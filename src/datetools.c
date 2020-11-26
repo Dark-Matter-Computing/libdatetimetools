@@ -364,8 +364,9 @@ void jdn2greg (int jdn, struct DATETIME *calc_date)
 * Arguments: The starting date and ending date, both in the form of         *
 *   pointers to a DATETIME struct.                                          *
 *                                                                           *
-* Return: Returns an integer which is the result of calculating the number  *
-*   of calendar days between the two dates.                                 *
+* Return: No return, but the function changes the value of the variable     *
+*   calc_date (the resulting date) through use of the pointer. The return   *
+*   value is positive if date1 is before date 2, and negative otherwise.    *
 *                                                                           *
 ****************************************************************************/
 
@@ -490,7 +491,7 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 *                                                                           *
 * Return: Returns an integer which is the result of calculating the number  *
 *   of court days between the two dates. Recall cour days exclude weekends  *
-*   and holidays. The return value is positive if date1 is before date 2,   * 
+*   and holidays. The return value is positive if date1 is before date 2,   *
 *   and negative otherwise.                                                 *
 *                                                                           *
 * Algorithm: Function uses two nested while loops.  The outer one counts    *
@@ -517,6 +518,9 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
                     we are moving forward or backward on the calendar */
 
     int count = 0; /* the variable to store the date difference count */
+    
+    /* FIXME (Thomas#1#): This function does not work properly if the start
+    date falls on a holiday.  MUST ADD ERROR HANDLING. */
 
 
     /* set tempday to the same JDN as orig_date */

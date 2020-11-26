@@ -295,7 +295,8 @@ int date_difference (struct DATETIME *date1, struct DATETIME *date2);
 *   pointer to another DATETIME struct to store the result.                 *
 *                                                                           *
 * Return: No return, but the function changes the value of the variable     *
-*   calc_date (the resulting date) through use of the pointer.              *
+*   calc_date (the resulting date) through use of the pointer. The return   *
+*   value is positive if date1 is before date 2, and negative otherwise.    *
 ****************************************************************************/
 
 void date_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
@@ -339,7 +340,7 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 *                                                                           *
 * Return: Returns an integer which is the result of calculating the number  *
 *   of court days between the two dates. Recall cour days exclude weekends  *
-*   and holidays. The return value is positive if date1 is before date 2,   * 
+*   and holidays. The return value is positive if date1 is before date 2,   *
 *   and negative otherwise.                                                 *
 *                                                                           *
 * Algorithm: Function uses two nested while loops.  The outer one counts    *
