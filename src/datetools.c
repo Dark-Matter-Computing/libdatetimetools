@@ -492,19 +492,14 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 
 int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
 {
-    int tempday; /* since numdays can only be used to count court-days, tempday
-                    is used to check ALL days between original date and end
-                    date. numdays will only be incremented when tempday is NOT a
-                    holiday. */
-                    
     struct DATETIME testdate; /* structure to hold temporary dates for
                                 intermediate testing */
-                                
+
     int test; /* test vaariable to see if a date falls on a holiday or not */
-    
+
     int fwd_back; /* variable to increment up or down depending on whether
                     we are moving forward or backward on the calendar */
-                    
+
     int count = 0; /* the variable to store the date difference count */
 
 
@@ -517,12 +512,13 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
     {
         return 0;
     }
-    
-    testdate.jdn = date2->jdn; /* set testdate to date2 */
-    
+
+    testdate.jdn = date2->jdn; /* set testdate to date2, this is our starting
+                                counting position ---> zero! */
+
     /* set fwd_back to 1 or -1 depending on whether we are counting forward or
         backward. */
-    if(date1->jdn < testdate.jdn)
+    if(date1->jdn > testdate.jdn)
             fwd_back = 1; /* count forward */
     else
         fwd_back = -1; /* count backward */
@@ -534,19 +530,21 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
         test = 1;
         while(test == 1)
         {
-            tempday += fwd_back; /* tempday starts out == to the original date;
-                                    we increment it to point to the very next
-                                    day. If tempday turns out to be a holiday
-                                    (see below), tempday is incremented at the
-                                    beginning of each loop iteration until it
-                                    points to the next non-holiday date. */
+            testdate.jdn += fwd_back; /* we increment testdate to point to the
+                                    very next (or previous) day.  if testdate
+                                    turns out to be a holiday (see below),
+                                    testdate is incremented again at the
+                                    beginning of the next loop iteration.  The
+                                    loop iterates until testdate points to a
+                                    non-holiday date. */
 
-            jdn2greg (tempday, calc_date); /* determine the new day */
+            jdn2greg (testdate.jdn, &testdate); /* determine the new day */
 
-            test = isholiday(calc_date); /* is the new day a holiday? */
+            test = isholiday(&testdate); /* is the new day a holiday? If so,
+                                            don't count it and test the next
+                                            (or previous) day */
         }
-        count -= fwd_back; /* decrease numdays -- this means the function has
-                                counted one non-holiday*/
+        count -= fwd_back; /* testdate was not a holiday, so count it! */
     }
     return count;
 }
