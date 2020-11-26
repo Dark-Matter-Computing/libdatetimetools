@@ -13,7 +13,7 @@
  *       Compiler:  gcc
  *
  *         Author:  Thomas H. Vidal (THV), thomashvidal@gmail.com
- *   Organization:  Dark Matter Software
+ *   Organization:  Dark Matter Computing
  *  
  *      Copyright:  (c) 2011-2020 - Thomas H. Vidal
  *        License:  This file is part of libdatetimetools library.
