@@ -46,7 +46,7 @@
 *                                                                           *
 * Usage/Limitations: This function calculates the day of the week based on  *
 *   Sakamoto's formula.  The formula is accurate for any date in the range  *
-*                    September 14, 1752–December 31, 9999                   *
+*                    September 14, 1752 December 31, 9999                   *
 *                                                                           *
 * Source. Text copied from Wikipedia.                                       *
 *                                                                           *
