@@ -1,3 +1,10 @@
+25 November 2020
+    This project started back in 2011. I made it pretty far and then had to
+    cease development for a while. I eventually decided to separate this from
+    the DocketMaster program so that I could further develop it as a
+    standalone library. I just added the license, having settled on the LGPL
+    for this one.
+
 22 October 2011
    released version 1.0.19 of DocketMaster
 

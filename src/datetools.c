@@ -1,28 +1,51 @@
-/*******************************************************************************
-* Datetools.c - This is the module that contains the various date function     *
-*               used by the DocketMaster application program for attorneys.    *
-*                                                                              *
-* Author: Thomas Vidal                                                         *
-*                                                                              *
-* Purpose: Perform date computations, such as day of the week.                 *
-*                                                                              *
-* Usage: The program sets up a test suite to test the date functions           *
-*                                                                              *
-* References: The program tests several different algorithms, which are        *
-*             described at the introduction to the particular functions.       *
-*             I obtained the algorithms from Wikipedia at:                     *
-*             http://en.wikipedia.org/wiki/Calculating_the_day_of_the_week     *
-*                                                                              *
-* File/Data Formats: None incorporated as of August 18, 2011.                  *
-*                                                                              *
-* Restrictions:  Some of the algorithms are perpetual, some are valid          *
-*                through a certain century                                     *
-*                                                                              *
-* Revision History: The first version was started on 8/18/2011                 *
-*                                                                              *
-* Error Handling: [describe]                                                   *
-*                                                                              *
-*******************************************************************************/
+/*
+ * =============================================================================
+ *
+ *       Filename:  datetools.c
+ *
+ *    Description:  This is the module that contains the various date function
+ *                  used by the DocketMaster application program for attorneys.
+ *
+ *        Version:  0.0
+ *        Created:  11/25/2020 21:15:15
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Thomas H. Vidal (THV), thomashvidal@gmail.com
+ *   Organization:  Dark Matter Software
+ *  
+ *      Copyright:  (c) 2011-2020 - Thomas H. Vidal
+ *        License:  This file is part of libdatetimetools library.
+ *
+ *                  libdatetimetools is free software: you can redistribute it
+ *                  and/or modify it under the terms of the GNU Lesser General
+ *                  Public License as published by the Free Software Foundation,
+ *                  version 3 of the License.
+ *
+ *                  libdatetimetools is distributed in the hope that it will be
+ *                  useful,but WITHOUT ANY WARRANTY; without even the implied
+ *                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *                  PURPOSE.  See the GNU Lesser General Public License for
+ *                  more details.
+ *
+ *                  You should have received a copy of the GNU General Public
+ *                  License along with libdatetimetools.  If not, see
+ *                  <https://www.gnu.org/licenses/>.
+ *
+ *	        Usage: Perform date computations, such as day of the week.
+ *    File Format: None incorporated as of August 18, 2011.
+ *   Restrictions: Some of the algorithms are perpetual, some are valid through
+ *                 a certain century.
+ * Error Handling: 
+ *     References: The program tests several different algorithms, which are
+ *                 described at the introduction to the particular functions.
+ *                 I obtained the algorithms from Wikipedia at:
+ *                 http://en.wikipedia.org/wiki/Calculating_the_day_of_the_week 
+ *          Notes: 
+ * 
+ * SPDX-License-Identifier:  LGPL-3.0-only
+ =============================================================================
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
