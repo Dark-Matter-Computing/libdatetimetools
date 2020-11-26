@@ -496,31 +496,40 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
                     is used to check ALL days between original date and end
                     date. numdays will only be incremented when tempday is NOT a
                     holiday. */
+                    
+    struct DATETIME testdate; /* structure to hold temporary dates for
+                                intermediate testing */
+                                
     int test; /* test vaariable to see if a date falls on a holiday or not */
+    
     int fwd_back; /* variable to increment up or down depending on whether
                     we are moving forward or backward on the calendar */
+                    
     int count = 0; /* the variable to store the date difference count */
+
 
     /* set tempday to the same JDN as orig_date */
     date1->jdn = jdncnvrt(date1);
     date2->jdn = jdncnvrt(date2);
-    tempday = date2->jdn;
 
     /* If numdays == 0, then there is no need to count anything. */
     if(date1->jdn == date2->jdn)
     {
         return 0;
     }
+    
+    testdate.jdn = date2->jdn; /* set testdate to date2 */
+    
     /* set fwd_back to 1 or -1 depending on whether we are counting forward or
         backward. */
-    if(date1->jdn > date2->jdn)
+    if(date1->jdn < testdate.jdn)
             fwd_back = 1; /* count forward */
     else
         fwd_back = -1; /* count backward */
 
 
     /* loop through and count the days */
-    while (tempday != date1->jdn) /* while there are days to count */
+    while (testdate.jdn != date1->jdn) /* while there are days to count */
     {
         test = 1;
         while(test == 1)
