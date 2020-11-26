@@ -358,7 +358,8 @@ void jdn2greg (int jdn, struct DATETIME *calc_date)
 /****************************************************************************
 ***************************   FUNCTION DEFINITION   *************************
 * Name: date_difference                                                     *
-calculates the number of calendar days between two dates.        *
+*                                                                           *
+* Description: calculates the number of calendar days between two dates.    *
 *                                                                           *
 * Arguments: The starting date and ending date, both in the form of         *
 *   pointers to a DATETIME struct.                                          *
@@ -421,9 +422,9 @@ void date_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
                   int numdays)
 {
-    int tempday; /* since numdays can only be used to count court-days, tempday is
-                    used to check ALL days between original date and end date.
-                    numdays will only be incremented when tempday is NOT a
+    int tempday; /* since numdays can only be used to count court-days, tempday
+                    is used to check ALL days between original date and end
+                    date. numdays will only be incremented when tempday is NOT a
                     holiday. */
     int test; /* test vaariable to see if a date falls on a holiday or not */
     int fwd_back; /* variable to increment up or down depending on whether
@@ -491,6 +492,57 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 
 int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
 {
+    int tempday; /* since numdays can only be used to count court-days, tempday
+                    is used to check ALL days between original date and end
+                    date. numdays will only be incremented when tempday is NOT a
+                    holiday. */
+    int test; /* test vaariable to see if a date falls on a holiday or not */
+    int fwd_back; /* variable to increment up or down depending on whether
+                    we are moving forward or backward on the calendar */
+
+    /* set tempday to the same JDN as orig_date */
+    date1->jdn = jdncnvrt(date1);
+    date2->jdn = jdncnvrt(date2);
+    tempday = date1->jdn;
+
+    /* If numdays == 0, then there is no need to count anything. */
+    if(numdays == 0)
+    {
+        calc_date->month = orig_date->month;
+        calc_date->day = orig_date->day;
+        calc_date->year = orig_date->year;
+        calc_date->jdn = orig_date->jdn;
+
+        return;
+    }
+    /* set fwd_back to 1 or -1 depending on whether we are counting forward or
+        backward. */
+    if(numdays > 0)
+            fwd_back = 1; /* count forward */
+    else
+        fwd_back = -1; /* count backward */
+
+
+    /* loop through and count the days */
+    while (numdays !=0) /* while there are days to count */
+    {
+        test = 1;
+        while(test == 1)
+        {
+            tempday += fwd_back; /* tempday starts out == to the original date;
+                                    we increment it to point to the very next
+                                    day. If tempday turns out to be a holiday
+                                    (see below), tempday is incremented at the
+                                    beginning of each loop iteration until it
+                                    points to the next non-holiday date. */
+
+            jdn2greg (tempday, calc_date); /* determine the new day */
+
+            test = isholiday(calc_date); /* is the new day a holiday? */
+        }
+        numdays -= fwd_back; /* decrease numdays -- this means the function has
+                                counted one non-holiday*/
+    }
     return;
 }
 
