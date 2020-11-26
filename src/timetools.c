@@ -34,8 +34,8 @@ int main()
     sscanf(line, "%d:%d:%d", &hr, &min, &sec);
     printf("The total number of minutes is %d", summin(hr, min, sec));
     printf("\n________________________________________________________\n\n");
-    
-    
+
+
     /* Exercise 5-6 */
     printf("Enter the total number of minutes:\n");
     fgets(line, sizeof(line), stdin);
@@ -69,7 +69,8 @@ int summin (int h, int m, int s)
 void min2time (int min, int *h, int *m, int *s)
 {
     *h = min /60;
-    *m = 
-    *s =
+    *m = min - (*h*60);
+    *s = 0;
+
     return;
 }

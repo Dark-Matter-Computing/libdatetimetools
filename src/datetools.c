@@ -228,7 +228,7 @@ int isleapyear(struct DATETIME *dt)
 *****************************************************************************
 ****************************************************************************/
 
-        /* FIXME (Thomas#1#): IMPORTANT - STREAMLINE THE AMOUNT OF FUNCITON
+        /* FIXME (Thomas#1#): IMPORTANT - STREAMLINE THE AMOUNT OF FUNCTION
         CALLS TO JDNCNVRT.  PERHAPS INITIALIZE THIS WHEN A DATE IS CREATED TO
         SOME MAGIC NUMBER.  THAT WAY IF THE JDN HAS NOT BE CALCULATED THE
         FUNCTION WILL CALCULATE IT, OTHERWISE IT WILL **NOT** RE-CALCULATE IT.
