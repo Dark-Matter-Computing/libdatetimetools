@@ -518,7 +518,7 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
                     we are moving forward or backward on the calendar */
 
     int count = 0; /* the variable to store the date difference count */
-    
+
     /* FIXME (Thomas#1#): This function does not work properly if the start
     date falls on a holiday.  MUST ADD ERROR HANDLING. */
 
