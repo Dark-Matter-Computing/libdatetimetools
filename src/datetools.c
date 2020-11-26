@@ -416,6 +416,10 @@ void date_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 * incremented, but the outerloop is not. Thus, this function could be       *
 * modified to report back not only the resulting court day, but the number  *
 * of actual calendar days between the two dates.                            *
+*                                                                           *
+* NOTE: This function counts forward and backward, so references to         *
+* incrementing can refer to decrementing; references to next day can refer  *
+* to prior day, as the case may be; day after can refer to day before.      *
 ****************************************************************************/
 
 
@@ -486,8 +490,20 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 *                                                                           *
 * Return: Returns an integer which is the result of calculating the number  *
 *   of court days between the two dates. Recall cour days exclude weekends  *
-*   and holidays.                                                           *
+*   and holidays. The return value is positive if date1 is before date 2,   * 
+*   and negative otherwise.                                                 *
 *                                                                           *
+* Algorithm: Function uses two nested while loops.  The outer one counts    *
+* up or down by numdays.  The inner while-loop cycles through each day      *
+* starting with the day after the end date.  It tests whether the day falls *
+* on a holiday.  If the day falls on a holliday, the inner loop  is         *
+* incremented, but the outerloop is not. Thus, this function could be       *
+* modified to report back not only the resulting court day, but the number  *
+* of actual calendar days between the two dates.                            *
+*                                                                           *
+* NOTE: This function counts forward and backward, so references to         *
+* incrementing can refer to decrementing; references to next day can refer  *
+* to prior day, as the case may be; day after can refer to day before.      *
 ****************************************************************************/
 
 int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
