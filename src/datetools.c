@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "datetools.h"
-#include "..\rule processor\ruleprocessor.h"
+#include "ruleprocessor.h"
 
 
 /****************************************************************************
