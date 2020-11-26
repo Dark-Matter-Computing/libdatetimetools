@@ -357,7 +357,8 @@ void jdn2greg (int jdn, struct DATETIME *calc_date)
 
 /****************************************************************************
 ***************************   FUNCTION DEFINITION   *************************
-* date_difference - calculates the number of days between two dates.        *
+* Name: date_difference                                                     *
+calculates the number of calendar days between two dates.        *
 *                                                                           *
 * Arguments: The starting date and ending date, both in the form of         *
 *   pointers to a DATETIME struct.                                          *
@@ -475,20 +476,20 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 
 /****************************************************************************
 **************************   FUNCTION DEFINITION   **************************
-* Name: courtday_difference [not programmed yet.]                                *
+* Name: courtday_difference                                                 *
 *                                                                           *
-* Description: Counts court days.                                           *
+* Description: Counts court days between two dates.                         *
 *                                                                           *
 * Arguments: The starting date and ending date, both in the form of         *
 *   pointers to a DATETIME struct.                                          *
 *                                                                           *
-* Returns: describe the return value of the function                        *
+* Return: Returns an integer which is the result of calculating the number  *
+*   of court days between the two dates. Recall cour days exclude weekends  *
+*   and holidays.                                                           *
 *                                                                           *
-* Other sections. algorithms, file formats, references, notes, etc.         *
 ****************************************************************************/
 
-void courtday_difference (struct DATETIME *orig_date, struct DATETIME *calc_date,
-                  int numdays)
+int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
 {
     return;
 }
