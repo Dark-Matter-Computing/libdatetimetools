@@ -499,32 +499,28 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
     int test; /* test vaariable to see if a date falls on a holiday or not */
     int fwd_back; /* variable to increment up or down depending on whether
                     we are moving forward or backward on the calendar */
+    int count = 0; /* the variable to store the date difference count */
 
     /* set tempday to the same JDN as orig_date */
     date1->jdn = jdncnvrt(date1);
     date2->jdn = jdncnvrt(date2);
-    tempday = date1->jdn;
+    tempday = date2->jdn;
 
     /* If numdays == 0, then there is no need to count anything. */
-    if(numdays == 0)
+    if(date1->jdn == date2->jdn)
     {
-        calc_date->month = orig_date->month;
-        calc_date->day = orig_date->day;
-        calc_date->year = orig_date->year;
-        calc_date->jdn = orig_date->jdn;
-
-        return;
+        return 0;
     }
     /* set fwd_back to 1 or -1 depending on whether we are counting forward or
         backward. */
-    if(numdays > 0)
+    if(date1->jdn > date2->jdn)
             fwd_back = 1; /* count forward */
     else
         fwd_back = -1; /* count backward */
 
 
     /* loop through and count the days */
-    while (numdays !=0) /* while there are days to count */
+    while (tempday != date1->jdn) /* while there are days to count */
     {
         test = 1;
         while(test == 1)
@@ -540,10 +536,10 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
 
             test = isholiday(calc_date); /* is the new day a holiday? */
         }
-        numdays -= fwd_back; /* decrease numdays -- this means the function has
+        count -= fwd_back; /* decrease numdays -- this means the function has
                                 counted one non-holiday*/
     }
-    return;
+    return count;
 }
 
 /****************************************************************************
