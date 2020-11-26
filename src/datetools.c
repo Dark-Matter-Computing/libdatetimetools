@@ -378,7 +378,7 @@ int date_difference (struct DATETIME *date1, struct DATETIME *date2)
 *   number days. The algorithm EXCLUDES the first date, but counts the end  *
 *   date.                                                                   *
 *                                                                           *
-* Arguments: The starting date, the number of court days to count, and a    *
+* Arguments: The starting date, the number of calendar days to count, and a *
 *   pointer to another DATETIME struct to store the result.                 *
 *                                                                           *
 * Return: No return, but the function changes the value of the variable     *
@@ -475,7 +475,7 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 
 /****************************************************************************
 **************************   FUNCTION DEFINITION   **************************
-* Name: courtday_count [not programmed yet.]                                *
+* Name: courtday_difference [not programmed yet.]                                *
 *                                                                           *
 * Description: Counts court days.                                           *
 *                                                                           *

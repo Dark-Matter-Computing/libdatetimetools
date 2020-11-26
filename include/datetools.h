@@ -273,6 +273,9 @@ void jdn2greg (int jdn, struct DATETIME *calc_date);
 ***************************   FUNCTION DECLARATION   ************************
 * date_difference - calculates the number of days between two dates.        *
 *                                                                           *
+* Arguments: The starting date and ending date, both in the form of         *
+*   pointers to a DATETIME struct.                                          *
+*                                                                           *
 * Return: Returns an integer with the number of days between the two dates. *
 *                                                                           *
 ****************************************************************************/
@@ -284,6 +287,9 @@ int date_difference (struct DATETIME *date1, struct DATETIME *date2);
 * date_offset - calculates the date after adding or subtracting a specified *
 *   number days. The algorithm EXCLUDES the first date, but counts the end  *
 *   date.                                                                   *
+*                                                                           *
+* Arguments: The starting date, the number of calender days to count, and a *
+*   pointer to another DATETIME struct to store the result.                 *
 *                                                                           *
 * Return: Returns an integer which is the result of calculating the number  *
 *   of days between the two dates.                                          *
@@ -325,7 +331,8 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
 *                                                                           *
 * Description: Counts court days.                                           *
 *                                                                           *
-* Arguments: Describe the parameters of the function.                       *
+* Arguments: The starting date and ending date, both in the form of         *
+*   pointers to a DATETIME struct.                                          *
 *                                                                           *
 * Returns: describe the return value of the function                        *
 *                                                                           *

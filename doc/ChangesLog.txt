@@ -1,3 +1,40 @@
+09 October 2011
+   released version 1.0.17 of DocketMaster
+
+     Change log:
+        -New: Revised and updated program documentation and comments
+
+08 October 2011
+   released version 1.0.16 of DocketMaster
+
+     Change log:
+        -Added: New datetools testing functions in main: holidayprinttest() and testsuite_checkholidays().
+        -Fixed: Was having problems in processing weekend and relative rules.  The problem was the datetime struct datatypes for wkday and wknum were chars.  I converted them to int and added a step in parseholidays() to convert an ASCII string read from ascii the holiday file to a decimal number using a paramaterized macro ASCII2DECIMAL().
+        -New: I fully debugged the isholiday() function
+        -Added: added the courtday_offset function.
+        -Added: test function in main to test the courtday_offset function.
+
+07 October 2011
+   released version 1.0.14 of DocketMaster
+
+     Change log:
+        -New: Created a new rule processing engine called processhrule.  This function does the hardwork of comparing a date to a rule to see if the date falls on a holiday defined by the rule.
+        -Cleaned: Streamlined the isholiday() function by separating out the processing engine.
+
+06 October 2011
+   released version 1.0.14 of DocketMaster
+
+     Change log:
+        -Added: In datetools.h, I added two arrays montharray, which lists the month numbers.  The other array is daysinmonths, which is a 2dimensional array that lists the total days for each month including leap years.
+
+06 October 2011
+   released version 1.0.13 of DocketMaster
+
+     Change log:
+        -Fixed: new function in datetools.c called islastxdom() -- to calculate whether a date is the last Xday of the month.
+        -Added: The islastweek() function was not working correctly.  That function was renamed islastxdom.  The problem with islastweek is that it was a confused function.  It was trying to tell us whther a certain day was the last X day (e.g., Tuesday) of the month, but it was programmed as if it were telling us whether some date was in the last week.  I copied the function into a new islastweek, but that function is not coded yet.  It's job will be to tell us if a date is in the last week of the month.
+        -Added: isleapyear function
+
 05 October 2011
    released version 1.0.10 of DocketMaster
 
