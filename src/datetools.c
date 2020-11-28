@@ -50,8 +50,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "datetools.h"
-#include "ruleprocessor.h"
+#include "../include/datetools.h"
+#include "/Volumes/development/products/DocketMaster/src/ruleprocessor.h"
 
 
 /****************************************************************************
@@ -726,7 +726,9 @@ int islastweek (struct DATETIME *dt)
         daycount = date_difference(dt, &tempdate);
         if (daycount > 7)
             return 0;
-        else if (daycount <= dt->day_of_week - tempdate.day_of_week)
+        else if (daycount <= (int) dt->day_of_week - (int) tempdate.day_of_week)
+            /* FIXME I need to check this because I'm comparing signed and
+             * unsigned types w/o the cast  */
             return 1;
         else
             return 0;
