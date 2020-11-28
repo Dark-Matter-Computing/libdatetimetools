@@ -46,16 +46,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/timetools.h"
 
 /* global variables */
 char line[100]; /* keyboard input buffer */
 int hr, min, sec; /* hours, minutes, and seconds */
 int ttlmin; /* total number of minutes */
-
-/* function prototypes */
-/* void parsetime (char input[], int *h, int *m, int *s); not used right now*/
-int summin (int h, int m, int s);
-void min2time (int min, int *h, int *m, int *s);
 
 int main()
 {

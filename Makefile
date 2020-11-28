@@ -13,6 +13,9 @@ project = libdatetimetools
 ## Source Tree
 SOURCEDIR = ./src
 OBJDIR = ./obj
+# OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
+SOURCES = $(sort $(shell find . -name '*.c'))
+OBJECTS = $(sort $(notdir $(patsubst %.c,%.o,$(SOURCES))))
 LIBDIR = ./lib
 
 ## Determine OS and Architecture
@@ -54,10 +57,9 @@ endif
 
 # Set Build Flags
 
-CFLAGS=-g -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c99
-
-CFLAGS2= -pedantic -W -Wundef -Wstrict-prototypes -Wmissing-prototypes \
-		 -Wmissing-declarations -Wcast-qual -Wwrite-strings
+CFLAGS=-g -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c99 \
+	   -pedantic -W -Wundef -Wstrict-prototypes -Wmissing-prototypes \
+	   -Wmissing-declarations -Wcast-qual -Wwrite-strings
 
 CPPFLAGS= -Weffc++
 
@@ -86,18 +88,12 @@ CPPFLAGS= -Weffc++
 # 	-Weffc++
 
 # Primary Build Targets
-build: $(OBJDIR)/datetools.o $(OBJDIR)/timetools.o
-	ar -rc $(LIBDIR)/$(target).a $^
+build: $(OBJECTS)
+	ar -rc $(LIBDIR)/$(target).a $(OBJDIR)/$<
 
-# Build datetools.c
-$(OBJDIR)/datetools.o: $(SOURCEDIR)/datetools.c
-	$(CC) $(CFLAGS) $(CFLAGS2) -c -o $@  $<
-
+$(OBJECTS): $(SOURCES)
+	@$(COMPILE.c) -c -o $(OBJDIR)/$@ $<
 	
-# Build timetools.c
-$(OBJDIR)/timetools.o: $(SOURCEDIR)/timetools.c
-	$(CC) $(CFLAGS) $(CFLAGS2) -c -o $@  $<
-
 # instead of using the macro PROGNAME, I could use the built-in macro
 # "$@". $@ = the name before the colon on the target line.  ("$<" is the
 # built-in macro to access the first dependency (files listed AFTER the colon).
@@ -122,7 +118,9 @@ variable_test:
 	@echo $(OSFLAG)
 	@echo $(target)
 	@echo $(CC)
-	@echo "$(project).c"
+	@echo "$(project).a"
+	@echo $(SOURCES)
+	@echo $(OBJECTS)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

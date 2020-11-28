@@ -42,3 +42,9 @@
  * SPDX-License-Identifier: LGPL-3.0-only
  =============================================================================
  */
+
+/* function prototypes */
+/* void parsetime (char input[], int *h, int *m, int *s); not used right now*/
+int summin (int h, int m, int s);
+void min2time (int min, int *h, int *m, int *s);
+
