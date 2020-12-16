@@ -1,14 +1,19 @@
-/*
- *       Filename:  datetools.c
+/* SPDX-License-Identifier:  LGPL-3.0-only
+ * datetools.c - [short description]
+ * [long description]
  *
- *        Version: 0.0
- *        Created: 11/25/2020 21:15:15
- *  Last Modified: Thu Dec 10 22:33:14 2020
+ * This file is part of libdatetimetools library.
  *
- *         Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
- *   Organization: Dark Matter Computing
- *  
- *      Copyright: (c) 2011-2020 - Thomas H. Vidal
+ * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
+ * Organization: Dark Matter Computing
+ *
+ * Version: 0.0
+ * Created: 08/18/2011 14:24:15
+ * Last Modified: Tue Dec 15 23:22:02 2020
+ *
+ * Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
+ * All Rights Reserved.
+ *
  *        License: This file is part of libdatetimetools library.
  *
  *                 libdatetimetools is free software: you can redistribute it
@@ -26,7 +31,7 @@
  *                 License along with libdatetimetools.  If not, see
  *                 <https://www.gnu.org/licenses/>.
  *
- * SPDX-License-Identifier:  LGPL-3.0-only
+ * 
  *
  */
 
@@ -65,7 +70,7 @@
  *
  */
 
-int wkday_sakamoto (struct DATETIME *dt)
+int wkday_sakamoto (struct DateTime *dt)
 {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4}; /* I'm not sure what
                                                                this does. */
@@ -124,14 +129,14 @@ void printwkday (int day)
  *  DATE CALCULATIONS
  *----------------------------------------------------------------------------*/
 
-int isweekend (struct DATETIME *dt)
+int isweekend (struct DateTime *dt)
 {
     if (dt->day_of_week == Saturday || Sunday)
         return 1;
         else return 0;
 }
 
-int isleapyear(struct DATETIME *dt)
+int isleapyear(struct DateTime *dt)
 {
     return (dt->year%4 == 0 && (dt->year%100 != 0 || dt->year%400 == 0));
 }
@@ -178,7 +183,7 @@ int isleapyear(struct DATETIME *dt)
         having the function simply assign the JDN to the struct member data
         object jdn. */
 
-int jdncnvrt (struct DATETIME *dt)
+int jdncnvrt (struct DateTime *dt)
 {
     int m; /* m is a temporary variable for month. so we don't change month
                 it's only used to calculate f. */
@@ -240,7 +245,7 @@ int jdncnvrt (struct DATETIME *dt)
  *
  */
 
-void jdn2greg (int jdn, struct DATETIME *calc_date)
+void jdn2greg (int jdn, struct DateTime *calc_date)
 {
     int a, b, c, d;
     int alpha;
@@ -283,12 +288,12 @@ void jdn2greg (int jdn, struct DATETIME *calc_date)
    return;
 }
 
-int date_difference (struct DATETIME *date1, struct DATETIME *date2)
+int date_difference (struct DateTime *date1, struct DateTime *date2)
 {
     return jdncnvrt(date2) - jdncnvrt(date1);
 }
 
-void date_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
+void date_offset (struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays)
 {
 
@@ -315,7 +320,7 @@ void date_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
  */
 
 
-void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
+void courtday_offset (struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays)
 {
     int tempday;
@@ -387,9 +392,9 @@ void courtday_offset (struct DATETIME *orig_date, struct DATETIME *calc_date,
  * to prior day, as the case may be; day after can refer to day before.
  */
 
-int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
+int courtday_difference (struct DateTime *date1, struct DateTime *date2)
 {
-    struct DATETIME testdate; /* structure to hold temporary dates for
+    struct DateTime testdate; /* structure to hold temporary dates for
                                 intermediate testing */
 
     int test; /* test vaariable to see if a date falls on a holiday or not */
@@ -461,9 +466,9 @@ int courtday_difference (struct DATETIME *date1, struct DATETIME *date2)
  *
  */
 
-int islastxdom (struct DATETIME *dt)
+int islastxdom (struct DateTime *dt)
 {
-    struct DATETIME tempdate; /* date struct used to store interim values */
+    struct DateTime tempdate; /* date struct used to store interim values */
     int daycount;
         /* counter variable to count how many days difference between the day
          * of the week of the last week of the first month to the laset x-day
@@ -527,9 +532,9 @@ int islastxdom (struct DATETIME *dt)
  *   ASSUMES FIRST DAY OF WEEK IS SUNDAY!
  */
 
-int islastweek (struct DATETIME *dt)
+int islastweek (struct DateTime *dt)
 {
-    struct DATETIME tempdate; 
+    struct DateTime tempdate; 
     int daycount; 
 
     if (dt->day < (WEEKDAYS*(MINNUMTTLWKS-1))) { /* if the date of month is less
