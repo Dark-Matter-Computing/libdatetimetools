@@ -1,49 +1,149 @@
-/* SPDX-License-Identifier:  LGPL-3.0-only
- * datetools.c - [short description]
- * [long description]
+/*
+ * Filename: datetools.c
+ * Library: libdatetimetools
  *
- * This file is part of libdatetimetools library.
+ * Description: 
+ *
+ * Version: 0.0
+ * Created: 08/18/2011 14:24:15
+ * Last Modified: Fri Dec 18 23:11:43 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
  *
- * Version: 0.0
- * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Dec 15 23:22:02 2020
- *
  * Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
- * All Rights Reserved.
+ * SPDX-License-Identifier:  LGPL-3.0-only
  *
- *        License: This file is part of libdatetimetools library.
- *
- *                 libdatetimetools is free software: you can redistribute it
- *                 and/or modify it under the terms of the GNU Lesser General
- *                 Public License as published by the Free Software Foundation,
- *                 version 3 of the License.
- *
- *                 libdatetimetools is distributed in the hope that it will be
- *                 useful,but WITHOUT ANY WARRANTY; without even the implied
- *                 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- *                 PURPOSE.  See the GNU Lesser General Public License for
- *                 more details.
- *
- *                 You should have received a copy of the GNU General Public
- *                 License along with libdatetimetools.  If not, see
- *                 <https://www.gnu.org/licenses/>.
- *
- * 
- *
+ * Usage: 
+ * File Format: 
+ * Restrictions: 
+ * Error Handling: 
+ * References: 
+ * Notes: 
  */
 
+#include "../include/datetools.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
-#include "../include/datetools.h"
-#include "/Volumes/development/products/DocketMaster/src/ruleprocessor.h"
-
 
 /*-----------------------------------------------------------------------------
- *  DAY OF WEEK FUNCTIONS
+ * Process Holiday Rules
+ *----------------------------------------------------------------------------*/
+
+void initializelist(struct HolidayNode *holidayhashtable[])
+{
+    int monthctr; /* counter to loop through months */
+
+    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    {
+        holidayhashtable[monthctr] = NULL;
+    }
+    return;
+}
+
+struct HolidayNode* addholidayrule(struct HolidayNode *list,
+                                    struct HolidayRule *holiday)
+{
+    struct HolidayNode *new_hrule; /* pointer to new holiday rule */
+
+    new_hrule = malloc(sizeof(struct HolidayNode)); /* creates a new node */
+
+    /* copy the data into the new node */
+    new_hrule->rule.month = holiday->month;
+    new_hrule->rule.ruletype = holiday->ruletype;
+    new_hrule->rule.wkday  = holiday->wkday;
+    new_hrule->rule.wknum = holiday->wknum;
+    new_hrule->rule.day = holiday->day;
+    strcpy(new_hrule->rule.holidayname, holiday->holidayname);
+    strcpy(new_hrule->rule.authority, holiday->authority);
+    new_hrule->nextrule = list; /* makes the new node point to the current
+                                    first node */
+    list = new_hrule; /* makes the new node the first node */
+
+    return list;
+}
+
+/*
+ * File Format: Comma Separated Values.  Fields: Type, Rule, Holiday, Source.
+ * The rule field is organized as Month-DayOfWeek-Number.  The "number"
+ * sub-field of the rule can contain (1) the week number e.g., 4 for the 4th
+ * week, (2) the word "all" for every week- day of the month (e.g., all
+ * Saturdays), (3) "last" for the last week-day (e.g., last Monday), or (4)
+ * "first" for the first week-day (e.g., first Tuesday).
+ */
+
+int processhrule (struct DateTime *dt, struct HolidayNode *rulenode)
+{
+
+    switch (rulenode->rule.ruletype)
+        {
+            case 'a': /* fall through */
+            case 'A':
+                if (rulenode->rule.day == dt->day)
+                    return 1;
+                break;
+            case 'r': /* fall through */
+            case 'R':
+                if (rulenode->rule.wkday == dt->day_of_week)
+                {
+                    /* previous line tests to see if day of week matches. */
+                    if ((rulenode->rule.wknum == LASTWEEK) && islastxdom(dt))
+                    {
+                        return 1;
+                    }
+                    else if (dt->day >= ((rulenode->rule.wknum-1)*WEEKDAYS+1) &&
+                            dt->day <= (rulenode->rule.wknum*WEEKDAYS))
+                    {
+                        /* Prev. line tests to see if the day is in the
+                        proper week. The formula "(wknum-1)*7+1" gets the
+                        first day of the applicable week; "wknum*7"
+                        calculates the last day of the applicable week.  */
+
+                        return 1;
+                    }
+                    else
+                        return 0;
+                }
+                break;
+            case 'w': /* fall through */
+            case 'W':
+                if(rulenode->rule.wkday == dt->day_of_week)
+                    return 1;
+                break;
+            default:
+                /* fall through */
+                break;
+        }
+
+    return 0;
+}
+
+void closerules(struct HolidayNode *holidayhashtable[])
+{
+    struct HolidayNode *tempnode;
+    int monthctr; /* counter to loop through months */
+
+    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    {
+        while (holidayhashtable[monthctr] != NULL)
+            /* checks to see if list is empty */
+        {
+            tempnode = holidayhashtable[monthctr];
+            /* sets a temporary pointer to the first node so we don't
+                lose it. */
+            holidayhashtable[monthctr] = holidayhashtable[monthctr]->nextrule;
+            /* makes the next node the new first node */
+            free(tempnode); /* frees the memory allocated to the former first
+                                node */
+        }
+    }
+    return;
+}
+
+/*-----------------------------------------------------------------------------
+ * DAY OF WEEK FUNCTIONS
  *----------------------------------------------------------------------------*/
 
 /*
@@ -80,49 +180,6 @@ int wkday_sakamoto (struct DateTime *dt)
 
     return (year + year/4 - year/100 + year/400 +
             t[dt->month-1] + dt->day) % 7;
-}
-
-/*
- * Name: printwkday
- *
- * Description: Prints the weekday corresponding to a day of the enum days.
- *
- * Parameters: Takes an integer corresponding to a day of the week.
- *
- * Return: Nothing.  It just prints the day.
- * 
- */
-
-void printwkday (int day)
-{
-    switch (day) {
-        case Sunday:
-            printf(" Sunday");
-            break;
-        case Monday:
-            printf(" Monday");
-            break;
-        case Tuesday:
-            printf(" Tuesday");
-            break;
-        case Wednesday:
-            printf(" Wednesday");
-            break;
-        case Thursday:
-            printf(" Thursday");
-            break;
-        case Friday:
-            printf(" Friday");
-            break;
-        case Saturday:
-            printf(" Saturday");
-            break;
-        default:
-            /* do nothing */
-            break;
-    }
-
-    return;
 }
 
 /*-----------------------------------------------------------------------------
@@ -575,6 +632,217 @@ int islastweek (struct DateTime *dt)
     }
 
     return 0;
+}
+
+int isholiday (struct DateTime *dt)
+{
+    struct HolidayNode *tempnode;
+
+    /* First, calculate whether an ALLMONTHS rule applies and whether this date
+    falls on a weekend */
+
+    dt->day_of_week = wkday_sakamoto (dt);
+    tempnode = holidayhashtable[ALLMONTHS-1];
+    while(tempnode != NULL)
+        {
+            if (processhrule(dt,tempnode) == 1)
+                return 1;
+            tempnode = tempnode->nextrule;
+        }
+
+    /* Second, calculate whether there are any holidays on the month of the
+        argument's date */
+
+    tempnode = holidayhashtable[dt->month-1];
+    while(tempnode != NULL)
+        {
+            if (processhrule(dt,tempnode) == 1)
+                return 1;
+            tempnode = tempnode->nextrule;
+        }
+
+    return 0;
+}
+
+void printholidayrules(struct HolidayNode *holidayhashtable[])
+{
+    struct HolidayNode *tempnode;
+    int monthctr; /* counter to loop through months */
+
+    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    {
+        tempnode = holidayhashtable[monthctr];
+        /* sets a temporary pointer to the first node so we traverse
+            the list. */
+
+        printf("-------------------------------------------------------\n");
+        if (tempnode != NULL)
+        {
+            switch (monthctr)
+            {
+            case 0: /* January rules */
+                printf("This holiday rules for January are as follows:\n");
+                break;
+            case 1:
+                printf("This holiday rules for February are as follows:\n");
+                break;
+            case 2:
+                printf("This holiday rules for March are as follows:\n");
+                break;
+            case 3:
+                printf("This holiday rules for April are as follows:\n");
+                break;
+            case 4:
+                printf("This holiday rules for May are as follows:\n");
+                break;
+            case 5:
+                printf("This holiday rules for June are as follows:\n");
+                break;
+            case 6:
+                printf("This holiday rules for July are as follows:\n");
+                break;
+            case 7:
+                printf("This holiday rules for August are as follows:\n");
+                break;
+            case 8:
+                printf("This holiday rules for September are as follows:\n");
+                break;
+            case 9:
+                printf("This holiday rules for October are as follows:\n");
+                break;
+            case 10:
+                printf("This holiday rules for November are as follows:\n");
+                break;
+            case 11:
+                printf("This holiday rules for December are as follows:\n");
+                break;
+            case 12:
+                printf("This holiday rules that apply to all months");
+                printf(" are as follows:\n");
+                break;
+            default:
+                printf("\n\n\n ERROR BAD MONTH.\n");
+                break;
+            }
+        }
+        else
+        {
+            switch (monthctr)
+            {
+            case 0: /* January rules */
+                printf("No holidays in January.\n");
+                break;
+            case 1:
+                printf("No holidays in February.\n");
+                break;
+            case 2:
+                printf("No holidays in March.\n");
+                break;
+            case 3:
+                printf("No holidays in April.\n");
+                break;
+            case 4:
+                printf("No holidays in May.\n");
+                break;
+            case 5:
+                printf("No holidays in June.\n");
+                break;
+            case 6:
+                printf("No holidays in July.\n");
+                break;
+            case 7:
+                printf("No holidays in August.\n");
+                break;
+            case 8:
+                printf("No holidays in September.\n");
+                break;
+            case 9:
+                printf("No holidays in October.\n");
+                break;
+            case 10:
+                printf("No holidays in November.\n");
+                break;
+            case 11:
+                printf("No holidays in December.\n");
+                break;
+            case 12:
+                printf("No holidays in apply to all months.");
+                break;
+            default:
+                printf("\n\n\n ERROR BAD MONTH.\n");
+                break;
+            }
+        }
+        while (tempnode != NULL) /* checks to see if list is empty */
+        {
+            printf("The applicable holiday is %s.\n",
+                   tempnode->rule.holidayname);
+            printf("The applicable ruletype is %c.\n",
+                   tempnode->rule.ruletype);
+            if ((tempnode->rule.ruletype != 'a') &&
+                    (tempnode->rule.ruletype != 'A'))
+            {
+                printf("The applicable weekday is %d.\n",
+                       tempnode->rule.wkday);
+                printf("The applicable weeknumber is %d.\n",
+                       tempnode->rule.wknum);
+            }
+            else
+            {
+                printf("The Day is %d.\n", tempnode->rule.day);
+            }
+            printf("The governing authority is %s.\n",
+                   tempnode->rule.authority);
+            printf("\n");
+            /* move to the next node */
+            tempnode = tempnode->nextrule;
+        }
+
+    }
+    return;
+}
+
+/*
+ * Name: printwkday
+ *
+ * Description: Prints the weekday corresponding to a day of the enum days.
+ *
+ * Parameters: Takes an integer corresponding to a day of the week.
+ *
+ * Return: Nothing.  It just prints the day.
+ * 
+ */
+
+void printwkday (int day)
+{
+    switch (day) {
+        case Sunday:
+            printf(" Sunday");
+            break;
+        case Monday:
+            printf(" Monday");
+            break;
+        case Tuesday:
+            printf(" Tuesday");
+            break;
+        case Wednesday:
+            printf(" Wednesday");
+            break;
+        case Thursday:
+            printf(" Thursday");
+            break;
+        case Friday:
+            printf(" Friday");
+            break;
+        case Saturday:
+            printf(" Saturday");
+            break;
+        default:
+            /* do nothing */
+            break;
+    }
+
+    return;
 }
 
 #ifdef UNDEF /* presently this entire the remainng code in this source file is

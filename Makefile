@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# To build a static library from a project.
+# Build static library
 # Supported Architectures: Various
 #
 # Using GNC C compiler [Linux and Unix], and Clang [macOS]
