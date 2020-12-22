@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Dec 22 12:03:29 2020
+ * Last Modified: Tue Dec 22 12:10:30 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -70,9 +70,7 @@ int holiday_rules_open(const char *receivedrulefilename, int close_on_success)
 
 void holiday_tbl_build(FILE *receivedrulefile, struct HolidayNode *holidayhashtable[])
 {
-    printf("## Initializing Table.\n");
     holiday_tbl_init(holidayhashtable);
-    printf("## Getting tokens from file.\n");
     holiday_rules_get_tokens(receivedrulefile, holidayhashtable, &activerules_h);
 }
 
@@ -80,11 +78,8 @@ void holiday_tbl_init(struct HolidayNode *holidayhashtable[])
 {
     int monthctr; /* counter to loop through months */
 
-    printf("Starting init for loop.\n");
     for(monthctr = 0; monthctr < MONTHS; monthctr++)
     {
-        printf("monthctr = %d.\n", monthctr);
-        printf("Initializing the array of pointers to  NULL.\n");
         holidayhashtable[monthctr] = NULL;
     }
     return;
@@ -116,7 +111,6 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
     struct HolidayRule newholiday;
 
     while (fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile) != NULL) {
-        printf("## tokenbuf = %s", tokenbuf);
         do {
             cur_token = holiday_rules_tokenize(tokenbuf, &lasttoken);
             holiday_rules_processtoken(cur_token,
@@ -207,7 +201,6 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
                 if (TEST_FLAG(flags, BEGIN_FIELD) == 0) {
                     /* If we are not inside a field, but we have reached a
                      * text delimiter, the file is not properly formatted. */
-                    printf("cur_char is: %c\n", *cur_char);
                     errorprocessor(NOFDELIM);
                 } else if (TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
                     *cur_char = '\0'; /* terminate the string */
@@ -229,7 +222,6 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
                         *lasttoken = 1;
                         prevpsn = NULL;
                     }
-                    printf("Tokenptr is %s\n", tokenptr);
                     return tokenptr;
                 }
                 break;
