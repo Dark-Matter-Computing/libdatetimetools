@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Fri Dec 18 23:11:43 2020
+ * Last Modified: Mon Dec 21 20:53:45 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -22,48 +22,474 @@
  * Notes: 
  */
 
-#include "../include/datetools.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "datetimetools_pvt.h"
 
 /*-----------------------------------------------------------------------------
- * Process Holiday Rules
+ * GLOBAL LIBRARY DATA TYPES 
  *----------------------------------------------------------------------------*/
 
-void initializelist(struct HolidayNode *holidayhashtable[])
+struct RuleSet activerules_h;
+/* struct RuleSet *activerulesptr_h; */
+
+
+/*-----------------------------------------------------------------------------
+ * Holidy Hashtable Handler Functions
+ *----------------------------------------------------------------------------*/   
+int holiday_rules_open(FILE *holidayrulefile, int close_on_success) 
+{
+    int valid_file = 0;
+
+    if ((valid_file = holiday_rules_validatefile(holidayrulefile))) {
+        holiday_rules_getfields(holidayrulefile, &activerules_h);
+        holiday_tbl_build(holidayrulefile, holidayhashtable);
+    }
+    else
+        /* address failure */;
+    
+    if (close_on_success == 1) {
+        activerules_h.openstatus=CLOSED;
+        holiday_rules_closefile(holidayrulefile);
+    } else {
+        activerules_h.openstatus=OPEN;
+    }
+    return 1;
+}
+
+void holiday_tbl_build(FILE *receivedrulefile, struct HolidayNode *holidayhashtable[])
+{
+    holiday_tbl_init(holidayhashtable);
+    holiday_rules_get_tokens(receivedrulefile, holidayhashtable, &activerules_h);
+}
+
+void holiday_tbl_init(struct HolidayNode *holidayhashtable[])
 {
     int monthctr; /* counter to loop through months */
 
     for(monthctr = 0; monthctr < MONTHS; monthctr++)
     {
-        holidayhashtable[monthctr] = NULL;
+        holidayhashtable[monthctr]->rule.ruletype = 'x'; /* set ruletype to X so
+                                                     * we know that it has not
+                                                     * been set yet.
+                                                     */
+        holidayhashtable[monthctr]->nextrule = NULL;
     }
     return;
 }
 
-struct HolidayNode* addholidayrule(struct HolidayNode *list,
+/* 
+ * Description:  Extract holiday-rule tokens from a record and populate the
+ * holiday hash table with the parsed rules.
+ *
+ * Parameters:  A string containing a record filled with input fields used to
+ * populate the hash table; a string containing the list of field names, and a
+ * pointer to the holiday hash table. 
+ *
+ * Returns:  Nothing.
+ * Algorithm:  
+ * References:  
+ * Notes:  
+ */
+
+void holiday_rules_get_tokens(FILE *holidayrulefile,
+                              struct HolidayNode *holidayhashtable[],
+                              struct RuleSet *globalstate)
+{
+
+    char tokenbuf[MAXRECORDLENGTH]; 
+    char *cur_token = NULL;
+    int cur_field = 0;
+    int lasttoken = 0;
+    struct HolidayRule newholiday;
+
+    while (fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile) != NULL) {
+        do {
+            cur_token = holiday_rules_tokenize(tokenbuf, &lasttoken);
+            holiday_rules_processtoken(cur_token,
+                                       globalstate->headerfields[cur_field],
+                                       &newholiday);
+            cur_field++;
+        } while (!lasttoken);
+        holiday_table_addrule(holidayhashtable[newholiday.month], &newholiday);
+        fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile); 
+    }
+}
+
+/*
+ * Parameters:  Takes a character string, a field delimiter, and a text string
+ * delimiter.
+ *
+ * Returns:  a pointer to a string containing the token or a null pointer.
+ *
+ * Algorithm:  The function first clears a set of token status flags.  Then the
+ * function checks to determine whether this is the first time it was called
+ * with a particular string.  If so, cur_char and prevpsn are set to the
+ * beginnigng of the string.  Otherwise, cur_car is set to prevpsn.
+ *
+ * Next, the function starts a while loop that iterates until the flag
+ * TOKEN_FOUND has been set.  As the loop iterates, cur_char is advanced along
+ * the string.  The guts of the while loop is a case statement that processes
+ * the tokens.
+ *
+ *
+ * Notes: On the first call of the function on a particular record the user
+ * must pass the string containing the record to tokenize.  On subsequent
+ * calls, only a null string should be passed.  The function sets up a static
+ * pointer to the next token in the record.
+ */
+
+char * holiday_rules_tokenize(char *string, int *lasttoken)
+{
+    unsigned char flags = 0x0; /* clear the flags. */
+    char *cur_char; /* character pointer to cycle through the string */
+    char *tokenptr; /* Pointer to current token in the record
+                           string */
+
+    static char *prevpsn = NULL; /* Previous position in the string from the last
+                             call to this function. */
+
+    if (prevpsn == NULL || *prevpsn != '\0') { /* If this is the first time the string is processed */
+        cur_char = prevpsn = string; /* point to the beginning of the string */
+
+        SET_FLAG(flags, BEGIN_FIELD); /* Set the BEGIN_FIELD flag because the
+                                          first field does not lead off with a
+                                         delimiter. */
+    } else { /* On subsequent calls, start at the previous position. */
+        cur_char = prevpsn;
+    }
+
+    while (TEST_FLAG(flags, TOKEN_FOUND) == 0) {
+
+        switch (*cur_char) {
+            case FDELIMITER:
+                /* If this is the first field delimiter found in the string,
+                 * it is likely the start of a field.  If it's a subsequent
+                 * one, it could be a character used within the text string. */
+
+                if (TEST_FLAG(flags,BEGIN_FIELD) == 0 &&
+                        TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
+                    
+                    /* this is the first field delimiter found and we are not
+                     * in a text string, so advance cur_char and set the 
+                     * BEGIN_FIELD flag. */
+
+                    cur_char++; /* point to the next char after fdelim */
+                    SET_FLAG(flags,BEGIN_FIELD);
+                } else if (TEST_FLAG(flags, BEGIN_TSTRING) != 0) {
+                    /* We are in the middle of a text field, so ignore the 
+                     * field delimiter. */
+                    cur_char++;
+                } else {
+                    /* There are two field delimiters back-to-back, which
+                     * indicates and empty field. */
+                    *cur_char = NULCHAR;
+                    return (tokenptr = cur_char); /* the field does not contain data */
+                }
+                break;
+            case TDELIMITER:
+                if (TEST_FLAG(flags, BEGIN_FIELD) == 0) {
+                    /* If we are not inside a field, but we have reached a
+                     * text delimiter, the file is not properly formatted. */
+                    errorprocessor(NOFDELIM);
+                }
+                if (TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
+                    *cur_char = '\0'; /* terminate the string */
+                    cur_char++; /* cur_char now points to first char of
+                                   token. */
+                    SET_FLAG(flags, BEGIN_TSTRING);
+                    tokenptr = cur_char; /* Set the tokenpointer to the begin of
+                                            the token. */
+                    cur_char++;
+                } else { /* we are at the end of the token */
+                    *cur_char = '\0'; /* terminate the token string */
+                    SET_FLAG(flags, TOKEN_FOUND);
+                    CLEAR_FLAG(flags, BEGIN_FIELD);
+                    prevpsn = cur_char+1; /* point prevpsn to the next
+                                      field delimter or end of tokenbuffer */
+                    if (*prevpsn == NULCHAR) { /* see if we are at the end of
+                                                * tokenbuff
+                                                */
+                        *lasttoken = 1;
+                        prevpsn = NULL;
+                    }
+                }
+                break;
+            case NEWLINE:
+                if (string == NULL) {
+                    if (TEST_FLAG(flags, BEGIN_FIELD) != 0)
+                        errorprocessor(NOTDELIM);
+                    else if (TEST_FLAG(flags, BEGIN_TSTRING))
+                        errorprocessor(NOTDELIM);
+                    else
+                        return NULL;
+                } else {
+                    errorprocessor(NULSTRING);
+                }
+                break;
+            case NULCHAR:
+                if (string == NULL) {
+                    if (TEST_FLAG(flags, BEGIN_FIELD) != 0)
+                        errorprocessor(NOTDELIM);
+                    else if (TEST_FLAG(flags, BEGIN_TSTRING))
+                        errorprocessor(NOTDELIM);
+                } else {
+                    errorprocessor(NULSTRING);
+                }
+                break;
+            default:
+                if(TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
+                    errorprocessor(NOTDELIM);
+                } else {
+                    cur_char++;
+                }
+                break;
+        }
+    }
+
+return tokenptr;
+}		/* -----  end of function holiday_rules_tokenize  ----- */
+
+void holiday_rules_processtoken(char *token, char *cur_field,
+                                struct HolidayRule *newholiday)
+{
+    char *currentchar = token;
+    int idx = 0;
+
+    if (*token == NULCHAR) {
+        /* THIS SIGNALS AN EMPTY FIELD */
+    }
+
+    if (strcmp(cur_field, HF_MONTH)) {
+        /*  Analyze the field to determine the month */
+        if (*currentchar == '0') {
+            /* if currentchar = '0' then the month is september or earlier */
+            currentchar++; /* read next character */
+
+            /* TODO (Thomas#1#): Add error processing in case the month
+            is not listed as a number betweeen 1 and 12. */
+
+            newholiday->month = (ASCII2DECIMAL(*currentchar));
+        } else {
+            currentchar++; /* read next character of filed */
+            newholiday->month = (10 + (ASCII2DECIMAL(*currentchar)));
+			/* add ten reflecting the first character read and
+			 * convert the second ASCII character to a number
+			 * between 0 and 9.
+			 * */
+
+            /* TODO (Thomas#1#): Add error processing in case the first
+            digit of the month month is != '1'. */
+        }
+    } else if (strcmp(cur_field, HF_RTYPE)) {
+        newholiday->ruletype = *currentchar; /* ruletype is a single character */
+    } else if (strcmp(cur_field, HF_RULE)) {
+        switch (*currentchar) {
+            case 'w':   /* Weekend Rules */
+                         /* fall through */
+            case 'W':
+                 newholiday->wkday = ASCII2DECIMAL(*currentchar);
+                 currentchar++; /* get rid of the dash */
+                 newholiday->wknum = ASCII2DECIMAL(*currentchar);
+                 break;
+            case 'a':   /* Absolute Rules */
+                        /* fall through */
+            case 'A':
+                newholiday->wkday = 999; /* temprule.wkday = '\0'; */
+                newholiday->wknum = 999; /* temprule.wknum = '\0'; */
+                currentchar++;
+                if (*currentchar == '0') { /* the day is less than 10 */
+                    currentchar++;
+                    newholiday->day = ASCII2DECIMAL(*++currentchar);
+                } else { /* day is greater than 10 */
+                   newholiday->day = ASCII2DECIMAL(*currentchar);
+                   newholiday->day = (newholiday->day * 10) + 
+                       ASCII2DECIMAL(*++currentchar);
+               }
+               break;
+            case 'r':   /* Relative Rules */
+                        /* fall through */
+            case 'R':
+                        newholiday->wkday = ASCII2DECIMAL(*currentchar);
+                        currentchar++; /* get rid of the dash */
+                        newholiday->wknum = ASCII2DECIMAL(*++currentchar);
+                        break;
+            case 'x':   /* rule has not been populated yet
+                            error to be handled */
+            default:
+                        /* TODO (Thomas#1#): Add error processing in case the
+                            rule is not in the proper format. */
+                        break;
+                }
+    } else if (strcmp(cur_field, HF_HOLIDAY)) {
+        while(*currentchar) {
+            newholiday->holidayname[idx] = *currentchar;
+            currentchar++;
+            idx++; 
+        }
+        newholiday->holidayname[idx] = '\0';    
+    }  else if (strcmp(cur_field, HF_AUTHORITY)) {
+        while(*currentchar) {
+            newholiday->authority[idx] = *currentchar;
+            currentchar++;
+            idx++; 
+        }
+        newholiday->authority[idx] = '\0';    
+    }  else {
+	    /* Error field name not defined */
+    } 
+}
+
+void holiday_table_addrule(struct HolidayNode *list,
                                     struct HolidayRule *holiday)
 {
-    struct HolidayNode *new_hrule; /* pointer to new holiday rule */
+    if ((list->rule.ruletype = 'x')) { /* if array element node has not be filled */
+        list->rule.month = holiday->month;
+        list->rule.ruletype = holiday->ruletype;
+        list->rule.wkday  = holiday->wkday;
+        list->rule.wknum = holiday->wknum;
+        list->rule.day = holiday->day;
+        strcpy(list->rule.holidayname, holiday->holidayname);
+        strcpy(list->rule.authority, holiday->authority);
+    } else {
+        struct HolidayNode *new_hrule; /* pointer to new holiday rule */
 
-    new_hrule = malloc(sizeof(struct HolidayNode)); /* creates a new node */
+        new_hrule = malloc(sizeof(struct HolidayNode)); /* creates a new node */
 
-    /* copy the data into the new node */
-    new_hrule->rule.month = holiday->month;
-    new_hrule->rule.ruletype = holiday->ruletype;
-    new_hrule->rule.wkday  = holiday->wkday;
-    new_hrule->rule.wknum = holiday->wknum;
-    new_hrule->rule.day = holiday->day;
-    strcpy(new_hrule->rule.holidayname, holiday->holidayname);
-    strcpy(new_hrule->rule.authority, holiday->authority);
-    new_hrule->nextrule = list; /* makes the new node point to the current
-                                    first node */
-    list = new_hrule; /* makes the new node the first node */
-
-    return list;
+        /* copy the data into the new node */
+        new_hrule->rule.month = holiday->month;
+        new_hrule->rule.ruletype = holiday->ruletype;
+        new_hrule->rule.wkday  = holiday->wkday;
+        new_hrule->rule.wknum = holiday->wknum;
+        new_hrule->rule.day = holiday->day;
+        strcpy(new_hrule->rule.holidayname, holiday->holidayname);
+        strcpy(new_hrule->rule.authority, holiday->authority);
+        new_hrule->nextrule = list->nextrule; /* makes the new node point to the current
+                                        second node; the 1st node is the array element */
+        list->nextrule = new_hrule; /* makes the new node the second node */
+    }
+    return;
 }
+
+void holiday_table_release(struct HolidayNode *holidayhashtable[])
+{
+    struct HolidayNode *tempnode;
+    int monthctr; /* counter to loop through months */
+
+    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    {
+        while (holidayhashtable[monthctr] != NULL)
+            /* checks to see if list is empty */
+        {
+            tempnode = holidayhashtable[monthctr];
+            /* sets a temporary pointer to the first node so we don't
+                lose it. */
+            holidayhashtable[monthctr] = holidayhashtable[monthctr]->nextrule;
+            /* makes the next node the new first node */
+            free(tempnode); /* frees the memory allocated to the former first
+                                node */
+        }
+    }
+    return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Holidy Rule File Management 
+ *----------------------------------------------------------------------------*/
+
+int holiday_rules_validatefile(FILE *candidaterulefile_h)
+{
+    /* TODO is fields used for anyting? should i create a global rulesset file
+     * where these fields can be saved?
+     */
+    char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
+    char *name = NULL; 
+    char *vers = NULL;
+    int index = 0; 
+
+    /* read first line of file */
+    name = fgets(tokenbuf, sizeof(tokenbuf), candidaterulefile_h); /* get the first line */
+    if (name == NULL) { /* file is empty */
+        return -1; /* TODO change this to return a meaningful errorcode */
+    } else {
+        name = &tokenbuf[0];
+        index = 1;
+        while (tokenbuf[index] != '\n') {
+            if (tokenbuf[index] == FDELIMITER) {
+                tokenbuf[index] = '\0'; /* file is CSV, to covert field delimiter
+                                          to end of string character */
+                if (vers == NULL) {
+                    vers = &tokenbuf[index+1];
+                }
+            }
+            index++; 
+            if ((tokenbuf[index] == FDELIMITER) &&
+                    (tokenbuf[index+1] == FDELIMITER))
+                tokenbuf[index] = '\0';
+        }
+        /* can't test these earlier b/c we first have to NUL term the strings */
+        if(strcmp(name, "Court Holiday Rules File") != 0) 
+           return -1; /* TODO change this to return a meaningful errorcode
+                       *  "ERROR: This is not a holiday rules file"
+                       */
+        if(strcmp(vers, "V1.0") != 0) 
+           return -1; /* TODO change this to return a meaningful errorcode
+                       *  "ERROR: This is not the correct version
+                       */
+    }
+    return 1;
+}
+
+void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
+{
+    char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
+    char *token = NULL;
+    int lasttoken = 0;
+    int index = 0; 
+
+    /*  Get the field names and store them in the fields array of strings */
+
+    fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile);
+        /* gets the next line of the file
+         *  which should contain the CSV field names.
+         */
+    
+    strcpy(globalstate->headerfields[index], token = 
+           holiday_rules_tokenize(tokenbuf, &lasttoken));
+    index++;
+
+    while(tokenbuf[index] != '\0') { /* When tokenbuf = NULCHAR then loop terminates */
+        strcpy(globalstate->headerfields[index], token =
+               holiday_rules_tokenize(tokenbuf, &lasttoken));
+        index++;
+    }
+
+    return;
+}
+
+void holiday_rules_resetfile(FILE *holidayrulefile)
+{ /* returns the file pointer to the beginning of the file. */
+  fseek(holidayrulefile, 0L, SEEK_SET);
+  clearerr(holidayrulefile);
+
+  return;
+}		/* -----  end of function resetfile  ----- */
+
+int holiday_rules_closefile(FILE *holidayrulefile)
+{
+    if( fclose(holidayrulefile) == EOF ) { /* close input file   */
+    fprintf (stderr, "Couldn't close holiday rule file; %s\n",
+	         strerror(errno) );
+    exit (EXIT_FAILURE);
+    }
+    return 0;
+}		/* -----  end of function closefile  ----- */
+
+/*-----------------------------------------------------------------------------
+ * Process Holiday Rules
+ *----------------------------------------------------------------------------*/
 
 /*
  * File Format: Comma Separated Values.  Fields: Type, Rule, Holiday, Source.
@@ -74,7 +500,7 @@ struct HolidayNode* addholidayrule(struct HolidayNode *list,
  * "first" for the first week-day (e.g., first Tuesday).
  */
 
-int processhrule (struct DateTime *dt, struct HolidayNode *rulenode)
+int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
 {
 
     switch (rulenode->rule.ruletype)
@@ -120,27 +546,6 @@ int processhrule (struct DateTime *dt, struct HolidayNode *rulenode)
     return 0;
 }
 
-void closerules(struct HolidayNode *holidayhashtable[])
-{
-    struct HolidayNode *tempnode;
-    int monthctr; /* counter to loop through months */
-
-    for(monthctr = 0; monthctr < MONTHS; monthctr++)
-    {
-        while (holidayhashtable[monthctr] != NULL)
-            /* checks to see if list is empty */
-        {
-            tempnode = holidayhashtable[monthctr];
-            /* sets a temporary pointer to the first node so we don't
-                lose it. */
-            holidayhashtable[monthctr] = holidayhashtable[monthctr]->nextrule;
-            /* makes the next node the new first node */
-            free(tempnode); /* frees the memory allocated to the former first
-                                node */
-        }
-    }
-    return;
-}
 
 /*-----------------------------------------------------------------------------
  * DAY OF WEEK FUNCTIONS
@@ -170,7 +575,7 @@ void closerules(struct HolidayNode *holidayhashtable[])
  *
  */
 
-int wkday_sakamoto (struct DateTime *dt)
+int wkday_sakamoto(struct DateTime *dt)
 {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4}; /* I'm not sure what
                                                                this does. */
@@ -186,7 +591,7 @@ int wkday_sakamoto (struct DateTime *dt)
  *  DATE CALCULATIONS
  *----------------------------------------------------------------------------*/
 
-int isweekend (struct DateTime *dt)
+int isweekend(struct DateTime *dt)
 {
     if (dt->day_of_week == Saturday || Sunday)
         return 1;
@@ -240,7 +645,7 @@ int isleapyear(struct DateTime *dt)
         having the function simply assign the JDN to the struct member data
         object jdn. */
 
-int jdncnvrt (struct DateTime *dt)
+int jdncnvrt(struct DateTime *dt)
 {
     int m; /* m is a temporary variable for month. so we don't change month
                 it's only used to calculate f. */
@@ -302,7 +707,7 @@ int jdncnvrt (struct DateTime *dt)
  *
  */
 
-void jdn2greg (int jdn, struct DateTime *calc_date)
+void jdn2greg(int jdn, struct DateTime *calc_date)
 {
     int a, b, c, d;
     int alpha;
@@ -345,12 +750,12 @@ void jdn2greg (int jdn, struct DateTime *calc_date)
    return;
 }
 
-int date_difference (struct DateTime *date1, struct DateTime *date2)
+int date_difference(struct DateTime *date1, struct DateTime *date2)
 {
     return jdncnvrt(date2) - jdncnvrt(date1);
 }
 
-void date_offset (struct DateTime *orig_date, struct DateTime *calc_date,
+void date_offset(struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays)
 {
 
@@ -377,7 +782,7 @@ void date_offset (struct DateTime *orig_date, struct DateTime *calc_date,
  */
 
 
-void courtday_offset (struct DateTime *orig_date, struct DateTime *calc_date,
+void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays)
 {
     int tempday;
@@ -449,7 +854,7 @@ void courtday_offset (struct DateTime *orig_date, struct DateTime *calc_date,
  * to prior day, as the case may be; day after can refer to day before.
  */
 
-int courtday_difference (struct DateTime *date1, struct DateTime *date2)
+int courtday_difference(struct DateTime *date1, struct DateTime *date2)
 {
     struct DateTime testdate; /* structure to hold temporary dates for
                                 intermediate testing */
@@ -523,7 +928,7 @@ int courtday_difference (struct DateTime *date1, struct DateTime *date2)
  *
  */
 
-int islastxdom (struct DateTime *dt)
+int islastxdom(struct DateTime *dt)
 {
     struct DateTime tempdate; /* date struct used to store interim values */
     int daycount;
@@ -589,7 +994,7 @@ int islastxdom (struct DateTime *dt)
  *   ASSUMES FIRST DAY OF WEEK IS SUNDAY!
  */
 
-int islastweek (struct DateTime *dt)
+int islastweek(struct DateTime *dt)
 {
     struct DateTime tempdate; 
     int daycount; 
@@ -634,7 +1039,7 @@ int islastweek (struct DateTime *dt)
     return 0;
 }
 
-int isholiday (struct DateTime *dt)
+int isholiday(struct DateTime *dt)
 {
     struct HolidayNode *tempnode;
 
@@ -645,7 +1050,7 @@ int isholiday (struct DateTime *dt)
     tempnode = holidayhashtable[ALLMONTHS-1];
     while(tempnode != NULL)
         {
-            if (processhrule(dt,tempnode) == 1)
+            if (holiday_tbl_checkrule(dt,tempnode) == 1)
                 return 1;
             tempnode = tempnode->nextrule;
         }
@@ -656,7 +1061,7 @@ int isholiday (struct DateTime *dt)
     tempnode = holidayhashtable[dt->month-1];
     while(tempnode != NULL)
         {
-            if (processhrule(dt,tempnode) == 1)
+            if (holiday_tbl_checkrule(dt,tempnode) == 1)
                 return 1;
             tempnode = tempnode->nextrule;
         }
@@ -664,7 +1069,7 @@ int isholiday (struct DateTime *dt)
     return 0;
 }
 
-void printholidayrules(struct HolidayNode *holidayhashtable[])
+void printholidayrules(void)
 {
     struct HolidayNode *tempnode;
     int monthctr; /* counter to loop through months */
@@ -813,7 +1218,7 @@ void printholidayrules(struct HolidayNode *holidayhashtable[])
  * 
  */
 
-void printwkday (int day)
+void printwkday(int day)
 {
     switch (day) {
         case Sunday:
@@ -842,6 +1247,13 @@ void printwkday (int day)
             break;
     }
 
+    return;
+}
+
+void errorprocessor(int error_code)
+{
+    /* not yet coded */
+    fprintf (stderr, "Error:%d\n", error_code);
     return;
 }
 

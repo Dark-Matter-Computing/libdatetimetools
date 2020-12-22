@@ -7,7 +7,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Fri Dec 18 23:03:17 2020
+ * Last Modified: Sun Dec 20 19:04:44 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -126,57 +126,13 @@ struct DateTime
 
 };
 
-/* The holiday rules are maintained in a chained hash table data structure.
- * The hash table is built up in three pieces.  The first piece is a structure
- * to hold data for a court holiday rule.  The second piece is a node to create
- * the linked list of holiday rules.  The third piece is an array of nodes
- * indexed to the months of the year.  Each pointer is the first node of a
- * linked list of HolidayNodes.  Each element holds the rules for the
- * applicable month.  There are 13 elements in the array becaues the final
- * element applies to the linked lists of rules that apply to every month, like
- * weekend rules.  The hash function is thus the months of the year. 
- */
-
-struct HolidayRule
-{
-    int month;
-    char ruletype;
-        /* holds one of three possible values: 'w' for a weekend rule, 'r'
-         * for a relative rule, and 'a' for an absolute rule
-         */
-    unsigned int wkday;
-        /* the day of the wk to which the rule applies. if the rule is
-         * relative.
-         */
-    int wknum;
-        /* the week number to which the rule applies if the rule is
-         * relative.
-         */
-    int day; /* the day of the holiday if the ruletype is 'a' */
-    char holidayname[40]; /* the title of the holiday */
-    char authority[100]; /* the statutory authority for the holiday */
-};
-
-/* structure for linked list to hold court holidays */
-struct HolidayNode
-{
-    struct HolidayRule rule; /* the rule contained in this node */
-    struct HolidayNode *nextrule; /* pointer to the next item in the list */
-};
-
-/* The hash table itself: an array to hold an individual holiday-node linked
-list for each month of the year + the ALLMONTHS rules */
-extern struct HolidayNode *holidayhashtable[13];
+struct HolidayNode;
 
 /*-----------------------------------------------------------------------------
- * Process Holiday Rules
+ * Activate Rule Handler 
  *----------------------------------------------------------------------------*/
 
-void initializelist(struct HolidayNode *holidayhashtable[]);
-struct HolidayNode* addholidayrule(struct HolidayNode *list,
-                                   struct HolidayRule *holiday);
-int processhrule (struct DateTime *dt, struct HolidayNode *rulenode);
-void closerules(struct HolidayNode *holidayhashtable[]);
+int holiday_rules_open(FILE *receivedrulefile, int close_on_success);
 
 /*-----------------------------------------------------------------------------
  * DATE COMPUTATIONS
@@ -191,7 +147,7 @@ void closerules(struct HolidayNode *holidayhashtable[]);
  *
  */
 
-int wkday_sakamoto (struct DateTime *dt);
+int wkday_sakamoto(struct DateTime *dt);
 
 /*
  * Name: isweekend
@@ -208,7 +164,7 @@ int wkday_sakamoto (struct DateTime *dt);
  * a 1 if the date IS a weekend.
  *
  */
-int isweekend (struct DateTime *dt);
+int isweekend(struct DateTime *dt);
 
 /*
  * Name: isleapyear
@@ -240,7 +196,7 @@ int isleapyear(struct DateTime *dt);
  * another function, such as the date_offset function.
  *
  */
-int jdncnvrt (struct DateTime *dt);
+int jdncnvrt(struct DateTime *dt);
 
 /*
  * Name: jdn2greg
@@ -255,7 +211,7 @@ int jdncnvrt (struct DateTime *dt);
  *   DateTime structure.
  *
  */
-void jdn2greg (int jdn, struct DateTime *calc_date);
+void jdn2greg(int jdn, struct DateTime *calc_date);
 
 /*
  * Name: date_difference
@@ -269,7 +225,7 @@ void jdn2greg (int jdn, struct DateTime *calc_date);
  *   of calendar days between the two dates.
  *
  */
-int date_difference (struct DateTime *date1, struct DateTime *date2);
+int date_difference(struct DateTime *date1, struct DateTime *date2);
 
 /*
  * Description: calculates the date after adding or subtracting a specified
@@ -284,7 +240,7 @@ int date_difference (struct DateTime *date1, struct DateTime *date2);
  *   calc_date (the resulting date) through use of the pointer. The return
  *   value is positive if date1 is before date 2, and negative otherwise.
  */
-void date_offset (struct DateTime *orig_date, struct DateTime *calc_date,
+void date_offset(struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays);
 
 /*
@@ -301,7 +257,7 @@ void date_offset (struct DateTime *orig_date, struct DateTime *calc_date,
  *   calc_date (the resulting date) through use of the pointer.
  *
  */
-void courtday_offset (struct DateTime *orig_date, struct DateTime *calc_date,
+void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
                   int numdays);
 
 /*
@@ -318,7 +274,7 @@ void courtday_offset (struct DateTime *orig_date, struct DateTime *calc_date,
  *   and negative otherwise.
  *
  */
-int courtday_difference (struct DateTime *date1, struct DateTime *date2);
+int courtday_difference(struct DateTime *date1, struct DateTime *date2);
 
 /*
  * Name: islastxdom
@@ -331,7 +287,7 @@ int courtday_difference (struct DateTime *date1, struct DateTime *date2);
  * Returns: An integer 0 = not in last week; 1 = is in last week
  *
  */
-int islastxdom (struct DateTime *dt);
+int islastxdom(struct DateTime *dt);
 
 /*
  * Name: islastweek
@@ -344,15 +300,15 @@ int islastxdom (struct DateTime *dt);
  * Returns: An integer 0 = not in last week; 1 = is in last week
  *
  */
-int islastweek (struct DateTime *dt);
+int islastweek(struct DateTime *dt);
 
-int isholiday (struct DateTime *dt) ;/* search holiday rules function */
+int isholiday(struct DateTime *dt) ;/* search holiday rules function */
 
 /*-----------------------------------------------------------------------------
  * Output Functions
  *----------------------------------------------------------------------------*/
 
-void printholidayrules(struct HolidayNode *holidayhashtable[]);
+void printholidayrules(void);
 
 /*
  * Name: printwkday
@@ -365,6 +321,6 @@ void printholidayrules(struct HolidayNode *holidayhashtable[]);
  *
  */
 
-void printwkday (int day);
+void printwkday(int day);
 
 #endif	/* _DATETOOLS_H_INCLUDED_ */
