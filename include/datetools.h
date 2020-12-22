@@ -7,7 +7,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Sun Dec 20 19:04:44 2020
+ * Last Modified: Mon Dec 21 23:55:45 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -25,6 +25,8 @@
 
 #ifndef _DATETOOLS_H_INCLUDED_
 #define _DATETOOLS_H_INCLUDED_
+
+#include <stdio.h>
 
 /*-----------------------------------------------------------------------------
  * Data Types
@@ -132,7 +134,7 @@ struct HolidayNode;
  * Activate Rule Handler 
  *----------------------------------------------------------------------------*/
 
-int holiday_rules_open(FILE *receivedrulefile, int close_on_success);
+int holiday_rules_open(const char * receivedrulefilename, int close_on_success);
 
 /*-----------------------------------------------------------------------------
  * DATE COMPUTATIONS

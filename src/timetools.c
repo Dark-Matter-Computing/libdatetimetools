@@ -53,7 +53,7 @@ char line[100]; /* keyboard input buffer */
 int hr, min, sec; /* hours, minutes, and seconds */
 int ttlmin; /* total number of minutes */
 
-int main()
+int testfunc()
 {
     /* Exercise 5-5 */
     printf("________________________________________________________\n");

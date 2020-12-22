@@ -6,13 +6,13 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Mon Dec 21 20:53:45 2020
+ * Last Modified: Tue Dec 22 08:12:41 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
  *
  * Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
- * SPDX-License-Identifier:  LGPL-3.0-only
+ * SPDX-License-Identifier: LGPL-3.0-only
  *
  * Usage: 
  * File Format: 
@@ -32,6 +32,7 @@
  * GLOBAL LIBRARY DATA TYPES 
  *----------------------------------------------------------------------------*/
 
+struct HolidayNode *holidayhashtable[13];
 struct RuleSet activerules_h;
 /* struct RuleSet *activerulesptr_h; */
 
@@ -39,13 +40,25 @@ struct RuleSet activerules_h;
 /*-----------------------------------------------------------------------------
  * Holidy Hashtable Handler Functions
  *----------------------------------------------------------------------------*/   
-int holiday_rules_open(FILE *holidayrulefile, int close_on_success) 
+int holiday_rules_open(const char *receivedrulefilename, int close_on_success) 
 {
+    FILE *holidayrulefile;
     int valid_file = 0;
 
+    holidayrulefile = fopen(receivedrulefilename, "r"); 
+    if (holidayrulefile == NULL)
+    {
+        printf("Cannot open HOLIDAY_FILE:%s\n", receivedrulefilename);
+        exit(8);
+    }
+
+    /* printf("About to validate files\n"); */
     if ((valid_file = holiday_rules_validatefile(holidayrulefile))) {
+        printf("File validated getting fields\n");
         holiday_rules_getfields(holidayrulefile, &activerules_h);
+        printf("Fields, Check. Now building table\n");
         holiday_tbl_build(holidayrulefile, holidayhashtable);
+        printf("table built\n");
     }
     else
         /* address failure */;
@@ -151,18 +164,28 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
     static char *prevpsn = NULL; /* Previous position in the string from the last
                              call to this function. */
 
-    if (prevpsn == NULL || *prevpsn != '\0') { /* If this is the first time the string is processed */
+    printf("## First line:\n\"%s\".\n\n", string);
+    if (prevpsn == NULL /* || *prevpsn != '\0' */) { /* If this is the first time the string is processed */
+        printf("## First time through this string.\n");
         cur_char = prevpsn = string; /* point to the beginning of the string */
 
+        printf("## Frst time reading. cur_char is %c.\n", *cur_char);
         SET_FLAG(flags, BEGIN_FIELD); /* Set the BEGIN_FIELD flag because the
                                           first field does not lead off with a
                                          delimiter. */
+        /*   SET_FLAG(flags, BEGIN_TSTRING); */
     } else { /* On subsequent calls, start at the previous position. */
+        printf("## Subsequent time through this string.\n");
         cur_char = prevpsn;
+        printf("## cur_char is %c.\n", *cur_char);
     }
 
     while (TEST_FLAG(flags, TOKEN_FOUND) == 0) {
 
+        printf("## Entering While loop\n");
+        printf("## Token is NOT found.\n");
+        printf("## about to enter switch\n");
+        printf("## cur_char is %c.\n", *cur_char);
         switch (*cur_char) {
             case FDELIMITER:
                 /* If this is the first field delimiter found in the string,
@@ -178,14 +201,18 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
 
                     cur_char++; /* point to the next char after fdelim */
                     SET_FLAG(flags,BEGIN_FIELD);
+                    printf("## cur_char is %c.\n", *cur_char);
                 } else if (TEST_FLAG(flags, BEGIN_TSTRING) != 0) {
                     /* We are in the middle of a text field, so ignore the 
                      * field delimiter. */
                     cur_char++;
+                    printf("## cur_char is %c.\n", *cur_char);
                 } else {
                     /* There are two field delimiters back-to-back, which
                      * indicates and empty field. */
                     *cur_char = NULCHAR;
+                    printf("## About to return NUL char: %c.\n", *cur_char);
+                    printf("## cur_char is %c.\n", *cur_char);
                     return (tokenptr = cur_char); /* the field does not contain data */
                 }
                 break;
@@ -196,25 +223,38 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
                     errorprocessor(NOFDELIM);
                 }
                 if (TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
+                    printf("## About to set BETIN_TSTRINGi\n");
+                    printf("## cur_char is %c.\n", *cur_char);
                     *cur_char = '\0'; /* terminate the string */
                     cur_char++; /* cur_char now points to first char of
                                    token. */
+                    printf("## cur_char is %c.\n", *cur_char);
                     SET_FLAG(flags, BEGIN_TSTRING);
                     tokenptr = cur_char; /* Set the tokenpointer to the begin of
                                             the token. */
                     cur_char++;
+                    printf("## cur_char is %c.\n", *cur_char);
                 } else { /* we are at the end of the token */
+                    printf("## cur_char is %c.\n", *cur_char);
                     *cur_char = '\0'; /* terminate the token string */
+                    printf("## cur_char is %c.\n", *cur_char);
                     SET_FLAG(flags, TOKEN_FOUND);
+                    printf("## Token IS found.\n");
                     CLEAR_FLAG(flags, BEGIN_FIELD);
                     prevpsn = cur_char+1; /* point prevpsn to the next
                                       field delimter or end of tokenbuffer */
-                    if (*prevpsn == NULCHAR) { /* see if we are at the end of
+                    printf("## Tokenptr is \"%s\".\n", tokenptr);
+                    printf("## cur_char is \"%c\".\n", *cur_char);
+                    printf("## prevpsn is \"%c\".\n", *prevpsn);
+                    if (*prevpsn == NEWLINE) { /* see if we are at the end of
                                                 * tokenbuff
                                                 */
                         *lasttoken = 1;
+                        printf("## prevpsn is \"%c\".\n", *prevpsn);
+                        printf("## prevpsn is \"%c\".\n", *prevpsn);
                         prevpsn = NULL;
                     }
+                    return tokenptr;
                 }
                 break;
             case NEWLINE:
@@ -240,10 +280,12 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
                 }
                 break;
             default:
+                printf("## We are in the default case.\n");
                 if(TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
                     errorprocessor(NOTDELIM);
                 } else {
                     cur_char++;
+                    printf("## cur_char is %c.\n", *cur_char);
                 }
                 break;
         }
@@ -410,7 +452,8 @@ int holiday_rules_validatefile(FILE *candidaterulefile_h)
     int index = 0; 
 
     /* read first line of file */
-    name = fgets(tokenbuf, sizeof(tokenbuf), candidaterulefile_h); /* get the first line */
+    name = fgets(tokenbuf, sizeof(tokenbuf), candidaterulefile_h); 
+
     if (name == NULL) { /* file is empty */
         return -1; /* TODO change this to return a meaningful errorcode */
     } else {
@@ -446,6 +489,7 @@ void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
 {
     char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
     char *token = NULL;
+    char *next_token = NULL;
     int lasttoken = 0;
     int index = 0; 
 
@@ -456,13 +500,17 @@ void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
          *  which should contain the CSV field names.
          */
     
+    next_token = tokenbuf;
     strcpy(globalstate->headerfields[index], token = 
-           holiday_rules_tokenize(tokenbuf, &lasttoken));
+           holiday_rules_tokenize(next_token, &lasttoken));
     index++;
 
-    while(tokenbuf[index] != '\0') { /* When tokenbuf = NULCHAR then loop terminates */
-        strcpy(globalstate->headerfields[index], token =
-               holiday_rules_tokenize(tokenbuf, &lasttoken));
+    printf("Entering token processing loop.\n");
+    while(!lasttoken) { /* When tokenbuf = NULCHAR then loop terminates */
+        printf("## Tokenbuf is \"%s\".\n", tokenbuf);
+        token = holiday_rules_tokenize(tokenbuf, &lasttoken);
+        strcpy(globalstate->headerfields[index], next_token);
+        token = next_token;
         index++;
     }
 
@@ -1254,6 +1302,7 @@ void errorprocessor(int error_code)
 {
     /* not yet coded */
     fprintf (stderr, "Error:%d\n", error_code);
+    exit(0);
     return;
 }
 
