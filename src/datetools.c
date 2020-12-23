@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Dec 22 22:08:34 2020
+ * Last Modified: Tue Dec 22 23:11:35 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -110,27 +110,18 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
     int lasttoken = 0;
     struct HolidayRule newholiday;
 
-    printf("+++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("## In get_tokens ## totalnumfields = %d.\n",
-          globalstate->totalnumfields);
     while (fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile) != NULL) {
         do {
             cur_token = holiday_rules_tokenize(tokenbuf, &lasttoken);
-            printf("## in get_tokens ## Current field is %s || ",
-                   globalstate->headerfields[cur_field]);
-            printf("## in get_tokens ## Current token is %s\n", cur_token);
             holiday_rules_processtoken(cur_token,
                                        globalstate->headerfields[cur_field],
                                        &newholiday);
             if (cur_field < (globalstate->totalnumfields-1)) {
                 cur_field++;
-                printf("## in get_tokens ## cur_field is %d.\n", cur_field);
              } else {
                 cur_field = 0; /* Reset once we reach the end of the fields */
-                printf("## in get_tokens ## cur_field is %d.\n", cur_field);
              }
         } while (!lasttoken);
-        printf("## Newholiday Month = %d\n", newholiday.month);
         holiday_table_addrule(holidayhashtable[newholiday.month-1], &newholiday);
         lasttoken=0;
     }
@@ -279,44 +270,23 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     char *currentchar = token;
     int idx = 0;
 
-    printf("####################################\n");
-    printf("## Entering processtoken.\n");
-    printf("Token = %s\n", token);
-    printf("cur_field = %s\n\n", cur_field);
-    printf("#######################################\n");
-    printf("#### WHAT KIND OF FIELD DO WE HAVE? ###\n");
-    printf("Is it a month? %d\n", strcmp(cur_field, HF_MONTH));
-    printf("Is it a Rule type? %d\n", strcmp(cur_field, HF_RTYPE));
-    printf("Is it a Rule? %d\n", strcmp(cur_field, HF_RULE));
-    printf("Is it a Holiday? %d\n", strcmp(cur_field, HF_HOLIDAY));
-    printf("Is it a Authority? %d\n", strcmp(cur_field, HF_AUTHORITY));
-    printf("#######################################\n");
     if (*token == NULCHAR) {
         /* THIS SIGNALS AN EMPTY FIELD */
     }
 
 
     if (strcmp(cur_field, HF_MONTH) == 0) {
-        printf("## Processing a \"month\" token.\n");
         /*  Analyze the field to determine the month */
         if (*currentchar == '0') {
             /* if currentchar = '0' then the month is september or earlier */
-            printf("## Month  = %c", *currentchar);
             currentchar++; /* read next character */
-            printf("%c", *currentchar);
-            printf(" || ## ASCII2DECIMAL  = %d\n\n\n",
-                    (10 + (ASCII2DECIMAL(*currentchar))));
 
             /* TODO (Thomas#1#): Add error processing in case the month
             is not listed as a number betweeen 1 and 12. */
 
             newholiday->month = (ASCII2DECIMAL(*currentchar));
         } else {
-            printf("## Month  = %c", *currentchar);
             currentchar++; /* read next character of filed */
-            printf("%c", *currentchar);
-            printf(" || ## ASCII2DECIMAL  = %d\n\n\n",
-                    (10 + (ASCII2DECIMAL(*currentchar))));
             newholiday->month = (10 + (ASCII2DECIMAL(*currentchar)));
 			/* add ten reflecting the first character read and
 			 * convert the second ASCII character to a number
@@ -327,27 +297,36 @@ void holiday_rules_processtoken(char *token, char *cur_field,
             digit of the month month is != '1'. */
         }
     } else if (strcmp(cur_field, HF_RTYPE) == 0) {
-        printf("## Processing a \"Rule Type\" token.\n");
         newholiday->ruletype = *currentchar; /* ruletype is a single character */
     } else if (strcmp(cur_field, HF_RULE) == 0) {
-        printf("## Processing a \"HF_RULE\" token.\n");
-        switch (*currentchar) {
+        printf("## in process_token ## currentchar is \"%c\".\n", *currentchar);
+        switch (newholiday->ruletype) {
             case 'w':   /* Weekend Rules */
                          /* fall through */
             case 'W':
+                 printf("## In process_token ## wkday = %d.\n",
+                        ASCII2DECIMAL(*currentchar));
                  newholiday->wkday = ASCII2DECIMAL(*currentchar);
-                 currentchar++; /* get rid of the dash */
+                 currentchar += 2; /* get rid of the dash */
+                 printf("## In process_token ## wknum = %d.\n",
+                        ASCII2DECIMAL(*currentchar));
                  newholiday->wknum = ASCII2DECIMAL(*currentchar);
+                 newholiday->day = 0; /* TODO use symbolic constant */
                  break;
             case 'a':   /* Absolute Rules */
                         /* fall through */
             case 'A':
-                newholiday->wkday = 999; /* temprule.wkday = '\0'; */
-                newholiday->wknum = 999; /* temprule.wknum = '\0'; */
-                currentchar++;
+                newholiday->wkday = 999; /* change this to a symbolic const  */
+                newholiday->wknum = 999; /* change this to a symbolic const  */
+                printf("## in process_token ## currentchar is \"%c\".\n",
+                        *currentchar);
                 if (*currentchar == '0') { /* the day is less than 10 */
                     currentchar++;
-                    newholiday->day = ASCII2DECIMAL(*++currentchar);
+                printf("## in process_token ## currentchar++ is \"%c\".\n",
+                        *currentchar);
+                    printf("## In process_token ## day# = %d.\n",
+                            ASCII2DECIMAL(*currentchar));
+                    newholiday->day = ASCII2DECIMAL(*currentchar);
                 } else { /* day is greater than 10 */
                    newholiday->day = ASCII2DECIMAL(*currentchar);
                    newholiday->day = (newholiday->day * 10) + 
@@ -369,7 +348,6 @@ void holiday_rules_processtoken(char *token, char *cur_field,
                         break;
                 }
     } else if (strcmp(cur_field, HF_HOLIDAY) == 0) {
-        printf("## Processing a \"HF_HOLIDAY\" token.\n");
         while(*currentchar) {
             newholiday->holidayname[idx] = *currentchar;
             currentchar++;
@@ -377,7 +355,6 @@ void holiday_rules_processtoken(char *token, char *cur_field,
         }
         newholiday->holidayname[idx] = '\0';    
     }  else if (strcmp(cur_field, HF_AUTHORITY) == 0) {
-        printf("## Processing an \"Authority\" token.\n");
         while(*currentchar) {
             newholiday->authority[idx] = *currentchar;
             currentchar++;
@@ -390,26 +367,35 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     return;
 }
 
-void holiday_table_addrule(struct HolidayNode *list,
-                                    struct HolidayRule *holiday)
+void holiday_table_addrule(struct HolidayNode *hashtable,
+                                    struct HolidayRule *newrule)
 {
-    struct HolidayNode *new_hrule; /* pointer to new holiday rule */
+    struct HolidayNode *newnode; /* pointer to new holiday table  node */
 
-    new_hrule = malloc(sizeof(struct HolidayNode)); /* creates a new node */
+    newnode = malloc(sizeof(struct HolidayNode)); /* creates a new node */
 
     /* copy the data into the new node */
-    new_hrule->rule.month = holiday->month;
-    new_hrule->rule.ruletype = holiday->ruletype;
-    new_hrule->rule.wkday  = holiday->wkday;
-    new_hrule->rule.wknum = holiday->wknum;
-    new_hrule->rule.day = holiday->day;
-    strcpy(new_hrule->rule.holidayname, holiday->holidayname);
-    strcpy(new_hrule->rule.authority, holiday->authority);
-    new_hrule->nextrule = list; /* makes the new node point to the current
+    printf("######################################\n");
+    newnode->rule.month = newrule->month;
+    printf("## in addrule ## month is %d.\n", newrule->month);
+    newnode->rule.ruletype = newrule->ruletype;
+    printf("## in addrule ## ruletype is %c.\n", newrule->ruletype);
+    newnode->rule.wkday  = newrule->wkday;
+    printf("## in addrule ## wkday is %d.\n", newrule->wkday);
+    newnode->rule.wknum = newrule->wknum;
+    printf("## in addrule ## wknum is %d.\n", newrule->wknum);
+    newnode->rule.day = newrule->day;
+    printf("## in addrule ## day is %d.\n", newrule->day);
+    strcpy(newnode->rule.holidayname, newrule->holidayname);
+    printf("## in addrule ## holiday name is %s.\n", newrule->holidayname);
+    strcpy(newnode->rule.authority, newrule->authority);
+    printf("## in addrule ## authority is %s.\n", newrule->authority);
+    printf("######################################\n");
+    newnode->nextrule = hashtable; /* makes the new node point to the current
                                  * first node; the 1st node is the array
                                  * element
                                  */
-    list = new_hrule; /* makes the new node the first node */
+    hashtable = newnode; /* makes the new node the first node */
     
     return;
 }
@@ -497,10 +483,8 @@ void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
     /*  Read the field names from the file */
     fgets(fieldnames, sizeof(fieldnames), holidayrulefile);
     globalstate->totalnumfields = 0;
-    printf("## Field Names List:  %s\n", fieldnames);
     do {
         *curchar = fieldnames[i];
-        printf("## In getfields ## curchar = \"%c\"\n", *curchar);
         switch (*curchar){
         case TDELIMITER:
             if (TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
@@ -509,10 +493,7 @@ void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
             } else { /* we are at the end of the token */
                 CLEAR_FLAG(flags, BEGIN_TSTRING);
                 *curchar = NULCHAR;
-                printf("## In getfields ## curfield = \"%s\"\n", curfield);
                 strcpy(globalstate->headerfields[fieldindex], curfield);
-                printf("## In getfields ## headerfield[%d] = \"%s\"\n",
-                        fieldindex, globalstate->headerfields[fieldindex]);
                 fieldindex++;
                 i++;
                 curchar++;
