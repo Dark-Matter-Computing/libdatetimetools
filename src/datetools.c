@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Dec 22 12:10:30 2020
+ * Last Modified: Tue Dec 22 22:08:34 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -110,15 +110,28 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
     int lasttoken = 0;
     struct HolidayRule newholiday;
 
+    printf("+++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("## In get_tokens ## totalnumfields = %d.\n",
+          globalstate->totalnumfields);
     while (fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile) != NULL) {
         do {
             cur_token = holiday_rules_tokenize(tokenbuf, &lasttoken);
+            printf("## in get_tokens ## Current field is %s || ",
+                   globalstate->headerfields[cur_field]);
+            printf("## in get_tokens ## Current token is %s\n", cur_token);
             holiday_rules_processtoken(cur_token,
                                        globalstate->headerfields[cur_field],
                                        &newholiday);
-            cur_field++;
+            if (cur_field < (globalstate->totalnumfields-1)) {
+                cur_field++;
+                printf("## in get_tokens ## cur_field is %d.\n", cur_field);
+             } else {
+                cur_field = 0; /* Reset once we reach the end of the fields */
+                printf("## in get_tokens ## cur_field is %d.\n", cur_field);
+             }
         } while (!lasttoken);
-        holiday_table_addrule(holidayhashtable[newholiday.month], &newholiday);
+        printf("## Newholiday Month = %d\n", newholiday.month);
+        holiday_table_addrule(holidayhashtable[newholiday.month-1], &newholiday);
         lasttoken=0;
     }
 }
@@ -266,22 +279,44 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     char *currentchar = token;
     int idx = 0;
 
+    printf("####################################\n");
+    printf("## Entering processtoken.\n");
+    printf("Token = %s\n", token);
+    printf("cur_field = %s\n\n", cur_field);
+    printf("#######################################\n");
+    printf("#### WHAT KIND OF FIELD DO WE HAVE? ###\n");
+    printf("Is it a month? %d\n", strcmp(cur_field, HF_MONTH));
+    printf("Is it a Rule type? %d\n", strcmp(cur_field, HF_RTYPE));
+    printf("Is it a Rule? %d\n", strcmp(cur_field, HF_RULE));
+    printf("Is it a Holiday? %d\n", strcmp(cur_field, HF_HOLIDAY));
+    printf("Is it a Authority? %d\n", strcmp(cur_field, HF_AUTHORITY));
+    printf("#######################################\n");
     if (*token == NULCHAR) {
         /* THIS SIGNALS AN EMPTY FIELD */
     }
 
-    if (strcmp(cur_field, HF_MONTH)) {
+
+    if (strcmp(cur_field, HF_MONTH) == 0) {
+        printf("## Processing a \"month\" token.\n");
         /*  Analyze the field to determine the month */
         if (*currentchar == '0') {
             /* if currentchar = '0' then the month is september or earlier */
+            printf("## Month  = %c", *currentchar);
             currentchar++; /* read next character */
+            printf("%c", *currentchar);
+            printf(" || ## ASCII2DECIMAL  = %d\n\n\n",
+                    (10 + (ASCII2DECIMAL(*currentchar))));
 
             /* TODO (Thomas#1#): Add error processing in case the month
             is not listed as a number betweeen 1 and 12. */
 
             newholiday->month = (ASCII2DECIMAL(*currentchar));
         } else {
+            printf("## Month  = %c", *currentchar);
             currentchar++; /* read next character of filed */
+            printf("%c", *currentchar);
+            printf(" || ## ASCII2DECIMAL  = %d\n\n\n",
+                    (10 + (ASCII2DECIMAL(*currentchar))));
             newholiday->month = (10 + (ASCII2DECIMAL(*currentchar)));
 			/* add ten reflecting the first character read and
 			 * convert the second ASCII character to a number
@@ -291,9 +326,11 @@ void holiday_rules_processtoken(char *token, char *cur_field,
             /* TODO (Thomas#1#): Add error processing in case the first
             digit of the month month is != '1'. */
         }
-    } else if (strcmp(cur_field, HF_RTYPE)) {
+    } else if (strcmp(cur_field, HF_RTYPE) == 0) {
+        printf("## Processing a \"Rule Type\" token.\n");
         newholiday->ruletype = *currentchar; /* ruletype is a single character */
-    } else if (strcmp(cur_field, HF_RULE)) {
+    } else if (strcmp(cur_field, HF_RULE) == 0) {
+        printf("## Processing a \"HF_RULE\" token.\n");
         switch (*currentchar) {
             case 'w':   /* Weekend Rules */
                          /* fall through */
@@ -331,14 +368,16 @@ void holiday_rules_processtoken(char *token, char *cur_field,
                             rule is not in the proper format. */
                         break;
                 }
-    } else if (strcmp(cur_field, HF_HOLIDAY)) {
+    } else if (strcmp(cur_field, HF_HOLIDAY) == 0) {
+        printf("## Processing a \"HF_HOLIDAY\" token.\n");
         while(*currentchar) {
             newholiday->holidayname[idx] = *currentchar;
             currentchar++;
             idx++; 
         }
         newholiday->holidayname[idx] = '\0';    
-    }  else if (strcmp(cur_field, HF_AUTHORITY)) {
+    }  else if (strcmp(cur_field, HF_AUTHORITY) == 0) {
+        printf("## Processing an \"Authority\" token.\n");
         while(*currentchar) {
             newholiday->authority[idx] = *currentchar;
             currentchar++;
@@ -348,6 +387,7 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     }  else {
 	    /* Error field name not defined */
     } 
+    return;
 }
 
 void holiday_table_addrule(struct HolidayNode *list,
@@ -446,31 +486,60 @@ int holiday_rules_validatefile(FILE *candidaterulefile_h)
 
 void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
 {
-    char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
-    char *token = NULL;
-    char *next_token = NULL;
-    int lasttoken = 0;
-    int index = 0; 
+    char fieldnames[MAXRECORDLENGTH]; 
+    unsigned char flags = 0x0; /* clear the flags. */
+    int i = 0;
+    char curfield[MAXRECORDLENGTH]; 
+    char *curchar = curfield;
+    int endoffields = 0;
+    int fieldindex = 0; 
 
-    /*  Get the field names and store them in the fields array of strings */
+    /*  Read the field names from the file */
+    fgets(fieldnames, sizeof(fieldnames), holidayrulefile);
+    globalstate->totalnumfields = 0;
+    printf("## Field Names List:  %s\n", fieldnames);
+    do {
+        *curchar = fieldnames[i];
+        printf("## In getfields ## curchar = \"%c\"\n", *curchar);
+        switch (*curchar){
+        case TDELIMITER:
+            if (TEST_FLAG(flags, BEGIN_TSTRING) == 0) {
+                SET_FLAG(flags, BEGIN_TSTRING);
+                i++; /* discard delimiter */
+            } else { /* we are at the end of the token */
+                CLEAR_FLAG(flags, BEGIN_TSTRING);
+                *curchar = NULCHAR;
+                printf("## In getfields ## curfield = \"%s\"\n", curfield);
+                strcpy(globalstate->headerfields[fieldindex], curfield);
+                printf("## In getfields ## headerfield[%d] = \"%s\"\n",
+                        fieldindex, globalstate->headerfields[fieldindex]);
+                fieldindex++;
+                i++;
+                curchar++;
+                curchar = curfield;
+                globalstate->totalnumfields++;
+            }
+            break;
+        case FDELIMITER:
+            i++;
+            break;
+        case NEWLINE:
+            endoffields = 1;
+            break;
+        case NULCHAR:
+          errorprocessor(NULSTRING);
+          break;
+        default:
+            i++;
+            curchar++;
+            break;
+      }
 
-    fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile);
-        /* gets the next line of the file
-         *  which should contain the CSV field names.
-         */
-    
-    next_token = tokenbuf;
-    strcpy(globalstate->headerfields[index], token = 
-           holiday_rules_tokenize(next_token, &lasttoken));
-    index++;
+    } while (!endoffields);
 
-    while(!lasttoken) { /* When tokenbuf = NULCHAR then loop terminates */
-        token = holiday_rules_tokenize(tokenbuf, &lasttoken);
-        strcpy(globalstate->headerfields[index], next_token);
-        token = next_token;
-        index++;
+    for (fieldindex++; fieldindex < MAXNUMFIELDS; fieldindex++){
+        globalstate->headerfields[fieldindex][0] = NULCHAR;
     }
-
     return;
 }
 
@@ -588,8 +657,8 @@ int wkday_sakamoto(struct DateTime *dt)
     year = dt->year;
     year -= dt->month < 3;
 
-    return (year + year/4 - year/100 + year/400 +
-            t[dt->month-1] + dt->day) % 7;
+    return ((year + year/4 - year/100 + year/400 +
+            t[dt->month-1] + dt->day) % 7);
 }
 
 /*-----------------------------------------------------------------------------
@@ -598,9 +667,9 @@ int wkday_sakamoto(struct DateTime *dt)
 
 int isweekend(struct DateTime *dt)
 {
-    if (dt->day_of_week == Saturday || Sunday)
+    if ((dt->day_of_week == Saturday) || (dt->day_of_week == Sunday))
         return 1;
-        else return 0;
+    else return 0;
 }
 
 int isleapyear(struct DateTime *dt)
@@ -1046,29 +1115,34 @@ int islastweek(struct DateTime *dt)
 
 int isholiday(struct DateTime *dt)
 {
-    struct HolidayNode *tempnode;
+    struct HolidayNode *nodecheckptr;
 
-    /* First, calculate whether an ALLMONTHS rule applies and whether this date
+    /* First, calculate whether this date falls on a weekend */
+    dt->day_of_week = wkday_sakamoto (dt);
+    if (isweekend(dt))
+        return 1;
+
+    /* Second, calculate whether an ALLMONTHS rule applies and whether this date
     falls on a weekend */
 
-    dt->day_of_week = wkday_sakamoto (dt);
-    tempnode = holidayhashtable[ALLMONTHS-1];
-    while(tempnode != NULL)
+    nodecheckptr = holidayhashtable[ALLMONTHS-1];
+    while(nodecheckptr != NULL)
         {
-            if (holiday_tbl_checkrule(dt,tempnode) == 1)
+            printf("In while loop to check allmonths holidays.\n");
+            if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
                 return 1;
-            tempnode = tempnode->nextrule;
+            nodecheckptr = nodecheckptr->nextrule;
         }
 
-    /* Second, calculate whether there are any holidays on the month of the
+    /* Third, calculate whether there are any holidays on the month of the
         argument's date */
 
-    tempnode = holidayhashtable[dt->month-1];
-    while(tempnode != NULL)
+    nodecheckptr = holidayhashtable[dt->month-1];
+    while(nodecheckptr != NULL)
         {
-            if (holiday_tbl_checkrule(dt,tempnode) == 1)
+            if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
                 return 1;
-            tempnode = tempnode->nextrule;
+            nodecheckptr = nodecheckptr->nextrule;
         }
 
     return 0;

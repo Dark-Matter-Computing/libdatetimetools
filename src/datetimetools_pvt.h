@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 12/19/2020 12:43:04
- * Last Modified: Tue Dec 22 10:58:30 2020
+ * Last Modified: Tue Dec 22 19:30:51 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -67,15 +67,13 @@ checking (of course!), but anticipates an ascii character between '0'
  * Symbolic Constants: Holiday File Field Codes 
  *----------------------------------------------------------------------------*/
 
-/*  Define field codes for the holiday CSV File
- *  TODO consider converting to enum.
- */
+/*  Define field codes for the holiday CSV File */
 
-#define HF_MONTH "Month"
-#define HF_RTYPE "Rule Type"
-#define HF_RULE "Rule"
-#define HF_HOLIDAY "Holiday"
-#define HF_AUTHORITY "Authority"
+const char* HF_MONTH     = "Month";
+const char* HF_RTYPE     = "Rule Type";
+const char* HF_RULE      = "Rule";
+const char* HF_HOLIDAY   = "Holiday";
+const char* HF_AUTHORITY = "Authority";
 
 /*------------------------------------------------------------------------------
  *  Sizes and numbers of records and fields 
@@ -129,6 +127,7 @@ const unsigned char TOKEN_FOUND = (1<<7);
 struct RuleSet {
     FILE *rulefile;
     char headerfields[MAXNUMFIELDS][MAXFIELDLEN];
+    int totalnumfields;
     enum {CLOSED, OPEN} openstatus;
 };
 
