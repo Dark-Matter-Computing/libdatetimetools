@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 09:30:06 2020
+ * Last Modified: Wed Dec 23 09:33:18 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -545,7 +545,6 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
     
     rulecheck = rulenode;
     while (rulecheck != NULL) {
-        printf("Rule Type at issue is %c\n", rulecheck->rule.ruletype);
         switch (rulecheck->rule.ruletype)
             {
                 case 'a': /* fall through */
@@ -577,10 +576,6 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
                     break;
                 case 'w': /* fall through */
                 case 'W':
-                    printf("## in checkrule ## rulecheck->rule.wkday = %d\n",
-                            rulecheck->rule.wkday);
-                    printf("## in checkrule ## test day wkday = %d\n",
-                            dt->day_of_week);
                     if(rulecheck->rule.wkday == dt->day_of_week)
                         return 1;
                     break;
