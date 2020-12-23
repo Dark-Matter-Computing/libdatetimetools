@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 08:29:05 2020
+ * Last Modified: Wed Dec 23 08:33:08 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -1243,16 +1243,8 @@ void printholidayrules(void)
                    tempnode->rule.authority);
             printf("\n");
             /* move to the next node */
-            printf("## in printholidayrules ## moving to the next node ##\n\n");
             tempnode = tempnode->nextrule;
-            if (tempnode == NULL)
-                printf("## in printholidayrules ## "
-                       "next node IS NULL ##\n\n");
-                
-            if (holidayhashtable[monthctr]->nextrule == NULL)
-                printf("## in printholidayrules ## "
-                       "No more rule for this month ##\n\n");
-             }
+        }
 
     }
     return;
