@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 08:26:51 2020
+ * Last Modified: Wed Dec 23 08:29:05 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -373,11 +373,9 @@ void holiday_table_addrule(struct HolidayNode **elementhandle,
     strcpy(newnode->rule.authority, newrule->authority);
 
     if (*elementhandle == NULL) {
-        printf ("## in addrule ## elementhandle is NULL.\n");
         (*elementhandle) = newnode; /* makes the new node the first node */
         newnode->nextrule = NULL; /* newnode is the end of the list. */
     } else {
-        printf ("## in addrule ## elementhandle has nodes.\n");
         newnode->nextrule = (*elementhandle)->nextrule;
         (*elementhandle)->nextrule = newnode; /* inserts new node as first node */
     }
