@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 07:52:16 2020
+ * Last Modified: Wed Dec 23 08:26:51 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -122,13 +122,8 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
                 cur_field = 0; /* Reset once we reach the end of the fields */
              }
         } while (!lasttoken);
-        printf("## in get_tokens -> addrule ## newholiday.month-1 = %d\n",
-               (newholiday.month-1)); 
         holiday_table_addrule(&holidayhashtable[newholiday.month-1], &newholiday);
         lasttoken=0;
-        printf("## in get_tokens ## new node success?\n");
-        printf("## in get_tokens ## new rule is: %s\n", 
-            holidayhashtable[newholiday.month-1]->rule.holidayname);
     }
 }
 
@@ -304,17 +299,12 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     } else if (strcmp(cur_field, HF_RTYPE) == 0) {
         newholiday->ruletype = *currentchar; /* ruletype is a single character */
     } else if (strcmp(cur_field, HF_RULE) == 0) {
-        printf("## in process_token ## currentchar is \"%c\".\n", *currentchar);
         switch (newholiday->ruletype) {
             case 'w':   /* Weekend Rules */
                          /* fall through */
             case 'W':
-                 printf("## In process_token ## wkday = %d.\n",
-                        ASCII2DECIMAL(*currentchar));
                  newholiday->wkday = ASCII2DECIMAL(*currentchar);
                  currentchar += 2; /* get rid of the dash */
-                 printf("## In process_token ## wknum = %d.\n",
-                        ASCII2DECIMAL(*currentchar));
                  newholiday->wknum = ASCII2DECIMAL(*currentchar);
                  newholiday->day = 0; /* TODO use symbolic constant */
                  break;
@@ -323,14 +313,8 @@ void holiday_rules_processtoken(char *token, char *cur_field,
             case 'A':
                 newholiday->wkday = 999; /* change this to a symbolic const  */
                 newholiday->wknum = 999; /* change this to a symbolic const  */
-                printf("## in process_token ## currentchar is \"%c\".\n",
-                        *currentchar);
                 if (*currentchar == '0') { /* the day is less than 10 */
                     currentchar++;
-                printf("## in process_token ## currentchar++ is \"%c\".\n",
-                        *currentchar);
-                    printf("## In process_token ## day# = %d.\n",
-                            ASCII2DECIMAL(*currentchar));
                     newholiday->day = ASCII2DECIMAL(*currentchar);
                 } else { /* day is greater than 10 */
                    newholiday->day = ASCII2DECIMAL(*currentchar);
@@ -376,7 +360,6 @@ void holiday_table_addrule(struct HolidayNode **elementhandle,
                                     struct HolidayRule *newrule)
 {
     struct HolidayNode *newnode; /* pointer to new holiday table  node */
-    struct HolidayNode *debuggingnode;
 
     newnode = (struct HolidayNode*) malloc(sizeof(struct HolidayNode)); /* creates a new node */
 
@@ -391,37 +374,14 @@ void holiday_table_addrule(struct HolidayNode **elementhandle,
 
     if (*elementhandle == NULL) {
         printf ("## in addrule ## elementhandle is NULL.\n");
-        newnode->nextrule = (*elementhandle); 
+        (*elementhandle) = newnode; /* makes the new node the first node */
+        newnode->nextrule = NULL; /* newnode is the end of the list. */
     } else {
         printf ("## in addrule ## elementhandle has nodes.\n");
-        newnode->nextrule = (*elementhandle)->nextrule; /* inserts the new node
-                                                at the headf the list */
+        newnode->nextrule = (*elementhandle)->nextrule;
+        (*elementhandle)->nextrule = newnode; /* inserts new node as first node */
     }
 
-    *elementhandle = newnode; /* makes the new node the first node */
-    printf("######################################\n");
-    printf("## in addrule ## Hash Node month is %d.\n", (*elementhandle)->rule.month);
-    printf("## in addrule ## Hash Node ruletype is %c.\n", (*elementhandle)->rule.ruletype);
-    printf("## in addrule ## Hash Node wkday is %d.\n", (*elementhandle)->rule.wkday);
-    printf("## in addrule ## Hash Node wknum is %d.\n", (*elementhandle)->rule.wknum);
-    printf("## in addrule ## Hash Node day is %d.\n", (*elementhandle)->rule.day);
-    printf("## in addrule ## Hash Node holiday name is %s.\n", (*elementhandle)->rule.holidayname);
-    printf("## in addrule ## Hash Node authority is %s.\n", (*elementhandle)->rule.authority);
-    printf("######################################\n");
-
-    if ((*elementhandle)->nextrule != NULL) {
-        debuggingnode = (*elementhandle)->nextrule;
-        printf("######################################\n");
-        printf("## in addrule ## Debugging Node month is %d.\n", debuggingnode->rule.month);
-        printf("## in addrule ## Debugging Node ruletype is %c.\n", debuggingnode->rule.ruletype);
-        printf("## in addrule ## Debugging Node wkday is %d.\n", debuggingnode->rule.wkday);
-        printf("## in addrule ## Debugging Node wknum is %d.\n", debuggingnode->rule.wknum);
-        printf("## in addrule ## Debugging Node day is %d.\n", debuggingnode->rule.day);
-        printf("## in addrule ## Debugging Node holiday name is %s.\n", debuggingnode->rule.holidayname);
-        printf("## in addrule ## Debugging Node authority is %s.\n", debuggingnode->rule.authority);
-        printf("######################################\n");
-
-    }
     return;
 }
 
@@ -1285,8 +1245,16 @@ void printholidayrules(void)
                    tempnode->rule.authority);
             printf("\n");
             /* move to the next node */
+            printf("## in printholidayrules ## moving to the next node ##\n\n");
             tempnode = tempnode->nextrule;
-        }
+            if (tempnode == NULL)
+                printf("## in printholidayrules ## "
+                       "next node IS NULL ##\n\n");
+                
+            if (holidayhashtable[monthctr]->nextrule == NULL)
+                printf("## in printholidayrules ## "
+                       "No more rule for this month ##\n\n");
+             }
 
     }
     return;
