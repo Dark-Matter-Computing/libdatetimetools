@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 08:33:08 2020
+ * Last Modified: Wed Dec 23 09:30:06 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -541,46 +541,55 @@ int holiday_rules_closefile(FILE *holidayrulefile)
 int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
 {
 
-    switch (rulenode->rule.ruletype)
-        {
-            case 'a': /* fall through */
-            case 'A':
-                if (rulenode->rule.day == dt->day)
-                    return 1;
-                break;
-            case 'r': /* fall through */
-            case 'R':
-                if (rulenode->rule.wkday == dt->day_of_week)
-                {
-                    /* previous line tests to see if day of week matches. */
-                    if ((rulenode->rule.wknum == LASTWEEK) && islastxdom(dt))
-                    {
+    struct HolidayNode *rulecheck;
+    
+    rulecheck = rulenode;
+    while (rulecheck != NULL) {
+        printf("Rule Type at issue is %c\n", rulecheck->rule.ruletype);
+        switch (rulecheck->rule.ruletype)
+            {
+                case 'a': /* fall through */
+                case 'A':
+                    if (rulecheck->rule.day == dt->day)
                         return 1;
-                    }
-                    else if (dt->day >= ((rulenode->rule.wknum-1)*WEEKDAYS+1) &&
-                            dt->day <= (rulenode->rule.wknum*WEEKDAYS))
+                    break;
+                case 'r': /* fall through */
+                case 'R':
+                    if (rulecheck->rule.wkday == dt->day_of_week)
                     {
-                        /* Prev. line tests to see if the day is in the
-                        proper week. The formula "(wknum-1)*7+1" gets the
-                        first day of the applicable week; "wknum*7"
-                        calculates the last day of the applicable week.  */
+                        /* previous line tests to see if day of week matches. */
+                        if ((rulecheck->rule.wknum == LASTWEEK) && islastxdom(dt))
+                        {
+                            return 1;
+                        }
+                        else if (dt->day >=
+                                ((rulecheck->rule.wknum-1)*WEEKDAYS+1) &&
+                                dt->day <= (rulecheck->rule.wknum*WEEKDAYS))
+                        {
+                            /* Prev. line tests to see if the day is in the
+                            proper week. The formula "(wknum-1)*7+1" gets the
+                            first day of the applicable week; "wknum*7"
+                            calculates the last day of the applicable week.  */
 
-                        return 1;
+                            return 1;
+                        }
                     }
-                    else
-                        return 0;
-                }
-                break;
-            case 'w': /* fall through */
-            case 'W':
-                if(rulenode->rule.wkday == dt->day_of_week)
-                    return 1;
-                break;
-            default:
-                /* fall through */
-                break;
-        }
-
+                    break;
+                case 'w': /* fall through */
+                case 'W':
+                    printf("## in checkrule ## rulecheck->rule.wkday = %d\n",
+                            rulecheck->rule.wkday);
+                    printf("## in checkrule ## test day wkday = %d\n",
+                            dt->day_of_week);
+                    if(rulecheck->rule.wkday == dt->day_of_week)
+                        return 1;
+                    break;
+                default:
+                    /* fall through */
+                    break;
+            }
+        rulecheck = rulecheck->nextrule;
+    }
     return 0;
 }
 
@@ -1081,10 +1090,12 @@ int isholiday(struct DateTime *dt)
 {
     struct HolidayNode *nodecheckptr;
 
-    /* First, calculate whether this date falls on a weekend */
+    /* First, calculate whether this date falls on a weekend */ 
     dt->day_of_week = wkday_sakamoto (dt);
-    if (isweekend(dt))
+    /* if (isweekend(dt))
         return 1;
+        commented out because I need to see if when there is an official "rule"
+        version picks up the weekend as a holiday. */
 
     /* Second, calculate whether an ALLMONTHS rule applies and whether this date
     falls on a weekend */
@@ -1092,7 +1103,6 @@ int isholiday(struct DateTime *dt)
     nodecheckptr = holidayhashtable[ALLMONTHS-1];
     while(nodecheckptr != NULL)
         {
-            printf("In while loop to check allmonths holidays.\n");
             if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
                 return 1;
             nodecheckptr = nodecheckptr->nextrule;
@@ -1221,8 +1231,7 @@ void printholidayrules(void)
                 break;
             }
         }
-        while (tempnode != NULL) /* checks to see if list is empty */
-        {
+        while (tempnode != NULL) { /* checks to see if list is empty */
             printf("The applicable holiday is %s.\n",
                    tempnode->rule.holidayname);
             printf("The applicable ruletype is %c.\n",
