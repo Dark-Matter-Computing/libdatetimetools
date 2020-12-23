@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Dec 22 23:11:35 2020
+ * Last Modified: Wed Dec 23 07:52:16 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -122,8 +122,13 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
                 cur_field = 0; /* Reset once we reach the end of the fields */
              }
         } while (!lasttoken);
-        holiday_table_addrule(holidayhashtable[newholiday.month-1], &newholiday);
+        printf("## in get_tokens -> addrule ## newholiday.month-1 = %d\n",
+               (newholiday.month-1)); 
+        holiday_table_addrule(&holidayhashtable[newholiday.month-1], &newholiday);
         lasttoken=0;
+        printf("## in get_tokens ## new node success?\n");
+        printf("## in get_tokens ## new rule is: %s\n", 
+            holidayhashtable[newholiday.month-1]->rule.holidayname);
     }
 }
 
@@ -367,36 +372,56 @@ void holiday_rules_processtoken(char *token, char *cur_field,
     return;
 }
 
-void holiday_table_addrule(struct HolidayNode *hashtable,
+void holiday_table_addrule(struct HolidayNode **elementhandle,
                                     struct HolidayRule *newrule)
 {
     struct HolidayNode *newnode; /* pointer to new holiday table  node */
+    struct HolidayNode *debuggingnode;
 
-    newnode = malloc(sizeof(struct HolidayNode)); /* creates a new node */
+    newnode = (struct HolidayNode*) malloc(sizeof(struct HolidayNode)); /* creates a new node */
 
     /* copy the data into the new node */
-    printf("######################################\n");
     newnode->rule.month = newrule->month;
-    printf("## in addrule ## month is %d.\n", newrule->month);
     newnode->rule.ruletype = newrule->ruletype;
-    printf("## in addrule ## ruletype is %c.\n", newrule->ruletype);
     newnode->rule.wkday  = newrule->wkday;
-    printf("## in addrule ## wkday is %d.\n", newrule->wkday);
     newnode->rule.wknum = newrule->wknum;
-    printf("## in addrule ## wknum is %d.\n", newrule->wknum);
     newnode->rule.day = newrule->day;
-    printf("## in addrule ## day is %d.\n", newrule->day);
     strcpy(newnode->rule.holidayname, newrule->holidayname);
-    printf("## in addrule ## holiday name is %s.\n", newrule->holidayname);
     strcpy(newnode->rule.authority, newrule->authority);
-    printf("## in addrule ## authority is %s.\n", newrule->authority);
+
+    if (*elementhandle == NULL) {
+        printf ("## in addrule ## elementhandle is NULL.\n");
+        newnode->nextrule = (*elementhandle); 
+    } else {
+        printf ("## in addrule ## elementhandle has nodes.\n");
+        newnode->nextrule = (*elementhandle)->nextrule; /* inserts the new node
+                                                at the headf the list */
+    }
+
+    *elementhandle = newnode; /* makes the new node the first node */
     printf("######################################\n");
-    newnode->nextrule = hashtable; /* makes the new node point to the current
-                                 * first node; the 1st node is the array
-                                 * element
-                                 */
-    hashtable = newnode; /* makes the new node the first node */
-    
+    printf("## in addrule ## Hash Node month is %d.\n", (*elementhandle)->rule.month);
+    printf("## in addrule ## Hash Node ruletype is %c.\n", (*elementhandle)->rule.ruletype);
+    printf("## in addrule ## Hash Node wkday is %d.\n", (*elementhandle)->rule.wkday);
+    printf("## in addrule ## Hash Node wknum is %d.\n", (*elementhandle)->rule.wknum);
+    printf("## in addrule ## Hash Node day is %d.\n", (*elementhandle)->rule.day);
+    printf("## in addrule ## Hash Node holiday name is %s.\n", (*elementhandle)->rule.holidayname);
+    printf("## in addrule ## Hash Node authority is %s.\n", (*elementhandle)->rule.authority);
+    printf("######################################\n");
+
+    if ((*elementhandle)->nextrule != NULL) {
+        debuggingnode = (*elementhandle)->nextrule;
+        printf("######################################\n");
+        printf("## in addrule ## Debugging Node month is %d.\n", debuggingnode->rule.month);
+        printf("## in addrule ## Debugging Node ruletype is %c.\n", debuggingnode->rule.ruletype);
+        printf("## in addrule ## Debugging Node wkday is %d.\n", debuggingnode->rule.wkday);
+        printf("## in addrule ## Debugging Node wknum is %d.\n", debuggingnode->rule.wknum);
+        printf("## in addrule ## Debugging Node day is %d.\n", debuggingnode->rule.day);
+        printf("## in addrule ## Debugging Node holiday name is %s.\n", debuggingnode->rule.holidayname);
+        printf("## in addrule ## Debugging Node authority is %s.\n", debuggingnode->rule.authority);
+        printf("######################################\n");
+
+    }
     return;
 }
 

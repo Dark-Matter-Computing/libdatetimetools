@@ -6,7 +6,7 @@
  *
  * Version: 0.0
  * Created: 12/19/2020 12:43:04
- * Last Modified: Tue Dec 22 22:36:17 2020
+ * Last Modified: Wed Dec 23 04:06:35 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -185,7 +185,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
 char *holiday_rules_tokenize(char *string, int *lasttoken);
 void holiday_rules_processtoken(char *token, char *cur_field,
                                 struct HolidayRule *newholiday);
-void holiday_table_addrule(struct HolidayNode *hashtable,
+void holiday_table_addrule(struct HolidayNode **elementhandle,
                                           struct HolidayRule *newrule);
 void holiday_table_release(struct HolidayNode *holidayhashtable[]);
 
