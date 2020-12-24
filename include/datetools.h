@@ -2,12 +2,14 @@
  * Filename: datetools.h
  * Library: libdatetimetools
  *
- * Description: This header file contines the data structures and
- *                 prototypes for the datetools module.
+ * Description: libdatetimetools is a library of useful functions to enable
+ * users to perform date and time calculations. One of its primary uses is as a
+ * component of solutions to computing chain-based scheduling, as in litigation
+ * and project management. 
  *
- * Version: 0.0
+ * Version: 1.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Tue Dec 22 13:46:13 2020
+ * Last Modified: Wed Dec 23 19:59:02 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -16,11 +18,19 @@
  * SPDX-License-Identifier: LGPL-3.0-only
  *
  * Usage: 
- * File Format: 
- * Restrictions: 
- * Error Handling: 
- * References: 
- * Notes: 
+ * File Format: Presently the library usese CSV files to import various rules
+ * such as holidays.
+ * 
+ * Restrictions: Presently, the library handles Unix encoded ASCII files fine,
+ * but chokes on macOS and Windows files. Handling CR and CRLFs will be
+ * addressed in the future. The formula for deriving the day of the week is
+ * Sakamoto's.  The formula is accurate for any date in the range September 14,
+ * 1752 to December 31, 9999.
+ * 
+ * Error Handling: Under development
+ * 
+ * Notes: this private header handles all the data type and file management
+ * activities, which should be unnecessary to users of the library.
  */
 
 #ifndef _DATETOOLS_H_INCLUDED_
@@ -38,16 +48,7 @@
 #define MINNUMTTLWKS 4 /* All months have at least 4 weeks. */
 #define LEAP 1
 #define MONTHS 13 /* Month is defined as 13 to account for the code for a
-                    holiday that applies to all months, e.g., Sundays. */
-
-        /* FIXME (Thomas#1#): Update definition of MONTHS.  There are 12 months
-         * in a calendar year.  I should somehow
-         * use a different term to implement the magic code for ALLMONTHS.
-         * Maybe use "MONTHCODES" or something like that. This way, I would
-         * always have the correct constant of 12 months. Perhaps set allmonths
-         * to 0.  That way if I use an array with 13 elements, Jan would start
-         * at 1 and December would end at 12??
-         */
+                    "holidays" that applies to all months, e.g., Sundays. */
 
 #define ALLMONTHS 13 /* This is the magic number for a holiday rule that applies
                         to every month of the year, e.g., weekends. */
@@ -65,25 +66,31 @@ enum days {
     Thursday = 4,
     Friday = 5,
     Saturday = 6,
-    alldays = 8, /* added for use with the rule functions */
-    noday = 9    /* neither is used for actual calendar dates */
+        /* The following "days" are used in various rule computations.
+         * Neither is used for actual calendar dates
+         */ 
+    alldays = 8, 
+    noday = 9 
 };
 
-/* TODO the months of the year -- NOT IMPLEMENTED YET.
+/* TODO the months of the year -- NOT IMPLEMENTED YET. Part of refactoring
+ * months so that the array and other indices can use the month number rather
+ * month -1.
+ *
 enum months {
-    January = 0;
-    February = 1;
-    March = 2;
-    April = 3;
-    May = 4;
-    June = 5;
-    July = 6;
-    August = 7;
-    September = 8;
-    October = 9;
-    November = 10;
-    December = 11;
-    allmonths = 12;
+    allmonths = 0;
+    January = 1;
+    February = 2;
+    March = 3;
+    April = 4;
+    May = 5;
+    June = 6;
+    July = 7;
+    August = 8;
+    September = 9;
+    October = 10;
+    November = 11;
+    December = 12;
 
 } */
 
@@ -141,15 +148,15 @@ int holiday_rules_open(const char * receivedrulefilename, int close_on_success);
  *----------------------------------------------------------------------------*/
 
 /*
- * Name: wkday_sakamoto
+ * Name: derive_weekday
  * 
  * Usage/Limitations: This function calculates the day of the week based on
  *   Sakamoto's formula.  The formula is accurate for any date in the range
- *   September 14, 1752–December 31, 9999
+ *   September 14, 1752 - December 31, 9999
  *
  */
 
-int wkday_sakamoto(struct DateTime *dt);
+int derive_weekday(struct DateTime *dt);
 
 /*
  * Name: isweekend

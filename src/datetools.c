@@ -2,24 +2,18 @@
  * Filename: datetools.c
  * Library: libdatetimetools
  *
- * Description: 
+ * FOR DESCRIPTION AND OTHER DETAILS, PLEASE SEE THE DATETOOLS.H AND 
+ * DATETIMETOOLS_PVT.H header files.
  *
- * Version: 0.0
+ * Version: 1.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 09:33:18 2020
+ * Last Modified: Wed Dec 23 21:30:55 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
  *
  * Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
  * SPDX-License-Identifier: LGPL-3.0-only
- *
- * Usage: 
- * File Format: 
- * Restrictions: 
- * Error Handling: 
- * References: 
- * Notes: 
  */
 
 #include <stdio.h>
@@ -34,8 +28,6 @@
 
 struct HolidayNode *holidayhashtable[13];
 struct RuleSet activerules_h;
-/* struct RuleSet *activerulesptr_h; */
-
 
 /*-----------------------------------------------------------------------------
  * Holidy Hashtable Handler Functions
@@ -617,16 +609,31 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
  *
  */
 
-int wkday_sakamoto(struct DateTime *dt)
+int derive_weekday(struct DateTime *dt)
 {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4}; /* I'm not sure what
                                                                this does. */
-    int year; /* temporary year variable */
+    int year; 
     year = dt->year;
     year -= dt->month < 3;
 
-    return ((year + year/4 - year/100 + year/400 +
+    if ((dt->year > 9999) || (dt->year < 1752) || ((dt->year == 1752) &&
+       (dt->month < 9)) || ((dt->year == 1752) && ((dt->month == 9) &&
+        (dt->day < 14)))) {
+        printf("###############################################\n");
+        printf("## Temporary warning in func derive_weekday  ##\n");
+        printf("## Date out of range of forumla to derive    ##\n");
+        printf("## the week day. Date is %d/%d/%d (Y/M/D).   ##\n",
+                dt->year, dt->month, dt->day);
+        printf("## Formula is accurate between September 14, ##\n");
+        printf("## 1752 and December 31, 9999.               ##\n");
+        printf("###############################################\n");
+
+        return - 1;
+    } else {
+        return ((year + year/4 - year/100 + year/400 +
             t[dt->month-1] + dt->day) % 7);
+    }
 }
 
 /*-----------------------------------------------------------------------------
@@ -995,8 +1002,8 @@ int islastxdom(struct DateTime *dt)
             tempdate.month = dt->month + 1;
             tempdate.year = dt->year;
         }
-        dt->day_of_week = wkday_sakamoto (dt);
-        tempdate.day_of_week = wkday_sakamoto (&tempdate);
+        dt->day_of_week = derive_weekday(dt);
+        tempdate.day_of_week = derive_weekday(&tempdate);
             /* calculate day of week of tempdate */
         jdncnvrt (&tempdate); /*calculate Julian Day Number of tempdate */
 
@@ -1062,8 +1069,8 @@ int islastweek(struct DateTime *dt)
         tempdate.day = daysinmonths[isleapyear(dt)][dt->month];
 
         /* calculate day of week of dt and tempdate */
-        dt->day_of_week = wkday_sakamoto (dt);
-        tempdate.day_of_week = wkday_sakamoto (&tempdate);
+        dt->day_of_week = derive_weekday(dt);
+        tempdate.day_of_week = derive_weekday(&tempdate);
 
         /* calculate number of days between the argument and the last day of
             the month. */
@@ -1086,7 +1093,7 @@ int isholiday(struct DateTime *dt)
     struct HolidayNode *nodecheckptr;
 
     /* First, calculate whether this date falls on a weekend */ 
-    dt->day_of_week = wkday_sakamoto (dt);
+    dt->day_of_week = derive_weekday(dt);
     /* if (isweekend(dt))
         return 1;
         commented out because I need to see if when there is an official "rule"

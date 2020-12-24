@@ -2,19 +2,41 @@
 A library of tools for performing date and time calculations.
 
 # Description
-Perform date computations, such as day of the week.
+Description: libdatetimetools is a library of useful functions to enable
+users to perform date and time calculations. One of its primary uses is as a
+component of solutions to computing chain-based scheduling, as in litigation
+and project management. 
 
-The program tests several different algorithms, which are described at the
-introduction to the particular functions. I obtained the algorithms from
-Wikipedia at: 
-http://en.wikipedia.org/wiki/Calculating_the_day_of_the_weekTest various date computations, such as day of the week
-                                                          
-#Present Usage:
-The program sets up a test suite to test the date functions
+# Version info
+Version: 1.0
+Created: 12/19/2020 12:43:04
+Last Modified: Wed Dec 23 16:01:48 2020
+
+
+#Usage:
+Static library.
+
+#File Formats:
+
+Presently the library usese CSV files to import various rules
+such as holidays.
+
+# Restrictions:
+Presently, the library handles Unix encoded ASCII files fine,
+but chokes on macOS and Windows files. Handling CR and CRLFs will be
+addressed in the future.
+
+#Error Handling:
+Under development
 
 # License & Disclaimer
+SPDX-License-Identifier:  LGPL-3.0-only
 
-Copyright (c) 2011-2020, Thomas H. Vidal
+Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
+Organization: Dark Matter Computing
+
+Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
+All rights reserved
 
 libdatetimetools is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by the
