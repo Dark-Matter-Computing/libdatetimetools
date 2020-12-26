@@ -7,7 +7,7 @@
  *                  in Practical C.  It will be modified into a library of time
  *                  calculating functions.
  *
- *        Version:  0.0
+ *        Version:  See version.h
  *        Created:  11/25/2020 21:15:15
  *       Revision:  none
  *       Compiler:  gcc
