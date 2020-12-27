@@ -9,7 +9,7 @@
  *
  * Version: 1.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Sat Dec 26 16:43:37 2020
+ * Last Modified: Sat Dec 26 22:11:59 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -47,49 +47,48 @@
 #define WEEKDAYS 7 
 #define MINNUMTTLWKS 4 /* All months have at least 4 weeks. */
 #define LEAP 1
-#define MONTHS 13 /* Month is defined as 13 to account for the code for
-                    "holidays" that apply to all months, e.g., Sundays. */
-
-#define ALLMONTHS 0 /* This is the magic number for a holiday rule that applies
-                        to every month of the year, e.g., weekends. Using zero
-                        so that the month array can use 1 to 12 for the month
-                        numbers. */
-
+/* #define TTLMONTHS 13 
+#define ALLMONTHS 0 */
 
 #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
                     to the last x-day of a certain month */
 
 /* Days of the week */
-enum days {
-    Sunday = 0,
-    Monday = 1,
-    Tuesday = 2,
-    Wednesday = 3,
-    Thursday = 4,
-    Friday = 5,
-    Saturday = 6,
+enum DAYS {
+    SUNDAY = 0,
+    MONDAY = 1,
+    TUESDAY = 2,
+    WEDNESDAY = 3,
+    THURSDAY = 4,
+    FRIDAY = 5,
+    SATURDAY = 6,
         /* The following "days" are used in various rule computations.
          * Neither is used for actual calendar dates
          */ 
-    alldays = 8, 
-    noday = 9 
+    ALLDAYS = 8, 
+    NODAY = 9 
 };
 
-enum months {
-    allmonths = 0,
-    January = 1,
-    February = 2,
-    March = 3,
-    April = 4,
-    May = 5,
-    June = 6,
-    July = 7,
-    August = 8,
-    September = 9,
-    October = 10,
-    November = 11,
-    December = 12
-
+enum MONTHS {
+    ALLMONTHS = 0, /* This is the magic number for a holiday rule that applies
+                    * to every month of the year, e.g., weekends. Using zero so
+                    * that the month array can use 1 to 12 for the month
+                    * numbers.
+                    */
+    JANUARY = 1,
+    FEBRUARY = 2,
+    MARCH = 3,
+    APRIL = 4,
+    MAY = 5,
+    JUNE = 6,
+    JULY = 7,
+    AUGUST = 8,
+    SEPTEMBER = 9,
+    OCTOBER = 10,
+    NOVEMBER = 11,
+    DECEMBER = 12,
+    TTLMONTHS = 13 /* Total months is defined as 13 to account for the code for
+                    "holidays" that apply to all months, e.g., Sundays. */
 };
 
 
@@ -129,7 +128,7 @@ struct DateTime
     int month;
     int day;
     int jdn; /* the Julian Day number for the relevant date */
-    enum days day_of_week;
+    enum DAYS day_of_week;
 
 };
 
@@ -318,16 +317,27 @@ int isholiday(struct DateTime *dt) ;/* search holiday rules function */
 void printholidayrules(void);
 
 /*
- * Name: printwkday
+ * Name: wkday_to_string
  * 
- * Description: Prints the weekday corresponding to a day of the enum days. 
+ * Description: Gets the weekday corresponding to a day of the enum DAYS. 
  *
  * Parameters: Takes an integer corresponding to a day of the week.
  *
- * Return: Nothing.  It just prints the day.
+ * Return: A string corresponding to the day of the week, or NULL.
  *
  */
 
-void printwkday(int day);
+const char* wkday_to_string(int day);
 
+/*
+ * Name: month_to_string
+ * 
+ * Description: Gets the month corresponding to a month of the enum MONTHS. 
+ *
+ * Parameters: Takes an integer corresponding to a MONTH of the year.
+ *
+ * Return: A string corresponding to the month of the year, or a NULL pointer.
+ *
+ */
+const char* month_to_string(int month);
 #endif	/* _DATETOOLS_H_INCLUDED_ */
