@@ -7,7 +7,7 @@
  *
  * Version: 1.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 21:30:55 2020
+ * Last Modified: Sat Dec 26 22:11:32 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -70,7 +70,7 @@ void holiday_tbl_init(struct HolidayNode *holidayhashtable[])
 {
     int monthctr; /* counter to loop through months */
 
-    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    for(monthctr = 0; monthctr < TTLMONTHS; monthctr++)
     {
         holidayhashtable[monthctr] = NULL;
     }
@@ -114,7 +114,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
                 cur_field = 0; /* Reset once we reach the end of the fields */
              }
         } while (!lasttoken);
-        holiday_table_addrule(&holidayhashtable[newholiday.month-1], &newholiday);
+        holiday_table_addrule(&holidayhashtable[newholiday.month], &newholiday);
         lasttoken=0;
     }
 }
@@ -380,7 +380,7 @@ void holiday_table_release(struct HolidayNode *holidayhashtable[])
     struct HolidayNode *tempnode;
     int monthctr; /* counter to loop through months */
 
-    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    for(monthctr = 0; monthctr < TTLMONTHS; monthctr++)
     {
         while (holidayhashtable[monthctr] != NULL)
             /* checks to see if list is empty */
@@ -611,8 +611,11 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
 
 int derive_weekday(struct DateTime *dt)
 {
-    static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4}; /* I'm not sure what
-                                                               this does. */
+    static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+        /* This is some factor that gets applied to the formula depending on
+         * what month is at issue. I'm not sure where it comes from
+         */
+ 
     int year; 
     year = dt->year;
     year -= dt->month < 3;
@@ -620,19 +623,19 @@ int derive_weekday(struct DateTime *dt)
     if ((dt->year > 9999) || (dt->year < 1752) || ((dt->year == 1752) &&
        (dt->month < 9)) || ((dt->year == 1752) && ((dt->month == 9) &&
         (dt->day < 14)))) {
-        printf("###############################################\n");
-        printf("## Temporary warning in func derive_weekday  ##\n");
-        printf("## Date out of range of forumla to derive    ##\n");
-        printf("## the week day. Date is %d/%d/%d (Y/M/D).   ##\n",
+        printf("#################################################\n");
+        printf("## Temporary warning in func derive_weekday    ##\n");
+        printf("## Date out of range of forumla to derive      ##\n");
+        printf("## the week day. Date is %d/%d/%d (Y/M/D).     ##\n",
                 dt->year, dt->month, dt->day);
-        printf("## Formula is accurate between September 14, ##\n");
-        printf("## 1752 and December 31, 9999.               ##\n");
-        printf("###############################################\n");
+        printf("## Formula is accurate between September 14,   ##\n");
+        printf("## 1752 and December 31, 9999.                 ##\n");
+        printf("#################################################\n");
 
         return - 1;
     } else {
         return ((year + year/4 - year/100 + year/400 +
-            t[dt->month-1] + dt->day) % 7);
+            t[dt->month-1] + dt->day) % 7); 
     }
 }
 
@@ -642,7 +645,7 @@ int derive_weekday(struct DateTime *dt)
 
 int isweekend(struct DateTime *dt)
 {
-    if ((dt->day_of_week == Saturday) || (dt->day_of_week == Sunday))
+    if ((dt->day_of_week == SATURDAY) || (dt->day_of_week == SUNDAY))
         return 1;
     else return 0;
 }
@@ -1075,14 +1078,12 @@ int islastweek(struct DateTime *dt)
         /* calculate number of days between the argument and the last day of
             the month. */
         daycount = date_difference(dt, &tempdate);
-        if (daycount > 7)
+        if (daycount >= 7)
             return 0;
-        else if (daycount <= (int) dt->day_of_week - (int) tempdate.day_of_week)
-            /* FIXME I need to check this because I'm comparing signed and
-             * unsigned types w/o the cast  */
-            return 1;
+        else if (dt->day_of_week > tempdate.day_of_week)
+            return 0; 
         else
-            return 0;
+            return 1;
     }
 
     return 0;
@@ -1102,7 +1103,7 @@ int isholiday(struct DateTime *dt)
     /* Second, calculate whether an ALLMONTHS rule applies and whether this date
     falls on a weekend */
 
-    nodecheckptr = holidayhashtable[ALLMONTHS-1];
+    nodecheckptr = holidayhashtable[ALLMONTHS];
     while(nodecheckptr != NULL)
         {
             if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
@@ -1113,7 +1114,7 @@ int isholiday(struct DateTime *dt)
     /* Third, calculate whether there are any holidays on the month of the
         argument's date */
 
-    nodecheckptr = holidayhashtable[dt->month-1];
+    nodecheckptr = holidayhashtable[dt->month];
     while(nodecheckptr != NULL)
         {
             if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
@@ -1129,7 +1130,7 @@ void printholidayrules(void)
     struct HolidayNode *tempnode;
     int monthctr; /* counter to loop through months */
 
-    for(monthctr = 0; monthctr < MONTHS; monthctr++)
+    for(monthctr = 0; monthctr < TTLMONTHS; monthctr++)
     {
         tempnode = holidayhashtable[monthctr];
         /* sets a temporary pointer to the first node so we traverse
@@ -1140,45 +1141,45 @@ void printholidayrules(void)
         {
             switch (monthctr)
             {
-            case 0: /* January rules */
-                printf("This holiday rules for January are as follows:\n");
-                break;
-            case 1:
-                printf("This holiday rules for February are as follows:\n");
-                break;
-            case 2:
-                printf("This holiday rules for March are as follows:\n");
-                break;
-            case 3:
-                printf("This holiday rules for April are as follows:\n");
-                break;
-            case 4:
-                printf("This holiday rules for May are as follows:\n");
-                break;
-            case 5:
-                printf("This holiday rules for June are as follows:\n");
-                break;
-            case 6:
-                printf("This holiday rules for July are as follows:\n");
-                break;
-            case 7:
-                printf("This holiday rules for August are as follows:\n");
-                break;
-            case 8:
-                printf("This holiday rules for September are as follows:\n");
-                break;
-            case 9:
-                printf("This holiday rules for October are as follows:\n");
-                break;
-            case 10:
-                printf("This holiday rules for November are as follows:\n");
-                break;
-            case 11:
-                printf("This holiday rules for December are as follows:\n");
-                break;
-            case 12:
-                printf("This holiday rules that apply to all months");
+            case ALLMONTHS: 
+                printf("The holiday rules that apply to all months");
                 printf(" are as follows:\n");
+                break;
+            case JANUARY:
+                printf("The holiday rules for January are as follows:\n");
+                break;
+            case FEBRUARY:
+                printf("The holiday rules for February are as follows:\n");
+                break;
+            case MARCH:
+                printf("The holiday rules for March are as follows:\n");
+                break;
+            case APRIL:
+                printf("The holiday rules for April are as follows:\n");
+                break;
+            case MAY:
+                printf("The holiday rules for May are as follows:\n");
+                break;
+            case JUNE:
+                printf("The holiday rules for June are as follows:\n");
+                break;
+            case JULY:
+                printf("The holiday rules for July are as follows:\n");
+                break;
+            case AUGUST:
+                printf("The holiday rules for August are as follows:\n");
+                break;
+            case SEPTEMBER:
+                printf("The holiday rules for September are as follows:\n");
+                break;
+            case OCTOBER:
+                printf("The holiday rules for October are as follows:\n");
+                break;
+            case NOVEMBER:
+                printf("The holiday rules for November are as follows:\n");
+                break;
+            case DECEMBER:
+                printf("The holiday rules for December are as follows:\n");
                 break;
             default:
                 printf("\n\n\n ERROR BAD MONTH.\n");
@@ -1189,44 +1190,44 @@ void printholidayrules(void)
         {
             switch (monthctr)
             {
-            case 0: /* January rules */
+            case ALLMONTHS:
+                printf("No holidays in apply to all months.");
+                break;
+            case JANUARY:
                 printf("No holidays in January.\n");
                 break;
-            case 1:
+            case FEBRUARY:
                 printf("No holidays in February.\n");
                 break;
-            case 2:
+            case MARCH:
                 printf("No holidays in March.\n");
                 break;
-            case 3:
+            case APRIL:
                 printf("No holidays in April.\n");
                 break;
-            case 4:
+            case MAY:
                 printf("No holidays in May.\n");
                 break;
-            case 5:
+            case JUNE:
                 printf("No holidays in June.\n");
                 break;
-            case 6:
+            case JULY:
                 printf("No holidays in July.\n");
                 break;
-            case 7:
+            case AUGUST:
                 printf("No holidays in August.\n");
                 break;
-            case 8:
+            case SEPTEMBER:
                 printf("No holidays in September.\n");
                 break;
-            case 9:
+            case OCTOBER:
                 printf("No holidays in October.\n");
                 break;
-            case 10:
+            case NOVEMBER:
                 printf("No holidays in November.\n");
                 break;
-            case 11:
+            case DECEMBER:
                 printf("No holidays in December.\n");
-                break;
-            case 12:
-                printf("No holidays in apply to all months.");
                 break;
             default:
                 printf("\n\n\n ERROR BAD MONTH.\n");
@@ -1262,46 +1263,104 @@ void printholidayrules(void)
 }
 
 /*
- * Name: printwkday
+ * Name: wkday_to_string
  *
- * Description: Prints the weekday corresponding to a day of the enum days.
+ * Description: Gets the weekday string corresponding to a day of the enum days.
  *
  * Parameters: Takes an integer corresponding to a day of the week.
  *
- * Return: Nothing.  It just prints the day.
+ * Return: The string of the day name or a NULL pointer.
  * 
  */
 
-void printwkday(int day)
+const char* wkday_to_string(int day)
 {
     switch (day) {
-        case Sunday:
-            printf(" Sunday");
+        case SUNDAY:
+            return "Sunday";
             break;
-        case Monday:
-            printf(" Monday");
+        case MONDAY:
+            return "Monday";
             break;
-        case Tuesday:
-            printf(" Tuesday");
+        case TUESDAY:
+            return "Tuesday";
             break;
-        case Wednesday:
-            printf(" Wednesday");
+        case WEDNESDAY:
+            return "Wednesday";
             break;
-        case Thursday:
-            printf(" Thursday");
+        case THURSDAY:
+            return "Thursday";
             break;
-        case Friday:
-            printf(" Friday");
+        case FRIDAY:
+            return "Friday";
             break;
-        case Saturday:
-            printf(" Saturday");
+        case SATURDAY:
+            return "Saturday";
             break;
         default:
             /* do nothing */
             break;
     }
 
-    return;
+    return NULL;
+}
+
+/*
+ * Name: month_to_string
+ * 
+ * Description: Gets the month corresponding to a month of the enum MONTHS. 
+ *
+ * Parameters: Takes an integer corresponding to a MONTH of the year.
+ *
+ * Return: A string corresponding to the month of the year, or a NULL pointer.
+ *
+ */
+
+const char* month_to_string(int month)
+{
+    switch (month) {
+        case JANUARY:
+            return "January";
+            break;
+        case FEBRUARY:
+            return "February";
+            break;
+        case MARCH:
+            return "March";
+            break;
+        case APRIL:
+            return "April";
+            break;
+        case MAY:
+            return "May";
+            break;
+        case JUNE:
+            return "June";
+            break;
+        case JULY:
+            return "July";
+            break;
+        case AUGUST:
+            return "August";
+            break;
+        case SEPTEMBER:
+            return "September";
+            break;
+        case OCTOBER:
+            return "October";
+            break;
+        case NOVEMBER:
+            return "November";
+            break;
+        case DECEMBER:
+            return "December";
+            break;
+        default:
+            /* do nothing */
+            break;
+    }
+
+    return NULL;
 }
 
 void errorprocessor(int error_code)
