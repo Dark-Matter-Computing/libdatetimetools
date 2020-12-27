@@ -7,7 +7,7 @@
  *
  * Version: 1.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Sat Dec 26 22:11:32 2020
+ * Last Modified: Sat Dec 26 22:26:43 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -60,10 +60,12 @@ int holiday_rules_open(const char *receivedrulefilename, int close_on_success)
     return 1;
 }
 
-void holiday_tbl_build(FILE *receivedrulefile, struct HolidayNode *holidayhashtable[])
+void holiday_tbl_build(FILE *receivedrulefile,
+                       struct HolidayNode *holidayhashtable[])
 {
     holiday_tbl_init(holidayhashtable);
-    holiday_rules_get_tokens(receivedrulefile, holidayhashtable, &activerules_h);
+    holiday_rules_get_tokens(receivedrulefile, holidayhashtable,
+                             &activerules_h);
 }
 
 void holiday_tbl_init(struct HolidayNode *holidayhashtable[])
@@ -549,7 +551,8 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
                     if (rulecheck->rule.wkday == dt->day_of_week)
                     {
                         /* previous line tests to see if day of week matches. */
-                        if ((rulecheck->rule.wknum == LASTWEEK) && islastxdom(dt))
+                        if ((rulecheck->rule.wknum == LASTWEEK)
+                             && islastxdom(dt))
                         {
                             return 1;
                         }

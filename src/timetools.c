@@ -53,6 +53,8 @@ char line[100]; /* keyboard input buffer */
 int hr, min, sec; /* hours, minutes, and seconds */
 int ttlmin; /* total number of minutes */
 
+
+#ifdef UNDEF
 int testfunc()
 {
     /* Exercise 5-5 */
@@ -74,8 +76,6 @@ int testfunc()
 
     return 0;
 }
-
-#ifdef UNDEF
 void parsetime (char input[], int *h, int *m, int *s)
 {
     int count; /*count for parsing loop */

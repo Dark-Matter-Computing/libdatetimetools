@@ -4,7 +4,7 @@
  *
  * Version:  1.0.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Sat Dec 26 15:28:55 2020
+ * Last Modified: Sat Dec 26 22:43:26 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -28,14 +28,14 @@
 	//Standard Version Type
 	static const long MAJOR = 1;
 	static const long MINOR = 0;
-	static const long BUILD = 01;
+	static const long BUILD = 02;
 	static const long REVISION = 00;
 	
 	//Miscellaneous Version Types
 	static const long BUILDS_COUNT = 000;
-	#define RC_FILEVERSION 1,0,0,0
-	#define RC_FILEVERSION_STRING "1, 0, 0, 0\0"
-	static const char FULLVERSION_STRING[] = "1.0.0.0";
+	#define RC_FILEVERSION 1,0,2,0
+	#define RC_FILEVERSION_STRING "1, 0, 2, 0\0"
+	static const char FULLVERSION_STRING[] = "1.0.2.0";
 	
 	//These values are to keep track of your versioning state, don't modify them.
 	static const long BUILD_HISTORY = 00;
