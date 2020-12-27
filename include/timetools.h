@@ -6,9 +6,9 @@
  *    Description: This header file contines the data structures and
  *                 prototypes for the timetools module.
  *
- *        Version: 0.0
+ *        Version: See version.h
  *        Created: 08/20/2011 10:33:55
- *  Last Modified: Wed Dec 16 14:29:28 2020
+ *  Last Modified: Fri Dec 25 16:46:02 2020
  *
  *         Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  *   Organization: Dark Matter Computing

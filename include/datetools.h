@@ -7,7 +7,7 @@
  * component of solutions to computing chain-based scheduling, as in litigation
  * and project management. 
  *
- * Version: 1.0
+ * Version: See version.h
  * Created: 08/18/2011 14:24:55
  * Last Modified: Sat Dec 26 22:11:59 2020
  *
