@@ -7,7 +7,7 @@
  *
  * Version: 1.0
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Dec 23 21:30:55 2020
+ * Last Modified: Sat Dec 26 16:37:43 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -114,7 +114,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
                 cur_field = 0; /* Reset once we reach the end of the fields */
              }
         } while (!lasttoken);
-        holiday_table_addrule(&holidayhashtable[newholiday.month-1], &newholiday);
+        holiday_table_addrule(&holidayhashtable[newholiday.month], &newholiday);
         lasttoken=0;
     }
 }
@@ -611,8 +611,11 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
 
 int derive_weekday(struct DateTime *dt)
 {
-    static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4}; /* I'm not sure what
-                                                               this does. */
+    static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+        /* This is some factor that gets applied to the formula depending on
+         * what month is at issue. I'm not sure where it comes from
+         */
+ 
     int year; 
     year = dt->year;
     year -= dt->month < 3;
@@ -632,7 +635,7 @@ int derive_weekday(struct DateTime *dt)
         return - 1;
     } else {
         return ((year + year/4 - year/100 + year/400 +
-            t[dt->month-1] + dt->day) % 7);
+            t[dt->month-1] + dt->day) % 7); 
     }
 }
 
@@ -1102,7 +1105,7 @@ int isholiday(struct DateTime *dt)
     /* Second, calculate whether an ALLMONTHS rule applies and whether this date
     falls on a weekend */
 
-    nodecheckptr = holidayhashtable[ALLMONTHS-1];
+    nodecheckptr = holidayhashtable[ALLMONTHS];
     while(nodecheckptr != NULL)
         {
             if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
@@ -1113,7 +1116,7 @@ int isholiday(struct DateTime *dt)
     /* Third, calculate whether there are any holidays on the month of the
         argument's date */
 
-    nodecheckptr = holidayhashtable[dt->month-1];
+    nodecheckptr = holidayhashtable[dt->month];
     while(nodecheckptr != NULL)
         {
             if (holiday_tbl_checkrule(dt,nodecheckptr) == 1)
@@ -1141,44 +1144,44 @@ void printholidayrules(void)
             switch (monthctr)
             {
             case 0: /* January rules */
-                printf("This holiday rules for January are as follows:\n");
+                printf("The holiday rules that apply to all months");
+                printf(" are as follows:\n");
                 break;
             case 1:
-                printf("This holiday rules for February are as follows:\n");
+                printf("The holiday rules for January are as follows:\n");
                 break;
             case 2:
-                printf("This holiday rules for March are as follows:\n");
+                printf("The holiday rules for February are as follows:\n");
                 break;
             case 3:
-                printf("This holiday rules for April are as follows:\n");
+                printf("The holiday rules for March are as follows:\n");
                 break;
             case 4:
-                printf("This holiday rules for May are as follows:\n");
+                printf("The holiday rules for April are as follows:\n");
                 break;
             case 5:
-                printf("This holiday rules for June are as follows:\n");
+                printf("The holiday rules for May are as follows:\n");
                 break;
             case 6:
-                printf("This holiday rules for July are as follows:\n");
+                printf("The holiday rules for June are as follows:\n");
                 break;
             case 7:
-                printf("This holiday rules for August are as follows:\n");
+                printf("The holiday rules for July are as follows:\n");
                 break;
             case 8:
-                printf("This holiday rules for September are as follows:\n");
+                printf("The holiday rules for August are as follows:\n");
                 break;
             case 9:
-                printf("This holiday rules for October are as follows:\n");
+                printf("The holiday rules for September are as follows:\n");
                 break;
             case 10:
-                printf("This holiday rules for November are as follows:\n");
+                printf("The holiday rules for October are as follows:\n");
                 break;
             case 11:
-                printf("This holiday rules for December are as follows:\n");
+                printf("The holiday rules for November are as follows:\n");
                 break;
             case 12:
-                printf("This holiday rules that apply to all months");
-                printf(" are as follows:\n");
+                printf("The holiday rules for December are as follows:\n");
                 break;
             default:
                 printf("\n\n\n ERROR BAD MONTH.\n");
@@ -1189,44 +1192,44 @@ void printholidayrules(void)
         {
             switch (monthctr)
             {
-            case 0: /* January rules */
-                printf("No holidays in January.\n");
+            case 0: /* "ALLMONTHS" rules */
+                printf("No holidays in apply to all months.");
                 break;
             case 1:
-                printf("No holidays in February.\n");
+                printf("No holidays in January.\n");
                 break;
             case 2:
-                printf("No holidays in March.\n");
+                printf("No holidays in February.\n");
                 break;
             case 3:
-                printf("No holidays in April.\n");
+                printf("No holidays in March.\n");
                 break;
             case 4:
-                printf("No holidays in May.\n");
+                printf("No holidays in April.\n");
                 break;
             case 5:
-                printf("No holidays in June.\n");
+                printf("No holidays in May.\n");
                 break;
             case 6:
-                printf("No holidays in July.\n");
+                printf("No holidays in June.\n");
                 break;
             case 7:
-                printf("No holidays in August.\n");
+                printf("No holidays in July.\n");
                 break;
             case 8:
-                printf("No holidays in September.\n");
+                printf("No holidays in August.\n");
                 break;
             case 9:
-                printf("No holidays in October.\n");
+                printf("No holidays in September.\n");
                 break;
             case 10:
-                printf("No holidays in November.\n");
+                printf("No holidays in October.\n");
                 break;
             case 11:
-                printf("No holidays in December.\n");
+                printf("No holidays in November.\n");
                 break;
             case 12:
-                printf("No holidays in apply to all months.");
+                printf("No holidays in December.\n");
                 break;
             default:
                 printf("\n\n\n ERROR BAD MONTH.\n");

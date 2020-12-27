@@ -9,7 +9,7 @@
  *
  * Version: 1.0
  * Created: 08/18/2011 14:24:55
- * Last Modified: Wed Dec 23 19:59:02 2020
+ * Last Modified: Sat Dec 26 16:43:37 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -47,11 +47,13 @@
 #define WEEKDAYS 7 
 #define MINNUMTTLWKS 4 /* All months have at least 4 weeks. */
 #define LEAP 1
-#define MONTHS 13 /* Month is defined as 13 to account for the code for a
-                    "holidays" that applies to all months, e.g., Sundays. */
+#define MONTHS 13 /* Month is defined as 13 to account for the code for
+                    "holidays" that apply to all months, e.g., Sundays. */
 
-#define ALLMONTHS 13 /* This is the magic number for a holiday rule that applies
-                        to every month of the year, e.g., weekends. */
+#define ALLMONTHS 0 /* This is the magic number for a holiday rule that applies
+                        to every month of the year, e.g., weekends. Using zero
+                        so that the month array can use 1 to 12 for the month
+                        numbers. */
 
 
 #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
@@ -73,26 +75,22 @@ enum days {
     noday = 9 
 };
 
-/* TODO the months of the year -- NOT IMPLEMENTED YET. Part of refactoring
- * months so that the array and other indices can use the month number rather
- * month -1.
- *
 enum months {
-    allmonths = 0;
-    January = 1;
-    February = 2;
-    March = 3;
-    April = 4;
-    May = 5;
-    June = 6;
-    July = 7;
-    August = 8;
-    September = 9;
-    October = 10;
-    November = 11;
-    December = 12;
+    allmonths = 0,
+    January = 1,
+    February = 2,
+    March = 3,
+    April = 4,
+    May = 5,
+    June = 6,
+    July = 7,
+    August = 8,
+    September = 9,
+    October = 10,
+    November = 11,
+    December = 12
 
-} */
+};
 
 
 /* EXPORTED DATA TYPES */
