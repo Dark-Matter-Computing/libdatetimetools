@@ -1,47 +1,18 @@
 /*
- * =============================================================================
+ * Filename:  timetools.c
  *
- *       Filename:  timetools.c
+ * FOR DESCRIPTION AND OTHER DETAILS, PLEASE SEE THE TIMETOOLS.H AND 
+ * DATETIMETOOLS_PVT.H header files.
  *
- *    Description:  This program has started with working exercises 5-5 and 5-6
- *                  in Practical C.  It will be modified into a library of time
- *                  calculating functions.
+ * Version:  See version.h
+ * Created:  11/25/2020 21:15:15
+ * Last Modified: Sun Dec 27 15:00:16 2020
  *
- *        Version:  See version.h
- *        Created:  11/25/2020 21:15:15
- *       Revision:  none
- *       Compiler:  gcc
+ * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
+ * Organization: Dark Matter Computing
  *
- *         Author:  Thomas H. Vidal (THV), thomashvidal@gmail.com
- *   Organization:  Dark Matter Computing
- *  
- *      Copyright:  (c) 2011-2020 - Thomas H. Vidal
- *        License:  This file is part of libdatetimetools library.
- *
- *                  libdatetimetools is free software: you can redistribute it
- *                  and/or modify it under the terms of the GNU Lesser General
- *                  Public License as published by the Free Software Foundation,
- *                  version 3 of the License.
- *
- *                  libdatetimetools is distributed in the hope that it will be
- *                  useful,but WITHOUT ANY WARRANTY; without even the implied
- *                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- *                  PURPOSE.  See the GNU Lesser General Public License for
- *                  more details.
- *
- *                  You should have received a copy of the GNU General Public
- *                  License along with libdatetimetools.  If not, see
- *                  <https://www.gnu.org/licenses/>.
- *
- *	        Usage: Perform time computations.
- *    File Format: None incorporated as of August 18, 2011.
- *   Restrictions: 
- * Error Handling: 
- *     References: Practical C Programming, S. Oualline @ 83.
- *          Notes: 
- * 
- * SPDX-License-Identifier:  LGPL-3.0-only
- =============================================================================
+ * Copyright: (c) 2011-2020 - Thomas H. Vidal, Los Angeles, CA
+ * SPDX-License-Identifier: LGPL-3.0-only
  */
 
 #include <stdio.h>

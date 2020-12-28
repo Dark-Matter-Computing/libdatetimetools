@@ -18,6 +18,10 @@ SOURCES = $(sort $(shell find . -name '*.c'))
 OBJECTS = $(sort $(notdir $(patsubst %.c,%.o,$(SOURCES))))
 LIBDIR = ./lib
 
+#Install Locations - Linux and macOS
+GLOBALLIBS = /usr/local/lib
+GLOBALINC = /usr/local/include
+
 ## Determine OS and Architecture
 
 OSFLAG		:=
@@ -112,7 +116,12 @@ rebuild: clean build
 clean:
 	rm -f $(OBJDIR)/*.o $(LIBDIR)/$(target).a 
 
-rebuild: clean build
+rebuild: clean build install
+
+install: 
+	cp $(LIBDIR)/$(target).a $(GLOBALLIBS)/.
+	cp ./include/*tools.h $(GLOBALINC)/.
+	cp ./include/*tools.h ../DocketMaster/ext/.
 
 variable_test:
 	@echo $(OSFLAG)

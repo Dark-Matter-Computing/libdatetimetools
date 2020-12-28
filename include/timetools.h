@@ -1,45 +1,21 @@
 /*
- * =============================================================================
+ * Filename: timetools.h
+ * Library: libdatetimetools
  *
- *       Filename: timetools.h
+ * Description: libdatetimetools is a library of useful functions to enable
+ * users to perform date and time calculations. One of its primary uses is as a
+ * component of solutions to computing chain-based scheduling, as in litigation
+ * and project management. 
  *
- *    Description: This header file contines the data structures and
- *                 prototypes for the timetools module.
+ * Version: See version.h
+ * Created: 08/20/2011 10:33:55
+ * Last Modified: Sun Dec 27 15:04:46 2020
  *
- *        Version: See version.h
- *        Created: 08/20/2011 10:33:55
- *  Last Modified: Fri Dec 25 16:46:02 2020
- *
- *         Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
- *   Organization: Dark Matter Computing
+ * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
+ * Organization: Dark Matter Computing
  *  
- *      Copyright: (c) 2020 - Thomas H. Vidal
- *        License: This file is part of libdatetimetools library.
- *
- *                 libdatetimetools is free software: you can redistribute it
- *                 and/or modify it under the terms of the GNU Lesser General
- *                 Public License as published by the Free Software Foundation,
- *                 version 3 of the License.
- *
- *                 libdatetimetools is distributed in the hope that it will be
- *                 useful,but WITHOUT ANY WARRANTY; without even the implied
- *                 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- *                 PURPOSE.  See the GNU Lesser General Public License for
- *                 more details.
- *
- *                 You should have received a copy of the GNU General Public
- *                 License along with libdatetimetools.  If not, see
- *                 <https://www.gnu.org/licenses/>.
- *
- *	        Usage: 
- *    File Format: 
- *   Restrictions: 
- * Error Handling: 
- *     References: 
- *          Notes: 
- * 
+ * Copyright: (c) 2011-2020 - Thomas H. Vidal
  * SPDX-License-Identifier: LGPL-3.0-only
- =============================================================================
  */
 
 /* function prototypes */

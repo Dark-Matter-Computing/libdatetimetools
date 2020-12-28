@@ -5,9 +5,9 @@
  * FOR DESCRIPTION AND OTHER DETAILS, PLEASE SEE THE DATETOOLS.H AND 
  * DATETIMETOOLS_PVT.H header files.
  *
- * Version: 1.0
+ * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Sat Dec 26 22:26:43 2020
+ * Last Modified: Sun Dec 27 10:47:20 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
