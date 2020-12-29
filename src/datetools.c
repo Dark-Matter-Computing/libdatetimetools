@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Mon Dec 28 21:53:18 2020
+ * Last Modified: Mon Dec 28 22:10:02 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -654,6 +654,13 @@ void set_weekday(struct DateTime *dt)
 
 int isweekend(struct DateTime *dt)
 {
+    /* check to see whether day_of_week has been initialized yet */
+    /* if not set, call set_weekday rather than generate an error.  */
+    if (dt->day_of_week == DAYNOTSET)
+        set_weekday(dt);
+    else if (dt->day_of_week < SUNDAY || dt->day_of_week > SATURDAY)
+        set_weekday(dt);
+
     if ((dt->day_of_week == SATURDAY) || (dt->day_of_week == SUNDAY))
         return 1;
     else return 0;
