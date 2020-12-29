@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Sun Dec 27 10:47:20 2020
+ * Last Modified: Mon Dec 28 21:53:18 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -642,6 +642,12 @@ int derive_weekday(struct DateTime *dt)
     }
 }
 
+void set_weekday(struct DateTime *dt)
+{
+    dt->day_of_week = derive_weekday(dt);
+
+    return;
+}
 /*-----------------------------------------------------------------------------
  *  DATE CALCULATIONS
  *----------------------------------------------------------------------------*/
@@ -1008,8 +1014,8 @@ int islastxdom(struct DateTime *dt)
             tempdate.month = dt->month + 1;
             tempdate.year = dt->year;
         }
-        dt->day_of_week = derive_weekday(dt);
-        tempdate.day_of_week = derive_weekday(&tempdate);
+        set_weekday(dt);
+         set_weekday(&tempdate);
             /* calculate day of week of tempdate */
         jdncnvrt (&tempdate); /*calculate Julian Day Number of tempdate */
 
@@ -1075,8 +1081,8 @@ int islastweek(struct DateTime *dt)
         tempdate.day = daysinmonths[isleapyear(dt)][dt->month];
 
         /* calculate day of week of dt and tempdate */
-        dt->day_of_week = derive_weekday(dt);
-        tempdate.day_of_week = derive_weekday(&tempdate);
+        set_weekday(dt);
+        set_weekday(&tempdate);
 
         /* calculate number of days between the argument and the last day of
             the month. */
@@ -1097,7 +1103,7 @@ int isholiday(struct DateTime *dt)
     struct HolidayNode *nodecheckptr;
 
     /* First, calculate whether this date falls on a weekend */ 
-    dt->day_of_week = derive_weekday(dt);
+    set_weekday(dt);
     /* if (isweekend(dt))
         return 1;
         commented out because I need to see if when there is an official "rule"

@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:55
- * Last Modified: Sat Dec 26 22:11:59 2020
+ * Last Modified: Mon Dec 28 21:53:23 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -66,7 +66,8 @@ enum DAYS {
          * Neither is used for actual calendar dates
          */ 
     ALLDAYS = 8, 
-    NODAY = 9 
+    NODAY = 9,
+    DAYNOTSET = 999
 };
 
 enum MONTHS {
@@ -154,6 +155,11 @@ int holiday_rules_open(const char * receivedrulefilename, int close_on_success);
  */
 
 int derive_weekday(struct DateTime *dt);
+
+/* Same as derive_weekday, but this one sets the day_of_week member of the 
+ * DateTime struct to the day of the week.
+ */
+void set_weekday(struct DateTime *dt);
 
 /*
  * Name: isweekend
