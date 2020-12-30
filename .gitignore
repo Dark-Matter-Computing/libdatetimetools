@@ -100,7 +100,12 @@ dkms.conf
 *~
 *.*~
 
-# Xcode
+# Xcode per-user config
+*.pbxuser
+*.xcworkspace
+xcuserdata
+*.perspective
+*.perspectivev3
 
 # Code::Blocks
 .ctagsignore
