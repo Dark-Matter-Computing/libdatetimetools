@@ -1,0 +1,455 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		060EBEA2259C162900090FD3 /* datetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA02259C063A00C0F87E /* datetools.h */; };
+		060EBEA3259C162900090FD3 /* timetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA03259C063A00C0F87E /* timetools.h */; };
+		060EBEA7259C179600090FD3 /* liblibdatetimetools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */; };
+		0637E9ED259C05E800C0F87E /* datetimetools_pvt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */; };
+		0637E9EE259C05E800C0F87E /* timetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637E9E9259C05E800C0F87E /* timetools.c */; };
+		0637E9EF259C05E800C0F87E /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637E9EA259C05E800C0F87E /* version.h */; };
+		0637E9F0259C05E800C0F87E /* datetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637E9EC259C05E800C0F87E /* datetools.c */; };
+		0637EA08259C063A00C0F87E /* datetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA02259C063A00C0F87E /* datetools.h */; };
+		0637EA09259C063A00C0F87E /* timetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA03259C063A00C0F87E /* timetools.h */; };
+		0637EA19259C077100C0F87E /* test_datetimetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637EA18259C077100C0F87E /* test_datetimetools.c */; };
+		0637EA22259C07F500C0F87E /* testsuite.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637EA20259C07F400C0F87E /* testsuite.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0637EA0D259C06D300C0F87E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		060EBE91259C0F8000090FD3 /* holidays_casuper.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = holidays_casuper.csv; sourceTree = "<group>"; };
+		060EBE93259C0F8D00090FD3 /* datecalc_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = datecalc_test.csv; sourceTree = "<group>"; };
+		060EBE94259C0F8D00090FD3 /* derive_date_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = derive_date_test.csv; sourceTree = "<group>"; };
+		060EBE95259C0FC000090FD3 /* unittest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unittest.sh; sourceTree = "<group>"; };
+		0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibdatetimetools.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datetimetools_pvt.h; sourceTree = "<group>"; };
+		0637E9E9259C05E800C0F87E /* timetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timetools.c; sourceTree = "<group>"; };
+		0637E9EA259C05E800C0F87E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		0637E9EC259C05E800C0F87E /* datetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = datetools.c; sourceTree = "<group>"; };
+		0637EA02259C063A00C0F87E /* datetools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datetools.h; sourceTree = "<group>"; };
+		0637EA03259C063A00C0F87E /* timetools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timetools.h; sourceTree = "<group>"; };
+		0637EA0F259C06D300C0F87E /* test_datetimetools */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_datetimetools; sourceTree = BUILT_PRODUCTS_DIR; };
+		0637EA18259C077100C0F87E /* test_datetimetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_datetimetools.c; sourceTree = "<group>"; };
+		0637EA20259C07F400C0F87E /* testsuite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testsuite.c; sourceTree = "<group>"; };
+		0637EA21259C07F400C0F87E /* testsuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testsuite.h; sourceTree = "<group>"; };
+		063C90E6259C447200BF1A98 /* test_datetimetools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = test_datetimetools.entitlements; sourceTree = "<group>"; };
+		06F471B6259C4DC7004D3DB9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0637E9D9259C05A300C0F87E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0637EA0C259C06D300C0F87E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				060EBEA7259C179600090FD3 /* liblibdatetimetools.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		060EBE90259C0F8000090FD3 /* testrules */ = {
+			isa = PBXGroup;
+			children = (
+				060EBE91259C0F8000090FD3 /* holidays_casuper.csv */,
+			);
+			path = testrules;
+			sourceTree = "<group>";
+		};
+		060EBE92259C0F8D00090FD3 /* testscripts */ = {
+			isa = PBXGroup;
+			children = (
+				060EBE93259C0F8D00090FD3 /* datecalc_test.csv */,
+				060EBE94259C0F8D00090FD3 /* derive_date_test.csv */,
+			);
+			path = testscripts;
+			sourceTree = "<group>";
+		};
+		0637E9D2259C05A300C0F87E = {
+			isa = PBXGroup;
+			children = (
+				06F471B6259C4DC7004D3DB9 /* README.md */,
+				063C90E6259C447200BF1A98 /* test_datetimetools.entitlements */,
+				0637EA01259C063A00C0F87E /* include */,
+				0637E9E4259C05E800C0F87E /* src */,
+				0637EA10259C06D300C0F87E /* testing */,
+				0637E9DC259C05A300C0F87E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0637E9DC259C05A300C0F87E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */,
+				0637EA0F259C06D300C0F87E /* test_datetimetools */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0637E9E4259C05E800C0F87E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */,
+				0637E9E9259C05E800C0F87E /* timetools.c */,
+				0637E9EA259C05E800C0F87E /* version.h */,
+				0637E9EC259C05E800C0F87E /* datetools.c */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		0637EA01259C063A00C0F87E /* include */ = {
+			isa = PBXGroup;
+			children = (
+				0637EA02259C063A00C0F87E /* datetools.h */,
+				0637EA03259C063A00C0F87E /* timetools.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		0637EA10259C06D300C0F87E /* testing */ = {
+			isa = PBXGroup;
+			children = (
+				0637EA18259C077100C0F87E /* test_datetimetools.c */,
+				0637EA21259C07F400C0F87E /* testsuite.h */,
+				0637EA20259C07F400C0F87E /* testsuite.c */,
+				060EBE95259C0FC000090FD3 /* unittest.sh */,
+				060EBE92259C0F8D00090FD3 /* testscripts */,
+				060EBE90259C0F8000090FD3 /* testrules */,
+			);
+			path = testing;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		060EBEA1259C161C00090FD3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				060EBEA2259C162900090FD3 /* datetools.h in Headers */,
+				060EBEA3259C162900090FD3 /* timetools.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0637E9D7259C05A300C0F87E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0637E9ED259C05E800C0F87E /* datetimetools_pvt.h in Headers */,
+				0637EA09259C063A00C0F87E /* timetools.h in Headers */,
+				0637EA08259C063A00C0F87E /* datetools.h in Headers */,
+				0637E9EF259C05E800C0F87E /* version.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0637E9DA259C05A300C0F87E /* libdatetimetools */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0637E9DF259C05A300C0F87E /* Build configuration list for PBXNativeTarget "libdatetimetools" */;
+			buildPhases = (
+				0637E9D7259C05A300C0F87E /* Headers */,
+				0637E9D8259C05A300C0F87E /* Sources */,
+				0637E9D9259C05A300C0F87E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libdatetimetools;
+			productName = libdatetimetools;
+			productReference = 0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		0637EA0E259C06D300C0F87E /* test_datetimetools */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0637EA13259C06D300C0F87E /* Build configuration list for PBXNativeTarget "test_datetimetools" */;
+			buildPhases = (
+				060EBEA1259C161C00090FD3 /* Headers */,
+				0637EA0B259C06D300C0F87E /* Sources */,
+				0637EA0C259C06D300C0F87E /* Frameworks */,
+				0637EA0D259C06D300C0F87E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = test_datetimetools;
+			productName = test_datetimetools;
+			productReference = 0637EA0F259C06D300C0F87E /* test_datetimetools */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0637E9D3259C05A300C0F87E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					0637E9DA259C05A300C0F87E = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					0637EA0E259C06D300C0F87E = {
+						CreatedOnToolsVersion = 12.3;
+					};
+				};
+			};
+			buildConfigurationList = 0637E9D6259C05A300C0F87E /* Build configuration list for PBXProject "libdatetimetools" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0637E9D2259C05A300C0F87E;
+			productRefGroup = 0637E9DC259C05A300C0F87E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0637E9DA259C05A300C0F87E /* libdatetimetools */,
+				0637EA0E259C06D300C0F87E /* test_datetimetools */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0637E9D8259C05A300C0F87E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0637E9EE259C05E800C0F87E /* timetools.c in Sources */,
+				0637E9F0259C05E800C0F87E /* datetools.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0637EA0B259C06D300C0F87E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0637EA22259C07F500C0F87E /* testsuite.c in Sources */,
+				0637EA19259C077100C0F87E /* test_datetimetools.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0637E9DD259C05A300C0F87E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0637E9DE259C05A300C0F87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0637E9E0259C05A300C0F87E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3DG42R2JP6;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0637E9E1259C05A300C0F87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3DG42R2JP6;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0637EA14259C06D300C0F87E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = test_datetimetools.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3DG42R2JP6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.darkmattercomputing.libdatetimetools;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0637EA15259C06D300C0F87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = test_datetimetools.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3DG42R2JP6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.darkmattercomputing.libdatetimetools;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0637E9D6259C05A300C0F87E /* Build configuration list for PBXProject "libdatetimetools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0637E9DD259C05A300C0F87E /* Debug */,
+				0637E9DE259C05A300C0F87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0637E9DF259C05A300C0F87E /* Build configuration list for PBXNativeTarget "libdatetimetools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0637E9E0259C05A300C0F87E /* Debug */,
+				0637E9E1259C05A300C0F87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0637EA13259C06D300C0F87E /* Build configuration list for PBXNativeTarget "test_datetimetools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0637EA14259C06D300C0F87E /* Debug */,
+				0637EA15259C06D300C0F87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0637E9D3259C05A300C0F87E /* Project object */;
+}
