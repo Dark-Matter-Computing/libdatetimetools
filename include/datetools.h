@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:55
- * Last Modified: Mon Dec 28 21:53:23 2020
+ * Last Modified: Thu Dec 31 15:44:57 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -28,9 +28,6 @@
  * 1752 to December 31, 9999.
  * 
  * Error Handling: Under development
- * 
- * Notes: this private header handles all the data type and file management
- * activities, which should be unnecessary to users of the library.
  */
 
 #ifndef _DATETOOLS_H_INCLUDED_
@@ -47,9 +44,6 @@
 #define WEEKDAYS 7 
 #define MINNUMTTLWKS 4 /* All months have at least 4 weeks. */
 #define LEAP 1
-/* #define TTLMONTHS 13 
-#define ALLMONTHS 0 */
-
 #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
                     to the last x-day of a certain month */
 
@@ -96,7 +90,7 @@ enum MONTHS {
 /* EXPORTED DATA TYPES */
 
 /*
- * array of months. The array starts with zero, which will never be used, so
+ * Array starts with zero, which will never be used, so
  * that subscripts match the actual calendar months 1=january, etc.
  */
 
@@ -146,15 +140,12 @@ int holiday_rules_open(const char * receivedrulefilename, int close_on_success);
  *----------------------------------------------------------------------------*/
 
 /*
- * Name: derive_weekday
- * 
  * Usage/Limitations: This function calculates the day of the week based on
  *   Sakamoto's formula.  The formula is accurate for any date in the range
  *   September 14, 1752 - December 31, 9999
- *
  */
 
-int derive_weekday(struct DateTime *dt);
+int derive_weekday(const struct DateTime *dt);
 
 /* Same as derive_weekday, but this one sets the day_of_week member of the 
  * DateTime struct to the day of the week.
@@ -164,30 +155,20 @@ void set_weekday(struct DateTime *dt);
 /*
  * Name: isweekend
  *
- * Description: calculates whether a certain date falls on a Saturday or
- * Sunday.  This founction was designed early on in development.  Because
- * most courts treat weekends as holidays, this function is not currently
- * used.  The weeked rules are simply part of the Holiday rules processing
- * tools
- *
- * Parameters: Takes a pointer to a DateTime structure.
+ * Because most courts treat weekends as holidays, this function is not
+ * currently needed.  The weeked rules are simply part of the Holiday rules
+ * processing tools
  *
  * Return: Returns an integer equal to zero if the date is NOT a weekend, or
  * a 1 if the date IS a weekend.
- *
  */
 int isweekend(struct DateTime *dt);
 
 /*
- * Name: isleapyear
- *
- * Description: calculates whether a year is a leap year or not
- *
  * Parameters: Takes a pointer to a DateTime structure.
  *
  * Return: Returns an integer equal to zero if the year is NOT a leap year,
  *  or a 1 if the year IS a leap year.
- *
  */
 int isleapyear(struct DateTime *dt);
 

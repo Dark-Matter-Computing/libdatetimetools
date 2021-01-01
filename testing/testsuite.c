@@ -237,7 +237,6 @@ void test_loop(enum TESTFILETYPES testtype, FILE *testfile,
                         month_to_string(testdate.month));
 
                 truefalse = islastxdom(&testdate);
-                truefalse = islastxdom(&testdate);
                 if(truefalse)
                     printf("Yes. It is the last %s of the %s.\t",
                            wkday_to_string(testdate.day_of_week),

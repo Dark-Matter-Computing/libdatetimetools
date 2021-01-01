@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Mon Dec 28 22:10:02 2020
+ * Last Modified: Thu Dec 31 15:44:48 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -107,7 +107,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
     while (fgets(tokenbuf, sizeof(tokenbuf), holidayrulefile) != NULL) {
         do {
             cur_token = holiday_rules_tokenize(tokenbuf, &lasttoken);
-            holiday_rules_processtoken(cur_token,
+            holiday_rules_parse_token(cur_token,
                                        globalstate->headerfields[cur_field],
                                        &newholiday);
             if (cur_field < (globalstate->totalnumfields-1)) {
@@ -134,7 +134,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
  *
  * Next, the function starts a while loop that iterates until the flag
  * TOKEN_FOUND has been set.  As the loop iterates, cur_char is advanced along
- * the string.  The guts of the while loop is a case statement that processes
+ * the string.  The guts of the while loop is a case statement that parses
  * the tokens.
  *
  *
@@ -152,7 +152,7 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
 
     unsigned char flags = 0x0; /* clear the flags. */
     char *cur_char; /* character pointer to cycle through the string */
-    char *tokenptr; /* Pointer to current token in the record
+    char *tokenptr = NULL; /* Pointer to current token in the record
                            string */
 
     static char *prevpsn = NULL; /* Previous position in the string from the last
@@ -258,7 +258,7 @@ char * holiday_rules_tokenize(char *string, int *lasttoken)
 return tokenptr;
 }		/* -----  end of function holiday_rules_tokenize  ----- */
 
-void holiday_rules_processtoken(char *token, char *cur_field,
+void holiday_rules_parse_token(char *token, char *cur_field,
                                 struct HolidayRule *newholiday)
 {
     char *currentchar = token;
@@ -612,7 +612,7 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
  *
  */
 
-int derive_weekday(struct DateTime *dt)
+int derive_weekday(const struct DateTime *dt)
 {
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
         /* This is some factor that gets applied to the formula depending on
@@ -909,17 +909,12 @@ void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
 /*
  * Description: Counts court days between two dates.
  *
- * Algorithm: Function uses two nested while loops.  The outer one counts
- * up or down by numdays.  The inner while-loop cycles through each day
- * starting with the day after the end date.  It tests whether the day falls
- * on a holiday.  If the day falls on a holliday, the inner loop  is
- * incremented, but the outerloop is not. Thus, this function could be
- * modified to report back not only the resulting court day, but the number
- * of actual calendar days between the two dates.
- *
  * NOTE: This function counts forward and backward, so references to
  * incrementing can refer to decrementing; references to next day can refer
  * to prior day, as the case may be; day after can refer to day before.
+ *
+ * This function could be modified to report back not only the resulting court
+ * day, but the number of actual calendar days between the two dates.
  */
 
 int courtday_difference(struct DateTime *date1, struct DateTime *date2)
@@ -984,29 +979,19 @@ int courtday_difference(struct DateTime *date1, struct DateTime *date2)
 
 /*
  * Description: calculates whether a particular date is in the last x day
- *               of the month.  (E.g., the last Tuesday of February.)        
- *
- * Algorithm: Step one is to simply test the day# of the argument date.
- *   If the number is less than WEEKDAYS * (MINNUMTTLWKS-1) (i.e., 22),then
- *   it cannot possibly be in the last week and function returns.  If not,
- *   Step 2 begins. The job is simply to (1) determine the last week of the
- *   date-argument's month, (2) identify the last Xday of the month, and (3)
- *   compare the last Xday with the argument's Xday. If they are the same,
- *   the argument date is the last Xday of the month.
- *
+ * of the month.  (E.g., the last Tuesday of February.)
  */
 
 int islastxdom(struct DateTime *dt)
 {
     struct DateTime tempdate; /* date struct used to store interim values */
     int daycount;
-        /* counter variable to count how many days difference between the day
-         * of the week of the last week of the first month to the laset x-day
-         * of the current month.
+        /* Count how many days difference between the day of the week of the
+         * last week of the first month to the laset x-day of the current month
          */
 
     if (dt->day < (WEEKDAYS*(MINNUMTTLWKS-1))) {
-        /* if the date of month is less then 22 it cannot be the last week.*/
+        /* If the date of month is less then 22 it cannot be the last week.*/
         return 0;
     }
     else {
@@ -1022,7 +1007,7 @@ int islastxdom(struct DateTime *dt)
             tempdate.year = dt->year;
         }
         set_weekday(dt);
-         set_weekday(&tempdate);
+        set_weekday(&tempdate);
             /* calculate day of week of tempdate */
         jdncnvrt (&tempdate); /*calculate Julian Day Number of tempdate */
 
@@ -1048,18 +1033,7 @@ int islastxdom(struct DateTime *dt)
  * of the month.
  *
  * Note: not currently used / not currently coded
- *
- * Algorithm: Step one is to simply test the day# of the argument date.
- * If the number is less than WEEKDAYS * (MINNUMTTLWKS-1) (i.e., 22),then
- * it cannot possibly be in the last week and function returns.  If not,
- * Step 2 begins. Calling function knows that the day of the week of the
- * date argument (let's call that Xday) matches the day of the week of a
- * specific holiday. This function's job is simply to (1) determine the
- * last week of date-argument's month, (2) identify the last Xday of the
- * month, and (3) compare the last Xday with the argument's Xday. If they
- * are the same, the argument date is the last Xday of the month.
- *
- *   ASSUMES FIRST DAY OF WEEK IS SUNDAY!
+ * ASSUMES FIRST DAY OF WEEK IS SUNDAY!
  */
 
 int islastweek(struct DateTime *dt)
@@ -1387,7 +1361,7 @@ void errorprocessor(int error_code)
     return;
 }
 
-#ifdef UNDEF /* presently this entire the remainng code in this source file is
+#ifdef UNDEF /* presently the remainng code in this source file is
                 removed from compilation for testing purposes. */
 
 /* Add ideas for functions here! */

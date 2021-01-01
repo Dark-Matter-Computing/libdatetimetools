@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 12/19/2020 12:43:04
- * Last Modified: Fri Dec 25 16:45:47 2020
+ * Last Modified: Thu Dec 31 15:44:54 2020
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -173,7 +173,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
                               struct HolidayNode *holidayhashtable[],
                               struct RuleSet *globalstate);
 char *holiday_rules_tokenize(char *string, int *lasttoken);
-void holiday_rules_processtoken(char *token, char *cur_field,
+void holiday_rules_parse_token(char *token, char *cur_field,
                                 struct HolidayRule *newholiday);
 void holiday_table_addrule(struct HolidayNode **elementhandle,
                                           struct HolidayRule *newrule);
