@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Thu Dec 31 15:44:48 2020
+ * Last Modified: Sat Jan  2 12:00:20 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -626,14 +626,14 @@ int derive_weekday(const struct DateTime *dt)
     if ((dt->year > 9999) || (dt->year < 1752) || ((dt->year == 1752) &&
        (dt->month < 9)) || ((dt->year == 1752) && ((dt->month == 9) &&
         (dt->day < 14)))) {
-        printf("#################################################\n");
+        /* printf("#################################################\n");
         printf("## Temporary warning in func derive_weekday    ##\n");
         printf("## Date out of range of forumla to derive      ##\n");
         printf("## the week day. Date is %d/%d/%d (Y/M/D).     ##\n",
                 dt->year, dt->month, dt->day);
         printf("## Formula is accurate between September 14,   ##\n");
         printf("## 1752 and December 31, 9999.                 ##\n");
-        printf("#################################################\n");
+        printf("#################################################\n"); */
 
         return - 1;
     } else {
@@ -1351,6 +1351,22 @@ const char* month_to_string(int month)
     }
 
     return NULL;
+}
+
+void date_to_string(char * rtnstring, const struct DateTime *dt, int date_order)
+{
+    switch(date_order){
+        case MDY:
+            sprintf(rtnstring, "%d/%d/%d", dt->month, dt->day, dt->year);
+            break;
+        case YMD:
+            sprintf(rtnstring, "%d/%d/%d", dt->year, dt->month, dt->day);
+            break;
+        default:
+            break;
+        
+    }
+    return;
 }
 
 void errorprocessor(int error_code)

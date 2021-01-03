@@ -4,7 +4,7 @@
  *
  * Version: 1.0.0.0
  * Created: Mon Dec 21 21:08:29 2020
- * Last Modified: Sat Dec 26 19:00:17 2020
+ * Last Modified: Sat Jan  2 18:13:20 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -39,7 +39,10 @@ int main(int argc, char *argv[])
     char *holidays_filename;
     char *weekdaytest_filename;
     char *datecalc_filename;
+    char *leapcalc_filename;
+    char *rulecheck_filename;
     int close_file_when_done = 1;
+    
 
     /* initialize file names */
     program_name = argv[0];
@@ -59,13 +62,21 @@ int main(int argc, char *argv[])
             case 'h':
                 holidays_filename = &argv[1][2];
                 break;
+            case 'C': /* fall through */
+            case 'c':
+                datecalc_filename = &argv[1][2];
+                break;
+            case 'L': /* fall through */
+            case 'l':
+                leapcalc_filename = &argv[1][2];
+                break;
+            case 'R': /* fall through */
+            case 'r':
+                rulecheck_filename = &argv[1][2];
+                break;
             case 'W': /* fall through */ 
             case 'w':
                 weekdaytest_filename = &argv[1][2];
-                break;
-            case 'c': /* fall through */
-            case 'C':
-                datecalc_filename = &argv[1][2];
                 break;
             default:
                 fprintf(stderr, "Bad option %s\n", argv[1]);
@@ -77,9 +88,10 @@ int main(int argc, char *argv[])
     
     holiday_rules_open(holidays_filename, close_file_when_done);
     printholidayrules();
+    testsuite_check_leap(leapcalc_filename);
     testsuite_check_deriveday(weekdaytest_filename);
     testsuite_check_calcs(datecalc_filename); 
-    testsuite_checkholidays(); 
+    testsuite_check_holidays(rulecheck_filename); 
 
     /* testsuite(); */
     return 0;

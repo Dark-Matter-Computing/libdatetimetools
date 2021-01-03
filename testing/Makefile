@@ -60,7 +60,7 @@ endif
 
 # Set Build Flags
 
-CFLAGS= -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c99
+CFLAGS= -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c89
 
 CFLAGS2= -W -Wundef -Wstrict-prototypes -Wmissing-prototypes \
 		 -Wmissing-declarations -Wcast-qual -Wwrite-strings

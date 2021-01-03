@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:55
- * Last Modified: Thu Dec 31 15:44:57 2020
+ * Last Modified: Fri Jan  1 21:12:10 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -46,6 +46,7 @@
 #define LEAP 1
 #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
                     to the last x-day of a certain month */
+#define DATESTRINGLEN 20 /* max length of a date string, enough for a long date */
 
 /* Days of the week */
 enum DAYS {
@@ -86,6 +87,10 @@ enum MONTHS {
                     "holidays" that apply to all months, e.g., Sundays. */
 };
 
+enum DATEORDER{
+    MDY,
+    YMD
+};
 
 /* EXPORTED DATA TYPES */
 
@@ -327,4 +332,5 @@ const char* wkday_to_string(int day);
  *
  */
 const char* month_to_string(int month);
+void date_to_string(char *rtnstring, const struct DateTime *dt, int date_order);
 #endif	/* _DATETOOLS_H_INCLUDED_ */
