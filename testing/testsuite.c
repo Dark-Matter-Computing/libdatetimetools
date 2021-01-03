@@ -7,7 +7,7 @@
  *
  * Version: 1.0.0.0
  * Created:  Mon Dec 21 21:17:02 2020
- * Last Modified: Sat Jan  2 18:11:36 2021
+ * Last Modified: Sun Jan  3 08:35:31 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -31,7 +31,7 @@
 #include "testsuite.h"
 
 /* Output Constants */
-#define MAXMESSAGELEN 2004 /* 204 enough for 3 lines */
+#define MAXMESSAGELEN 204 /* Enough for 3 lines */
 const int   SCREENWIDTH     = 70;
 const int   FRAMESIDEWIDTH  = 1;
 const char  FRAME_SYMB      = '*';

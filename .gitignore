@@ -30,7 +30,9 @@ Temporary Items
 # project tree directories to ignore
 **/bin/
 **/build
+**/obj
 **/config
+**/DerivedData/
 doc/**/specs
 **/ext
 **/ide
@@ -101,6 +103,7 @@ dkms.conf
 *.*~
 
 # Xcode per-user config
+*.entitlements
 *.pbxuser
 *.xcworkspace
 xcuserdata

@@ -332,5 +332,19 @@ const char* wkday_to_string(int day);
  *
  */
 const char* month_to_string(int month);
+
+/*
+ * Name: date_to_string
+ *
+ * Description: Extracts a date from a DateTime struct. User can select the
+ * the format that the string is output in using the DATEORDER enum.
+ *
+ * Parameters: Takes a pointer to a DateTime struct.
+ *
+ * Precondition: DateTime struct must have had a date set.
+ *
+ * Return: A string corresponding to the date, or a NULL pointer.
+ *
+ */
 void date_to_string(char *rtnstring, const struct DateTime *dt, int date_order);
 #endif	/* _DATETOOLS_H_INCLUDED_ */
