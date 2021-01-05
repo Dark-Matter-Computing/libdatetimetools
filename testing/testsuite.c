@@ -7,7 +7,7 @@
  *
  * Version: 1.0.0.0
  * Created:  Mon Dec 21 21:17:02 2020
- * Last Modified: Sun Jan  3 08:35:31 2021
+ * Last Modified: Mon Jan  4 18:49:04 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -54,6 +54,37 @@ enum TESTPHASE{
 };
 
 /* Functions */
+
+void testsuite_interactive(void)
+{
+    struct DateTime begin_date; 
+    struct DateTime end_date; 
+    /*  struct DateTime result_date; */
+    int day_count; 
+    /*  char dateinput[11]; */
+    char line[80]; 
+
+    printf("Test your own dates.\n");
+    printf("please enter the beginning date in the format mm/dd/yyyy");
+    printf("\n(Press x to end):\n");
+
+    fgets(line, sizeof(line), stdin);
+    sscanf(line, "%d/%d/%d", &begin_date.month, &begin_date.day,
+           &begin_date.year);
+    printf("\nHow many days out is the deadline?");
+    fgets(line, sizeof(line), stdin);
+    sscanf(line, "%d", &day_count);
+    date_offset (&begin_date, &end_date,
+                  day_count);
+    printf("The deadline is: %d/%d/%d.\n", end_date.month, end_date.day,
+           end_date.year);
+    if (isholiday(&end_date)==0)
+        printf("The end date is valid and does not fall on a holiday.\n");
+    else
+        printf("The end date is NOT valid.  It falls on a holiday.\n");
+    printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+    return;
+}
 
 void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
 {
@@ -616,39 +647,6 @@ void testsuite (void)
     return;
 }
 
-void testsuite_interactive(void)
-{
-    struct DateTime begin_date; /* date to begin date calculations */
-    struct DateTime end_date; /* date to use for end calculations */
-    struct DateTime result_date; /* used to hold new dates resulting from
-                                    calculations */
-    int day_count; /* number of days before or after a particular deadline */
-    char dateinput[11]; /*used to get data from the keyboard */
-    char line[80]; /* keyboard buffer */
-
-    /* commented out ...
-    printf("Test your own dates.\n");
-    printf("please enter the beginning date in the format mm/dd/yyyy");
-    printf("\n(Press x to end):\n");
-
-    fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d/%d/%d", &begin_date.month, &begin_date.day,
-           &begin_date.year);
-    printf("\nHow many days out is the deadline?");
-    fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d", &day_count);
-    date_offset (&begin_date, &end_date,
-                  day_count);
-    printf("The deadline is: %d/%d/%d.\n", end_date.month, end_date.day,
-           end_date.year);
-    if (isholiday(&end_date)==0)
-        printf("The end date is valid and does not fall on a holiday.\n");
-    else
-        printf("The end date is NOT valid.  It falls on a holiday.\n");
-    printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-    end commented out section. */
-    return;
-}
 #endif /* UNDEF */
 
 /* #####   FUNCTION DEFINITIONS  -  LOCAL TO THIS SOURCE FILE   ############# */

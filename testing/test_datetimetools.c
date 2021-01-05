@@ -4,7 +4,7 @@
  *
  * Version: 1.0.0.0
  * Created: Mon Dec 21 21:08:29 2020
- * Last Modified: Sat Jan  2 18:13:20 2021
+ * Last Modified: Mon Jan  4 18:43:40 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -48,6 +48,9 @@ int main(int argc, char *argv[])
     program_name = argv[0];
     holidays_filename = NULL;
     weekdaytest_filename = NULL;
+    datecalc_filename = NULL;
+    leapcalc_filename = NULL;
+    rulecheck_filename = NULL;
 
     /* Process the commandline arguments */
     if (argc == 1) {
@@ -67,22 +70,26 @@ int main(int argc, char *argv[])
             case 'C': /* fall through */
             case 'c':
                 datecalc_filename = &argv[1][2];
+                testsuite_run_check(CALCS, datecalc_filename);
                 break;
             case 'I': /* fall through */
             case 'i':
-                /* add code for interactive mode */
+                testsuite_interactive();
                 break;
             case 'L': /* fall through */
             case 'l':
                 leapcalc_filename = &argv[1][2];
+                testsuite_run_check(LEAPDATES, leapcalc_filename);
                 break;
             case 'R': /* fall through */
             case 'r':
                 rulecheck_filename = &argv[1][2];
+                testsuite_run_check(RULECHECK, rulecheck_filename);
                 break;
             case 'W': /* fall through */ 
             case 'w':
                 weekdaytest_filename = &argv[1][2];
+                testsuite_run_check(DERIVEDATES, weekdaytest_filename);
                 break;
             default:
                 fprintf(stderr, "Bad option %s\n", argv[1]);
@@ -91,11 +98,6 @@ int main(int argc, char *argv[])
         ++argv;
         --argc;
     }
-    
-    testsuite_run_check(LEAPDATES, leapcalc_filename);
-    testsuite_run_check(DERIVEDATES, weekdaytest_filename);
-    testsuite_run_check(CALCS, datecalc_filename);
-    testsuite_run_check(RULECHECK, rulecheck_filename);
     /* testsuite(); */
     return 0;
 }

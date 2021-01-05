@@ -24,6 +24,7 @@ struct teststats{
  *----------------------------------------------------------------------------*/
 
 /* Test Batteries */
+void testsuite_interactive(void);
 void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name);
 void testsuite_check_calcs(FILE *openedtestfile);
 void testsuite_check_deriveday(FILE *openedtestfile);
