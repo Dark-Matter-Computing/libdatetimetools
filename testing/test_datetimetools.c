@@ -61,10 +61,16 @@ int main(int argc, char *argv[])
             case 'H': /* fall through */
             case 'h':
                 holidays_filename = &argv[1][2];
+                holiday_rules_open(holidays_filename, close_file_when_done);
+                printholidayrules();
                 break;
             case 'C': /* fall through */
             case 'c':
                 datecalc_filename = &argv[1][2];
+                break;
+            case 'I': /* fall through */
+            case 'i':
+                /* add code for interactive mode */
                 break;
             case 'L': /* fall through */
             case 'l':
@@ -86,13 +92,10 @@ int main(int argc, char *argv[])
         --argc;
     }
     
-    holiday_rules_open(holidays_filename, close_file_when_done);
-    printholidayrules();
-    testsuite_check_leap(leapcalc_filename);
-    testsuite_check_deriveday(weekdaytest_filename);
-    testsuite_check_calcs(datecalc_filename); 
-    testsuite_check_holidays(rulecheck_filename); 
-
+    testsuite_run_check(LEAPDATES, leapcalc_filename);
+    testsuite_run_check(DERIVEDATES, weekdaytest_filename);
+    testsuite_run_check(CALCS, datecalc_filename);
+    testsuite_run_check(RULECHECK, rulecheck_filename);
     /* testsuite(); */
     return 0;
 }
@@ -109,8 +112,17 @@ int main(int argc, char *argv[])
 
 void usage(char *program_name)
 {
+    int padding = (int) strlen(program_name);
+    
     printf("In Function: Usage\n");
-    fprintf(stderr, "Uasge is %s -h[filename 1]\n",
+    fprintf(stderr, "Uasge is %s -hcilrw\n",
             program_name);
+    
+    fprintf(stderr, "%-32s", " ");
+    fprintf(stderr, "-i -> interactive mode\n");
+    fprintf(stderr, "%-32s", " ");
+    fprintf(stderr, "-h[holiday rules filename]\n");
+    fprintf(stderr, "%-32s", " ");
+    fprintf(stderr, "-l[leap year test filename]\n");
     exit(8);
 }

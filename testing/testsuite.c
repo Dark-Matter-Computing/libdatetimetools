@@ -55,66 +55,214 @@ enum TESTPHASE{
 
 /* Functions */
 
-void testsuite_check_calcs(const char *receivedtestfile)
+void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
 {
+    
     FILE *testfile;
-    char line[100];
-    struct teststats calc_stats;
+    
+    switch (testtype) {
+        case DERIVEDATES:
+            testfile = fopen(testfile_name, "r");
+            if (testfile == NULL) {
+                fprintf (stderr, "couldn't open file '%s'; %s\n",
+                         testfile_name, strerror(errno));
+                exit (EXIT_FAILURE);
+            }
+            testsuite_check_deriveday(testfile);
+            fclose(testfile);
+            break;
+        case CALCS:
+            testfile = fopen(testfile_name, "r");
+            if (testfile == NULL) {
+                fprintf (stderr, "couldn't open file '%s'; %s\n",
+                         testfile_name, strerror(errno));
+                exit (EXIT_FAILURE);
+            }
+            testsuite_check_calcs(testfile);
+            fclose(testfile);
+            break;
+        case LEAPDATES:
+            testfile = fopen(testfile_name, "r");
+            if (testfile == NULL) {
+                fprintf (stderr, "couldn't open file '%s'; %s\n",
+                         testfile_name, strerror(errno));
+                exit (EXIT_FAILURE);
+            }
+            testsuite_check_leap(testfile);
+            fclose(testfile);
+            break;
+        default:
+            /* do nothing */
+            break;
+    }
+    return;
+}
 
+void testsuite_check_calcs(FILE *openedtestfile)
+{
+    struct DateTime testdate;
+    char line[100];
+    int count;
+    int result = 0;
+    int truefalse = 0;
+    int expected_result_A = 0;
+    int expected_result_B = 0;
+    char datestring[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
+    struct teststats calc_stats;
 
     calc_stats.ttl_tests = 0;
     calc_stats.successful_tests = 0;
 
     display_results(NULL, EMPTY_ROW);
     display_results("Date Calculation Functions", BUILD_FRAME);
-
-    /* open file */
-    testfile = fopen(receivedtestfile, "r");
-
+    
     /* read and discard the headers */
-    fgets(line, sizeof(line), testfile);
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d,%d", &testdate.year,
+                       &testdate.month, &testdate.day,
+                       &expected_result_A, &expected_result_B);
 
-    test_loop(CALCS, testfile, &calc_stats);  
+        date_to_string(datestring, &testdate, MDY);
+        testdate.day_of_week = derive_weekday(&testdate);
+        result = derive_weekday(&testdate);
+
+        sprintf(message, "Testing whether %s is that the last %s of %s...",
+                datestring, wkday_to_string(testdate.day_of_week),
+                month_to_string(testdate.month));
+
+        display_results(message, TESTING);
+
+        truefalse = islastxdom(&testdate);
+        calc_stats.ttl_tests++;
+
+        if(truefalse)
+            sprintf(message, "    Yes. It is the last %s of the %s.",
+                   wkday_to_string(testdate.day_of_week),
+                   month_to_string(testdate.month));
+        else
+            sprintf(message, "    No. It is NOT last %s of %s.",
+                   wkday_to_string(testdate.day_of_week),
+                   month_to_string(testdate.month));
+
+        if ((expected_result_A == 1) &&
+            (truefalse == expected_result_A)) {
+            calc_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else if ((expected_result_A == 0) &&
+                   (truefalse == expected_result_A)) {
+            calc_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+
+        display_results(message, TESTING);
+
+        sprintf(message, "Now testing whether %s is in the last week of "
+                "the month...", datestring);
+
+        display_results(message, TESTING);
+        truefalse = islastweek(&testdate);
+        calc_stats.ttl_tests++;
+        
+        if(truefalse)
+            sprintf(message, "    Yes. It is in the last week of %s",
+                    month_to_string(testdate.month));
+        else
+            sprintf(message, "    No. It is NOT in the last week of %s.",
+                    month_to_string(testdate.month));
+
+        if ((expected_result_B == 1) &&
+            (truefalse == expected_result_B)) {
+            calc_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else if ((expected_result_B == 0) &&
+                  (truefalse == expected_result_B)) {
+            calc_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        
+        display_results(message, TESTING);
+        display_results(NULL, BLANK_ROW);
+    }
     display_stats(&calc_stats);
     display_results(NULL, END_FRAME);
-    fclose(testfile);
-
+    
     return;
 }
 
-void testsuite_check_deriveday(const char *receivedtestfile)
+void testsuite_check_deriveday(FILE *openedtestfile)
 {
-    FILE *testfile;
+    struct DateTime testdate;
     char line[100];
+    int count;
+    int result = 0;
+    int expected_result_A = 0;
+    char datestring[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
     struct teststats deriveday_stats;
-
 
     deriveday_stats.ttl_tests = 0;
     deriveday_stats.successful_tests = 0;
-
+    
     display_results(NULL, EMPTY_ROW);
     display_results("Derive Day of Week Function", BUILD_FRAME);
-
-    /* open file */
-    testfile = fopen(receivedtestfile, "r");
-    if (testfile == NULL) {
-        fprintf (stderr, "couldn't open file '%s'; %s\n",
-                 receivedtestfile, strerror(errno));
-        exit (EXIT_FAILURE);
-    }
+    
     /* read and discard the headers */
-    fgets(line, sizeof(line), testfile);
-    test_loop(DERIVEDATES, testfile, &deriveday_stats);
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
+                      &testdate.month, &testdate.day,
+                      &expected_result_A);
+
+        result = derive_weekday(&testdate);
+        deriveday_stats.ttl_tests++;
+
+        date_to_string(datestring, &testdate, MDY);
+        sprintf(message, "Testing the following (D/M/Y) %s ...",
+                datestring);
+        display_results(message, TESTING);
+
+        if (result >= 0){
+            sprintf(message, "    In range. Weekday is %s.",
+                    wkday_to_string(result));
+        } else {
+            sprintf(message, "    Out of range. "
+                   "No computation performed.");
+        }
+
+        if ((expected_result_A == -1) &&
+            (result == expected_result_A)) {
+            deriveday_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else if ((expected_result_A == 0) && (result >= 0)) {
+            deriveday_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        display_results(message, TESTING);
+    }
     display_stats(&deriveday_stats);
     display_results(NULL, END_FRAME);
-    fclose(testfile);
     return;
 }
 
-void testsuite_check_holidays(const char *receivedtestfile)
+void testsuite_check_holidays(FILE *openedtestfile)
 {
-    FILE *testfile = NULL;
-    char line[1000];
+    struct DateTime testdate;
+    char line[100];
+    char ruletype;
+    int count;
+    int expected_result_A = 0;
+    char datestring[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
     struct teststats rulecheck_stats;
 
     rulecheck_stats.ttl_tests = 0;
@@ -122,27 +270,72 @@ void testsuite_check_holidays(const char *receivedtestfile)
 
     display_results(NULL, EMPTY_ROW);
     display_results("Holiday Rule-Checking Algorithm", BUILD_FRAME);
-    /* open file */
-    testfile = fopen(receivedtestfile, "r");
-    if (testfile == NULL) {
-        fprintf (stderr, "couldn't open file '%s'; %s\n",
-                 receivedtestfile, strerror(errno));
-        exit (EXIT_FAILURE);
-    }
+    
     /* read and discard the headers */
-    fgets(line, sizeof(line), testfile);
-    test_loop(RULECHECK, testfile, &rulecheck_stats);
-
+    fgets(line, sizeof(line), openedtestfile);
+ 
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%c,%d", &testdate.year,
+                       &testdate.month, &testdate.day,
+                       &ruletype, &expected_result_A);
+        
+        date_to_string(datestring, &testdate, MDY);
+        switch (ruletype) {
+            case 'A': /* fall through */
+            case 'a':
+                sprintf(message, "Testing %s, an absolute rule...",
+                        datestring);
+                break;
+            case 'R': /* fall through */
+            case 'r':
+                sprintf(message, "Testing %s, a relative rule...",
+                        datestring);
+                break;
+            case 'W': /* fall through */
+            case 'w':
+                sprintf(message, "Testing %s, a weekend rule...",
+                        datestring);
+                break;
+            default: /* do nothing */
+                break;
+        }
+        rulecheck_stats.ttl_tests++;
+        
+        if (isholiday(&testdate) != 0){
+            strcat(message, "    YES date is a holiday. ");
+            if (expected_result_A == 1) {
+                rulecheck_stats.successful_tests++;
+                message_right_justify(message, "PASS", SCREENWIDTH);
+            } else {
+                message_right_justify(message, "FAIL", SCREENWIDTH);
+            }
+        } else {
+            strcat(message, "    NO date is a holiday. ");
+            if (expected_result_A == 1) {
+                rulecheck_stats.successful_tests++;
+                message_right_justify(message, "PASS", SCREENWIDTH);
+            } else {
+                message_right_justify(message, "FAIL", SCREENWIDTH);
+            }
+        }
+        
+        display_results(message, TESTING);
+    }
     display_stats(&rulecheck_stats);
-    display_results(NULL, END_FRAME); 
-    fclose(testfile);
+    display_results(NULL, END_FRAME);
+
     return;
 }
 
-void testsuite_check_leap(const char *receivedtestfile)
+void testsuite_check_leap(FILE *openedtestfile)
 {
-    FILE *testfile;
+    struct DateTime testdate;
     char line[100];
+    int count;
+    int truefalse = 0;
+    int expected_result_A = 0;
+    char datestring[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
     struct teststats leap_stats;
 
     leap_stats.ttl_tests = 0;
@@ -151,223 +344,39 @@ void testsuite_check_leap(const char *receivedtestfile)
     display_results(NULL, EMPTY_ROW);
     display_results("Leap Year Function", BUILD_FRAME);
     
-    /* open file */
-    testfile = fopen(receivedtestfile, "r");
-    if (testfile == NULL) {
-        fprintf (stderr, "couldn't open file '%s'; %s\n",
-                 receivedtestfile, strerror(errno));
-        exit (EXIT_FAILURE);
-    }
     /* read and discard the headers */
-    fgets(line, sizeof(line), testfile);
-
-    test_loop(LEAPDATES, testfile, &leap_stats);
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
+                      &testdate.month, &testdate.day,
+                      &expected_result_A);
+        
+        date_to_string(datestring, &testdate, MDY);
+        sprintf(message, "Testing %s ... ", datestring);
+        truefalse = isleapyear(&testdate);
+        leap_stats.ttl_tests++;
+        
+        if(truefalse)
+            strcat(message, "Result: Leap year.");
+        else
+            strcat(message, "Result: Not a leap year.");
+        if ((expected_result_A == 1) &&
+            (truefalse == expected_result_A)) {
+            leap_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else if ((expected_result_A == 0) &&
+                   (truefalse == expected_result_A)) {
+            leap_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        
+        display_results(message, TESTING);
+    }
     display_stats(&leap_stats);
     display_results(NULL, END_FRAME);
-    fclose(testfile);
-    return;
-}
-
-void test_loop(enum TESTFILETYPES testtype, FILE *testfile,
-               struct teststats *stats)
-{
-    struct DateTime testdate; 
-    char line[100];
-    char ruletype;
-    int count;
-    int result = 0;
-    int truefalse = 0;
-    int expected_result_A = 0;
-    int expected_result_B = 0;
-    char datestring[DATESTRINGLEN];
-    char message[MAXMESSAGELEN];
-
-    while (fgets(line, sizeof(line), testfile) != NULL) {
-        switch (testtype) {
-            case DERIVEDATES:
-                count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
-                              &testdate.month, &testdate.day,
-                              &expected_result_A);
-
-                result = derive_weekday(&testdate);
-                stats->ttl_tests++;
-
-                date_to_string(datestring, &testdate, MDY);
-                sprintf(message, "Testing the following (D/M/Y) %s ...",
-                        datestring);
-                display_results(message, TESTING);
-
-                if (result >= 0){
-                    sprintf(message, "    In range. Weekday is %s.",
-                            wkday_to_string(result));
-                } else {
-                    sprintf(message, "    Out of range. "
-                           "No computation performed.");
-                }
-
-                if ((expected_result_A == -1) &&
-                    (result == expected_result_A)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else if ((expected_result_A == 0) && (result >= 0)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else {
-                    message_right_justify(message, "FAIL", SCREENWIDTH);
-                }
-
-                display_results(message, TESTING);
-                break;
-            case CALCS:
-                count = sscanf(line, "%d,%d,%d,%d,%d", &testdate.year,
-                               &testdate.month, &testdate.day,
-                               &expected_result_A, &expected_result_B);
-
-                date_to_string(datestring, &testdate, MDY);
-                testdate.day_of_week = derive_weekday(&testdate);
-                result = derive_weekday(&testdate);
-
-                sprintf(message, "Testing whether %s is that the last %s of %s...",
-                        datestring, wkday_to_string(testdate.day_of_week),
-                        month_to_string(testdate.month));
-
-                display_results(message, TESTING);
-
-                truefalse = islastxdom(&testdate);
-                stats->ttl_tests++;
-
-                if(truefalse)
-                    sprintf(message, "    Yes. It is the last %s of the %s.",
-                           wkday_to_string(testdate.day_of_week),
-                           month_to_string(testdate.month));
-                else
-                    sprintf(message, "    No. It is NOT last %s of %s.",
-                           wkday_to_string(testdate.day_of_week),
-                           month_to_string(testdate.month));
-
-                if ((expected_result_A == 1) &&
-                    (truefalse == expected_result_A)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else if ((expected_result_A == 0) &&
-                           (truefalse == expected_result_A)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else {
-                    message_right_justify(message, "FAIL", SCREENWIDTH);
-                }
-
-                display_results(message, TESTING);
-
-                sprintf(message, "Now testing whether %s is in the last week of "
-                        "the month...", datestring);
-
-                display_results(message, TESTING);
-                truefalse = islastweek(&testdate);
-                stats->ttl_tests++;
-                
-                if(truefalse)
-                    sprintf(message, "    Yes. It is in the last week of %s",
-                            month_to_string(testdate.month));
-                else
-                    sprintf(message, "    No. It is NOT in the last week of %s.",
-                            month_to_string(testdate.month));
-
-                if ((expected_result_B == 1) &&
-                    (truefalse == expected_result_B)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else if ((expected_result_B == 0) &&
-                          (truefalse == expected_result_B)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else {
-                    message_right_justify(message, "FAIL", SCREENWIDTH);
-                }
-                
-                display_results(message, TESTING);
-                display_results(NULL, BLANK_ROW);
-                break;
-            case LEAPDATES:
-                count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
-                              &testdate.month, &testdate.day,
-                              &expected_result_A);
-                
-                date_to_string(datestring, &testdate, MDY);
-                sprintf(message, "Testing %s ... ", datestring);
-                truefalse = isleapyear(&testdate);
-                stats->ttl_tests++;
-                
-                if(truefalse)
-                    strcat(message, "Result: Leap year.");
-                else
-                    strcat(message, "Result: Not a leap year.");
-                if ((expected_result_A == 1) &&
-                    (truefalse == expected_result_A)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else if ((expected_result_A == 0) &&
-                           (truefalse == expected_result_A)) {
-                    stats->successful_tests++;
-                    message_right_justify(message, "PASS", SCREENWIDTH);
-                } else {
-                    message_right_justify(message, "FAIL", SCREENWIDTH);
-                }
-                
-                display_results(message, TESTING);
-                break;
-            case RULECHECK:
-                count = sscanf(line, "%d,%d,%d,%c,%d", &testdate.year,
-                               &testdate.month, &testdate.day,
-                               &ruletype, &expected_result_A);
-                
-                date_to_string(datestring, &testdate, MDY);
-                switch (ruletype) {
-                    case 'A': /* fall through */
-                    case 'a':
-                        sprintf(message, "Testing %s, an absolute rule...",
-                                datestring);
-                        break;
-                    case 'R': /* fall through */
-                    case 'r':
-                        sprintf(message, "Testing %s, a relative rule...",
-                                datestring);
-                        break;
-                    case 'W': /* fall through */
-                    case 'w':
-                        sprintf(message, "Testing %s, a weekend rule...",
-                                datestring);
-                        break;
-                    default: /* do nothing */
-                        break;
-                }
-                stats->ttl_tests++;
-                
-                if (isholiday(&testdate) != 0){
-                    strcat(message, "    YES date is a holiday. ");
-                    if (expected_result_A == 1) {
-                        stats->successful_tests++;
-                        message_right_justify(message, "PASS", SCREENWIDTH);
-                    } else {
-                        message_right_justify(message, "FAIL", SCREENWIDTH);
-                    }
-                } else {
-                    strcat(message, "    NO date is a holiday. ");
-                    if (expected_result_A == 1) {
-                        stats->successful_tests++;
-                        message_right_justify(message, "PASS", SCREENWIDTH);
-                    } else {
-                        message_right_justify(message, "FAIL", SCREENWIDTH);
-                    }
-                }
-                
-                display_results(message, TESTING);
-                break;
-            default:
-                /* do nothing */
-                break;
-        }
-    } 
     return;
 }
 
@@ -399,7 +408,7 @@ void display_results(const char *message, int testphase)
            break;
         case TESTING:
            printf("%c %s", FRAME_SYMB, message);
-           rightborder = SCREENWIDTH - (FRAMESIDEWIDTH + 2) - strlen(message);
+           rightborder = SCREENWIDTH - (FRAMESIDEWIDTH + 2) - (int) strlen(message);
            print_repeat_char(rightborder, ' ');
            printf("* \n");
            break;
@@ -433,7 +442,7 @@ void display_frame(const char *section_name, int framepos)
             printf("\n%c", FRAME_SYMB); 
 
             /*  Frame Title - Centered */
-            SpaceLen = (SCREENWIDTH - (FRAMESIDEWIDTH*2) - strlen(section_name))/2;
+            SpaceLen = (SCREENWIDTH - (FRAMESIDEWIDTH*2) - (int) strlen(section_name))/2;
             if ((SpaceLen % 2) != 0)
                 print_repeat_char(SpaceLen, ' ');
             else
@@ -446,7 +455,7 @@ void display_frame(const char *section_name, int framepos)
             print_repeat_char(SCREENWIDTH, FRAME_SYMB);
             printf("\n%c", FRAME_SYMB); 
             /*  Frame Title - Centered */
-            SpaceLen = (SCREENWIDTH - (FRAMESIDEWIDTH*2) - strlen(section_name))/2;
+            SpaceLen = (SCREENWIDTH - (FRAMESIDEWIDTH*2) - (int) strlen(section_name))/2;
             print_repeat_char(SpaceLen, ' ');
             printf("%s", section_name);
             print_repeat_char(SpaceLen, ' ');
@@ -475,13 +484,13 @@ void print_repeat_char(int count, const char s)
 void message_right_justify(char *text, const char * addedtext, int linewidth) 
 {
     unsigned int i;
-    int paddingwidth = (linewidth - (strlen(text) + (FRAMESIDEWIDTH +1) * 2 +
+    int paddingwidth = (linewidth - (int)(strlen(text) + (FRAMESIDEWIDTH +1) * 2 +
                         strlen(addedtext)));
     if (paddingwidth < 1) {
-        for (i = (linewidth - strlen(text)); i > 3; i--)
+        for (i = (linewidth - (int) strlen(text)); i > 3; i--)
             strcat (text, " ");
         strcat (text, "*\n* ");
-        paddingwidth = linewidth - (strlen(addedtext) + 2 + (FRAMESIDEWIDTH * 2));
+        paddingwidth = linewidth - (int) (strlen(addedtext) + 2 + (FRAMESIDEWIDTH * 2));
         for (i = paddingwidth; i > 0 ; i--)
             strcat(text, " ");
         strcat(text, addedtext);

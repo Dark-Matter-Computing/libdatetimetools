@@ -7,8 +7,8 @@
  *----------------------------------------------------------------------------*/
 
 enum TESTFILETYPES {
-    DERIVEDATES = 4,
-    CALCS = 5,
+    DERIVEDATES,
+    CALCS,
     LEAPDATES,
     RULECHECK
 };
@@ -19,18 +19,16 @@ struct teststats{
     int successful_tests;
 };
 
-
-
 /*-----------------------------------------------------------------------------
  * Prototypes 
  *----------------------------------------------------------------------------*/
 
 /* Test Batteries */
-void testsuite_check_calcs(const char *receivedtestfile);
-void testsuite_check_deriveday(const char *receivedtestfile);
-void testsuite_check_holidays(const char *receivedtestfile);
-void testsuite_check_leap(const char *receivedtestfile);
-void test_loop(enum TESTFILETYPES testtype, FILE *testfile, struct teststats *stats);
+void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name);
+void testsuite_check_calcs(FILE *openedtestfile);
+void testsuite_check_deriveday(FILE *openedtestfile);
+void testsuite_check_holidays(FILE *openedtestfile);
+void testsuite_check_leap(FILE *openedtestfile);
 
 /* Display Manager */
 void display_stats(struct teststats *printstats);
