@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Tue Feb  2 19:11:24 2021
+ * Last Modified: Wed Feb  3 07:41:41 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -146,10 +146,6 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
 
 char *holiday_rules_tokenize(char *string, int *lasttoken)
 {
-    /* FIXME Include handling for DOS/UNIX/MAC file endings.
-     * So far this just handles UNIX endings. 
-     */
-
     unsigned char flags = 0x0; /* clear the flags. */
     char *cur_char; /* character pointer to cycle through the string */
     char *tokenptr = NULL; /* Pointer to current token in the record
@@ -214,7 +210,7 @@ char *holiday_rules_tokenize(char *string, int *lasttoken)
                     CLEAR_FLAG(flags, BEGIN_FIELD);
                     prevpsn = cur_char+1; /* point prevpsn to the next
                                       field delimter or end of tokenbuffer */
-                    if (*prevpsn == NEWLINE) { /* see if we are at the end of
+                    if (*prevpsn == NEWLINE || *prevpsn == CARRIAGE_RTN) { /* see if we are at the end of
                                                 * tokenbuff
                                                 */
                         *lasttoken = 1;
@@ -223,6 +219,7 @@ char *holiday_rules_tokenize(char *string, int *lasttoken)
                     return tokenptr;
                 }
                 break;
+            case CARRIAGE_RTN: /* fall through */
             case NEWLINE:
                 if (string == NULL) {
                     if (TEST_FLAG(flags, BEGIN_FIELD) != 0)
@@ -605,7 +602,7 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
  * (1-12) and day of the month (1-31).  The function returns 0 = Sunday,
  * 1 = Monday, etc.  As the algorithm performs no range checks on the
  * function arguments, unreasonable dates will produce erroneous results
- * or run-time errors. TODO: Add error checking.
+ * or run-time errors. TODO: Add to error checking.
  *
  * References. Devised by Tomohiko Sakamoto[1] in 1993.
  * Source. Text copied from Wikipedia.              
@@ -626,6 +623,7 @@ int derive_weekday(const struct DateTime *dt)
     if ((dt->year > 9999) || (dt->year < 1752) || ((dt->year == 1752) &&
        (dt->month < 9)) || ((dt->year == 1752) && ((dt->month == 9) &&
         (dt->day < 14)))) {
+        /* TODO Move this into the error checking module */
         /* printf("#################################################\n");
         printf("## Temporary warning in func derive_weekday    ##\n");
         printf("## Date out of range of forumla to derive      ##\n");
@@ -703,7 +701,7 @@ int isleapyear(struct DateTime *dt)
  *
  */
 
-        /* FIXME (Thomas#1#): IMPORTANT - STREAMLINE THE AMOUNT OF FUNCTION
+        /* TODO (Thomas#1#): IMPORTANT - STREAMLINE THE AMOUNT OF FUNCTION
         CALLS TO JDNCNVRT.  PERHAPS INITIALIZE THIS WHEN A DATE IS CREATED TO
         SOME MAGIC NUMBER.  THAT WAY IF THE JDN HAS NOT BE CALCULATED THE
         FUNCTION WILL CALCULATE IT, OTHERWISE IT WILL **NOT** RE-CALCULATE IT.
@@ -723,7 +721,7 @@ int jdncnvrt(struct DateTime *dt)
 
     if (dt->month >= 3)
         z = dt->year;
-        else z = dt->year; /* FIXME looks like the if and else do the same thing. */
+        else z = dt->year; /* TODO looks like the if & else do same thing */
     m = dt->month;
     if (m < 3){
         m += 12;

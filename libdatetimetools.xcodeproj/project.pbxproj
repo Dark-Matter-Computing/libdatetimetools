@@ -18,8 +18,6 @@
 		0637EA09259C063A00C0F87E /* timetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA03259C063A00C0F87E /* timetools.h */; };
 		0637EA19259C077100C0F87E /* test_datetimetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637EA18259C077100C0F87E /* test_datetimetools.c */; };
 		0637EA22259C07F500C0F87E /* testsuite.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637EA20259C07F400C0F87E /* testsuite.c */; };
-		06596A5C25AD85310023CF82 /* errorhandler_pvt.h in Headers */ = {isa = PBXBuildFile; fileRef = 06596A5225AD85310023CF82 /* errorhandler_pvt.h */; };
-		06596A6425AD85310023CF82 /* errorhandler.c in Sources */ = {isa = PBXBuildFile; fileRef = 06596A5A25AD85310023CF82 /* errorhandler.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -167,7 +165,6 @@
 				0637E9ED259C05E800C0F87E /* datetimetools_pvt.h in Headers */,
 				0637EA09259C063A00C0F87E /* timetools.h in Headers */,
 				0637EA08259C063A00C0F87E /* datetools.h in Headers */,
-				06596A5C25AD85310023CF82 /* errorhandler_pvt.h in Headers */,
 				0637E9EF259C05E800C0F87E /* version.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,7 +249,6 @@
 			files = (
 				0637E9EE259C05E800C0F87E /* timetools.c in Sources */,
 				0637E9F0259C05E800C0F87E /* datetools.c in Sources */,
-				06596A6425AD85310023CF82 /* errorhandler.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
