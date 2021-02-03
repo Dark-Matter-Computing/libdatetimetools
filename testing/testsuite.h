@@ -32,7 +32,7 @@ void testsuite_check_deriveday(FILE *openedtestfile);
 void testsuite_check_holidays(FILE *openedtestfile);
 void testsuite_check_leap(FILE *openedtestfile);
 void testsuite_check_math(FILE *openedtestfile);
-
+void testsuite_compute_courtdays(FILE *openedtestfile);
 /* Display Manager */
 void display_stats(struct teststats *printstats);
 void display_results(const char *message, int testphase);

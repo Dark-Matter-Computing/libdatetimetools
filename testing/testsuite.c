@@ -7,7 +7,7 @@
  *
  * Version: 1.0.0.0
  * Created:  Mon Dec 21 21:17:02 2020
- * Last Modified: Tue Feb  2 19:02:36 2021
+ * Last Modified: Tue Feb  2 21:02:21 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -130,6 +130,9 @@ void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
                 exit (EXIT_FAILURE);
             }
             testsuite_check_math(testfile);
+             fseek(testfile, 0L, SEEK_SET);
+             clearerr(testfile);
+            testsuite_compute_courtdays(testfile);
             fclose(testfile);
             break;
         default:
@@ -472,6 +475,61 @@ void testsuite_check_math(FILE *openedtestfile)
     return;
 }
 
+void testsuite_compute_courtdays(FILE *openedtestfile)
+{
+    struct DateTime start_date;
+    struct DateTime computed_date;
+    struct DateTime expected_result;
+    int day_count = 0;
+    int count;
+    char line[100];
+    char datestring1[DATESTRINGLEN];
+    char datestring2[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
+    char message2[MAXMESSAGELEN];
+    struct teststats math_stats;
+
+    math_stats.ttl_tests = 0;
+    math_stats.successful_tests = 0;
+
+    display_results(NULL, EMPTY_ROW);
+    display_results("Court Day Offset Function", BUILD_FRAME);
+    
+    /* read and discard the headers */
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d,%d,%d,%d", &start_date.year,
+                      &start_date.month, &start_date.day, &expected_result.year,
+                      &expected_result.month, &expected_result.day,
+                      &day_count);
+        
+        date_to_string(datestring1, &start_date, MDY);
+        if (day_count > 0)
+            sprintf(message, "Adding %d court days to %s... ", day_count,
+                    datestring1);
+        else
+            sprintf(message, "Subtracting %d court days from %s... ", day_count,
+                    datestring1);
+        courtday_offset(&start_date, &computed_date, day_count);
+        date_to_string(datestring2, &computed_date, MDY);
+        math_stats.ttl_tests++;
+        sprintf(message2, "Result: %s.", datestring2);
+        strcat(message, message2); 
+        if (jdncnvrt(&computed_date) == jdncnvrt(&expected_result)) {
+            math_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        
+        display_results(message, TESTING);
+    }
+    display_stats(&math_stats);
+    display_results(NULL, END_FRAME);
+    return;
+}
+
 void display_stats(struct teststats *printstats)
 {
     char message[MAXMESSAGELEN];
@@ -535,10 +593,10 @@ void display_frame(const char *section_name, int framepos)
 
             /*  Frame Title - Centered */
             SpaceLen = (SCREENWIDTH - (FRAMESIDEWIDTH*2) - (int) strlen(section_name))/2;
-            if ((SpaceLen % 2) != 0)
-                print_repeat_char(SpaceLen, ' ');
-            else
+            if ((2*SpaceLen + (FRAMESIDEWIDTH*2) + (int) strlen(section_name)) < SCREENWIDTH)
                 print_repeat_char(SpaceLen + 1, ' ');
+            else
+                print_repeat_char(SpaceLen, ' ');
             printf("%s", section_name);
             print_repeat_char(SpaceLen, ' ');
             printf("%c\n", FRAME_SYMB); 
@@ -601,7 +659,7 @@ void message_right_justify(char *text, const char *addedtext, int linewidth)
 
 /*
         Add functions to test date validity.
-
+t
 To check if a date is on the calendar:
 
   if [y,m,d] = d(g(y,m,d))
