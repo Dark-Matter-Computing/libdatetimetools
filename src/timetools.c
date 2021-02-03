@@ -6,7 +6,7 @@
  *
  * Version:  See version.h
  * Created:  11/25/2020 21:15:15
- * Last Modified: Sun Dec 27 15:00:16 2020
+ * Last Modified: Tue Feb  2 06:15:53 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -28,7 +28,6 @@ int ttlmin; /* total number of minutes */
 #ifdef UNDEF
 int testfunc()
 {
-    /* Exercise 5-5 */
     printf("________________________________________________________\n");
     printf("Enter time in hh:m:ss format:\n");
     fgets(line, sizeof(line), stdin);
@@ -37,7 +36,6 @@ int testfunc()
     printf("\n________________________________________________________\n\n");
 
 
-    /* Exercise 5-6 */
     printf("Enter the total number of minutes:\n");
     fgets(line, sizeof(line), stdin);
     sscanf(line, "%d", &ttlmin);

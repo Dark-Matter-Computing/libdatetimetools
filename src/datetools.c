@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Sat Jan  2 12:00:20 2021
+ * Last Modified: Tue Feb  2 19:11:24 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -144,7 +144,7 @@ void holiday_rules_get_tokens(FILE *holidayrulefile,
  * pointer to the next token in the record.
  */
 
-char * holiday_rules_tokenize(char *string, int *lasttoken)
+char *holiday_rules_tokenize(char *string, int *lasttoken)
 {
     /* FIXME Include handling for DOS/UNIX/MAC file endings.
      * So far this just handles UNIX endings. 
@@ -557,8 +557,8 @@ int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
                             return 1;
                         }
                         else if (dt->day >=
-                                ((rulecheck->rule.wknum-1)*WEEKDAYS+1) &&
-                                dt->day <= (rulecheck->rule.wknum*WEEKDAYS))
+                                ((rulecheck->rule.wknum-1) * WEEKDAYS+1) &&
+                                dt->day <= (rulecheck->rule.wknum * WEEKDAYS))
                         {
                             /* Prev. line tests to see if the day is in the
                             proper week. The formula "(wknum-1)*7+1" gets the
@@ -798,7 +798,7 @@ void jdn2greg(int jdn, struct DateTime *calc_date)
 
       /* Use the intermediate calculations to derive the day, month, year */
 
-      calc_date->day = b - d - (30.6001*e) + f + 1;
+      calc_date->day = b - d - (30.6001 * e) + f + 1;
             /* for the date calculation formula, the final "+1" is not normally
              * included. I use it b/c my result is always one day shy of
              * the correct date.  Perhaps it is because of the use of integer
@@ -917,62 +917,59 @@ void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
  * day, but the number of actual calendar days between the two dates.
  */
 
-int courtday_difference(struct DateTime *date1, struct DateTime *date2)
+int courtday_difference(struct DateTime date1, struct DateTime date2)
 {
-    struct DateTime testdate; /* structure to hold temporary dates for
-                                intermediate testing */
 
-    int test; /* test vaariable to see if a date falls on a holiday or not */
+    int onholiday; /* does a date fall on a holiday */
 
-    int fwd_back; /* variable to increment up or down depending on whether
-                    we are moving forward or backward on the calendar */
+    int incrdir; /* variable to increment positive or negative depending on
+                  * whether we are moving forward or backward on the calendar
+                  */
 
     int count = 0; /* the variable to store the date difference count */
 
-    /* FIXME (Thomas#1#): This function does not work properly if the start
-    date falls on a holiday.  MUST ADD ERROR HANDLING. */
+    /* calculate JDNs */
+    date1.jdn = jdncnvrt(&date1);
+    date2.jdn = jdncnvrt(&date2);
 
-
-    /* set tempday to the same JDN as orig_date */
-    date1->jdn = jdncnvrt(date1);
-    date2->jdn = jdncnvrt(date2);
-
-    /* If numdays == 0, then there is no need to count anything. */
-    if(date1->jdn == date2->jdn) {
-        return 0;
+    if(date1.jdn == date2.jdn) {
+        return 0; /* same dates = zero offset */
     }
 
-    testdate.jdn = date2->jdn; /* set testdate to date2, this is our starting
-                                counting position ---> zero! */
-
-    /* set fwd_back to 1 or -1 depending on whether we are counting forward or
+    /* set incrdir to 1 or -1 depending on whether we are counting forward or
         backward. */
-    if(date1->jdn > testdate.jdn)
-            fwd_back = 1; /* count forward */
-    else
-        fwd_back = -1; /* count backward */
+    if(date1.jdn > date2.jdn) {
+        incrdir = 1; /* count forward */
+    } else {
+        incrdir = -1; /* count backward */
+    }
 
+    /* if date1 is a holday, move to first non-holiday. */
+    while (isholiday(&date1)) {
+        date1.jdn += incrdir;
+        jdn2greg (date1.jdn, &date1); /* determine the new day */
+    }
 
     /* loop through and count the days */
-    while (testdate.jdn != date1->jdn) { /* while there are days to count */
-        test = 1;
-        while(test == 1) {
-            testdate.jdn += fwd_back;
-                /* we increment testdate to point to the very next (or
-                 * previous) day.  if testdate turns out to be a holiday (see
-                 * below), testdate is incremented again at the beginning of
-                 * the next loop iteration. The loop iterates until testdate
+    while (date2.jdn != date1.jdn) { /* while there are days to count */
+        onholiday = 1;
+        while(onholiday == 1) {
+            date2.jdn += incrdir;
+                /* we increment date2dupe to point to the very next (or
+                 * previous) day.  if date2dupe turns out to be a holiday (see
+                 * below), date2dupe is incremented again at the beginning of
+                 * the next loop iteration. The loop iterates until date2dupe
                  * points to a non-holiday date.
                  */
 
-            jdn2greg (testdate.jdn, &testdate); /* determine the new day */
+            jdn2greg (date2.jdn, &date2); /* determine the new day */
 
-            test = isholiday(&testdate);
-                /* is the new day a holiday? If so, don't count it and test the
-                 * next (or previous) day
+            onholiday = isholiday(&date2);
+                /* is the new day a holiday? If so, don't count it and move to
+                 * the next (or previous) day.
                  */
         }
-        count -= fwd_back; /* testdate was not a holiday, so count it! */
+        count -= incrdir; /* date2dupe was not a holiday, so count it! */
     }
     return count;
 }
@@ -990,7 +987,7 @@ int islastxdom(struct DateTime *dt)
          * last week of the first month to the laset x-day of the current month
          */
 
-    if (dt->day < (WEEKDAYS*(MINNUMTTLWKS-1))) {
+    if (dt->day < (WEEKDAYS * (MINNUMTTLWKS-1))) {
         /* If the date of month is less then 22 it cannot be the last week.*/
         return 0;
     }
@@ -1041,7 +1038,7 @@ int islastweek(struct DateTime *dt)
     struct DateTime tempdate; 
     int daycount; 
 
-    if (dt->day < (WEEKDAYS*(MINNUMTTLWKS-1))) { /* if the date of month is less
+    if (dt->day < (WEEKDAYS * (MINNUMTTLWKS-1))) { /* if the date of month is less
             then 22 it cannot be the last week. */
         return 0;
     }
@@ -1129,8 +1126,7 @@ void printholidayrules(void)
         printf("-------------------------------------------------------\n");
         if (tempnode != NULL)
         {
-            switch (monthctr)
-            {
+            switch (monthctr) {
             case ALLMONTHS: 
                 printf("The holiday rules that apply to all months");
                 printf(" are as follows:\n");
@@ -1178,8 +1174,7 @@ void printholidayrules(void)
         }
         else
         {
-            switch (monthctr)
-            {
+            switch (monthctr) {
             case ALLMONTHS:
                 printf("No holidays in apply to all months.");
                 break;
@@ -1263,7 +1258,7 @@ void printholidayrules(void)
  * 
  */
 
-const char* wkday_to_string(int day)
+const char *wkday_to_string(int day)
 {
     switch (day) {
         case SUNDAY:
@@ -1306,7 +1301,7 @@ const char* wkday_to_string(int day)
  *
  */
 
-const char* month_to_string(int month)
+const char *month_to_string(int month)
 {
     switch (month) {
         case JANUARY:
@@ -1353,7 +1348,7 @@ const char* month_to_string(int month)
     return NULL;
 }
 
-void date_to_string(char * rtnstring, const struct DateTime *dt, int date_order)
+void date_to_string(char *rtnstring, const struct DateTime *dt, int date_order)
 {
     switch(date_order){
         case MDY:

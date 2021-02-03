@@ -13,10 +13,10 @@ Created: 12/19/2020 12:43:04
 Last Modified: Wed Dec 23 16:01:48 2020
 
 
-#Usage:
+# Usage:
 Static library.
 
-#File Formats:
+# File Formats:
 
 Presently the library usese CSV files to import various rules
 such as holidays.
@@ -26,7 +26,7 @@ Presently, the library handles Unix encoded ASCII files fine,
 but chokes on macOS and Windows files. Handling CR and CRLFs will be
 addressed in the future.
 
-#Error Handling:
+# Error Handling:
 Under development
 
 # License & Disclaimer

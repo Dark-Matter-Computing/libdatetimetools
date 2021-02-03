@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 01/11/2021 22:43:54
- * Last Modified: Mon Jan 11 23:07:12 2021
+ * Last Modified: Tue Jan 12 19:57:04 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -31,6 +31,18 @@
  * Symbolic Constants 
  *----------------------------------------------------------------------------*/
 
+enum DateTimeErrorCode {
+    /* computation error codes */ 
+    /* file i/o error codes */
+    /* configuration error codes */
+    /* memory error codes */
+    /* UI error codes */
+
+};
+
+enum DateTimeWarningCode {
+    
+}
 
 /*-----------------------------------------------------------------------------
  * Error Handling  
@@ -38,41 +50,70 @@
 
 /* ----- Computation Error Handling ----- */
 
-    /*  MARK - Computation errors */
+    /*  MARK: - Computation errors */
 
 
 /* ----- File i/o Error Handling ----- */
 
-    /* Mark - File i/o */
+    /* MARK: - File i/o */
 
 
 /* ----- Configuration Error Handling ----- */
 
-    /* Mark - Configuration */
+    /* MARK: - Configuration */
 
 
 /* ----- Memory Error Handling ----- */
 
-    /* Mark - Memory */
+    /* MARK: - Memory */
 
 
 /* ----- User Interface Error Handling ----- */
 
-    /* Mark - User Interface */
+    /* MARK: - User Interface */
 
 
 /*-----------------------------------------------------------------------------
  * Error Reporting  
  *----------------------------------------------------------------------------*/
 
+
+/*
+ * Name: errorcode_to_string
+ *
+ * Description: Gets the text of the error code message.
+ *
+ * Parameters: Takes an integer corresponding to a DateTimeErrorCode.
+ *
+ * Return: The string of the error code or a NULL pointer.
+ * 
+ */
+
+const char *errorcode_to_string(int ErrCode);
+
+/*
+ * Name: warncode_to_string
+ *
+ * Description: Gets the text of the warning code message.
+ *
+ * Parameters: Takes an integer corresponding to a DateTimeWarnCode.
+ *
+ * Return: The string of the warning code or a NULL pointer.
+ * 
+ */
+
+const char *warncode_to_string(int WarnCode);
+
+
+
 /* ----- CLI Non-Interactive Mode Error Reporting ----- */
 
-    /* Mark CLI - Non-Interactive */
+    /* MARK: CLI - Non-Interactive */
 
 /* ----- CLI Interactive Mode Error Reporting ----- */
 
-    /* Mark - CLI Interactive Mode */
+    /* MARK: - CLI Interactive */
 
 /* ----- GUI Mode Error Reporting ----- */
 
-    /*  Mark - GUI Mode */
+    /*  MARK: - GUI */

@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:55
- * Last Modified: Fri Jan  1 21:12:10 2021
+ * Last Modified: Tue Feb  2 18:19:23 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -138,7 +138,7 @@ struct HolidayNode;
  * Activate Rule Handler 
  *----------------------------------------------------------------------------*/
 
-int holiday_rules_open(const char * receivedrulefilename, int close_on_success);
+int holiday_rules_open(const char *receivedrulefilename, int close_on_success);
 
 /*-----------------------------------------------------------------------------
  * DATE COMPUTATIONS
@@ -264,15 +264,15 @@ void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
  * Description: Counts court days between two dates.
  *
  * Parameters: The starting date and ending date, both in the form of
- *   pointers to a DateTime struct.
+ *   DateTime structs.
  *
  * Return: Returns an integer which is the result of calculating the number
- *   of court days between the two dates. Recall cour days exclude weekends
+ *   of court days between the two dates. Recall court days exclude weekends
  *   and holidays. The return value is positive if date1 is before date 2,
  *   and negative otherwise.
  *
  */
-int courtday_difference(struct DateTime *date1, struct DateTime *date2);
+int courtday_difference(struct DateTime date1, struct DateTime date2);
 
 /*
  * Name: islastxdom
@@ -319,7 +319,7 @@ void printholidayrules(void);
  *
  */
 
-const char* wkday_to_string(int day);
+const char *wkday_to_string(int day);
 
 /*
  * Name: month_to_string
@@ -331,7 +331,7 @@ const char* wkday_to_string(int day);
  * Return: A string corresponding to the month of the year, or a NULL pointer.
  *
  */
-const char* month_to_string(int month);
+const char *month_to_string(int month);
 
 /*
  * Name: date_to_string
