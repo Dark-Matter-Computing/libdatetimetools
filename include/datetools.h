@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:55
- * Last Modified: Tue Feb  2 18:19:23 2021
+ * Last Modified: Fri Feb  5 17:23:02 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -223,7 +223,7 @@ void jdn2greg(int jdn, struct DateTime *calc_date);
  *   of calendar days between the two dates.
  *
  */
-int date_difference(struct DateTime *date1, struct DateTime *date2);
+int date_difference(struct DateTime date1, struct DateTime date2);
 
 /*
  * Description: calculates the date after adding or subtracting a specified

@@ -11,6 +11,7 @@ enum TESTFILETYPES {
     CALCS,
     LEAPDATES,
     MATHCALC,
+    CALMATH,
     RULECHECK
 };
 
@@ -31,7 +32,9 @@ void testsuite_check_calcs(FILE *openedtestfile);
 void testsuite_check_deriveday(FILE *openedtestfile);
 void testsuite_check_holidays(FILE *openedtestfile);
 void testsuite_check_leap(FILE *openedtestfile);
-void testsuite_check_math(FILE *openedtestfile);
+void testsuite_check_calmath(FILE *openedtestfile);
+void testsuite_check_courtmath(FILE *openedtestfile);
+void testsuite_compute_caldays(FILE *openedtestfile);
 void testsuite_compute_courtdays(FILE *openedtestfile);
 /* Display Manager */
 void display_stats(struct teststats *printstats);

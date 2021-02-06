@@ -103,6 +103,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-k/Volumes/development/products/libdatetimetools/testing/testscripts/caldays_test.csv"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-r/Volumes/development/products/libdatetimetools/testing/testscripts/check_rule_test.csv"
             isEnabled = "YES">
          </CommandLineArgument>

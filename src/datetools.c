@@ -7,7 +7,7 @@
  *
  * Version: See version.h
  * Created: 08/18/2011 14:24:15
- * Last Modified: Wed Feb  3 07:41:41 2021
+ * Last Modified: Fri Feb  5 17:25:10 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -402,7 +402,7 @@ void holiday_table_release(struct HolidayNode *holidayhashtable[])
 
 int holiday_rules_validatefile(FILE *candidaterulefile_h)
 {
-    /* TODO is fields used for anyting? should i create a global rulesset file
+    /* TODO is fields used for anything? Should I create a global rulesset file
      * where these fields can be saved?
      */
     char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
@@ -816,9 +816,9 @@ void jdn2greg(int jdn, struct DateTime *calc_date)
    return;
 }
 
-int date_difference(struct DateTime *date1, struct DateTime *date2)
+int date_difference(struct DateTime date1, struct DateTime date2)
 {
-    return jdncnvrt(date2) - jdncnvrt(date1);
+    return jdncnvrt(&date2) - jdncnvrt(&date1);
 }
 
 void date_offset(struct DateTime *orig_date, struct DateTime *calc_date,
@@ -1062,7 +1062,7 @@ int islastweek(struct DateTime *dt)
 
         /* calculate number of days between the argument and the last day of
             the month. */
-        daycount = date_difference(dt, &tempdate);
+        daycount = date_difference(*dt, tempdate);
         if (daycount >= 7)
             return 0;
         else if (dt->day_of_week > tempdate.day_of_week)

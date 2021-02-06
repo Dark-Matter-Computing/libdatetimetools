@@ -7,7 +7,7 @@
  *
  * Version: 1.0.0.0
  * Created:  Mon Dec 21 21:17:02 2020
- * Last Modified: Tue Feb  2 21:02:21 2021
+ * Last Modified: Fri Feb  5 17:33:59 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -122,6 +122,19 @@ void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
             testsuite_check_leap(testfile);
             fclose(testfile);
             break;
+        case CALMATH:
+            testfile = fopen(testfile_name, "r");
+            if (testfile == NULL) {
+                fprintf (stderr, "couldn't open file '%s'; %s\n",
+                         testfile_name, strerror(errno));
+                exit (EXIT_FAILURE);
+            }
+            testsuite_check_calmath(testfile);
+            fseek(testfile, 0L, SEEK_SET);
+            clearerr(testfile);
+            testsuite_compute_caldays(testfile);
+            fclose(testfile);
+            break;
         case MATHCALC:
             testfile = fopen(testfile_name, "r");
             if (testfile == NULL) {
@@ -129,7 +142,7 @@ void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
                          testfile_name, strerror(errno));
                 exit (EXIT_FAILURE);
             }
-            testsuite_check_math(testfile);
+            testsuite_check_courtmath(testfile);
              fseek(testfile, 0L, SEEK_SET);
              clearerr(testfile);
             testsuite_compute_courtdays(testfile);
@@ -371,47 +384,45 @@ void testsuite_check_holidays(FILE *openedtestfile)
     return;
 }
 
-void testsuite_check_leap(FILE *openedtestfile)
+void testsuite_check_calmath(FILE *openedtestfile)
 {
-    struct DateTime testdate;
+    struct DateTime start_date;
+    struct DateTime end_date;
     char line[100];
     int count;
-    int truefalse = 0;
-    int expected_result_A = 0;
-    char datestring[DATESTRINGLEN];
+    int computed_days = 9999;
+    int expected_result = 0;
+    char datestring1[DATESTRINGLEN];
+    char datestring2[DATESTRINGLEN];
     char message[MAXMESSAGELEN];
-    struct teststats leap_stats;
+    char message2[MAXMESSAGELEN];
+    struct teststats calmath_stats;
 
-    leap_stats.ttl_tests = 0;
-    leap_stats.successful_tests = 0;
+    calmath_stats.ttl_tests = 0;
+    calmath_stats.successful_tests = 0;
 
     display_results(NULL, EMPTY_ROW);
-    display_results("Leap Year Function", BUILD_FRAME);
+    display_results("Date Difference Function", BUILD_FRAME);
     
     /* read and discard the headers */
     fgets(line, sizeof(line), openedtestfile);
     
     while (fgets(line, sizeof(line), openedtestfile) != NULL) {
-        count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
-                      &testdate.month, &testdate.day,
-                      &expected_result_A);
+        count = sscanf(line, "%d,%d,%d,%d,%d,%d,%d", &start_date.year,
+                      &start_date.month, &start_date.day, &end_date.year,
+                      &end_date.month, &end_date.day,
+                      &expected_result);
         
-        date_to_string(datestring, &testdate, MDY);
-        sprintf(message, "Testing %s ... ", datestring);
-        truefalse = isleapyear(&testdate);
-        leap_stats.ttl_tests++;
-        
-        if(truefalse)
-            strcat(message, "Result: Leap year.");
-        else
-            strcat(message, "Result: Not a leap year.");
-        if ((expected_result_A == 1) &&
-            (truefalse == expected_result_A)) {
-            leap_stats.successful_tests++;
-            message_right_justify(message, "PASS", SCREENWIDTH);
-        } else if ((expected_result_A == 0) &&
-                   (truefalse == expected_result_A)) {
-            leap_stats.successful_tests++;
+        date_to_string(datestring1, &start_date, MDY);
+        date_to_string(datestring2, &end_date, MDY);
+        sprintf(message, "Calendar days between %s and %s... ",
+                datestring1, datestring2);
+        computed_days = date_difference(start_date, end_date);
+        calmath_stats.ttl_tests++;
+        sprintf(message2, "Result: %d days.", computed_days);
+        strcat(message, message2); 
+        if (computed_days == expected_result) {
+            calmath_stats.successful_tests++;
             message_right_justify(message, "PASS", SCREENWIDTH);
         } else {
             message_right_justify(message, "FAIL", SCREENWIDTH);
@@ -419,12 +430,12 @@ void testsuite_check_leap(FILE *openedtestfile)
         
         display_results(message, TESTING);
     }
-    display_stats(&leap_stats);
+    display_stats(&calmath_stats);
     display_results(NULL, END_FRAME);
     return;
 }
 
-void testsuite_check_math(FILE *openedtestfile)
+void testsuite_check_courtmath(FILE *openedtestfile)
 {
     struct DateTime start_date;
     struct DateTime end_date;
@@ -455,7 +466,7 @@ void testsuite_check_math(FILE *openedtestfile)
         
         date_to_string(datestring1, &start_date, MDY);
         date_to_string(datestring2, &end_date, MDY);
-        sprintf(message, "Court-days between %s and %s... ",
+        sprintf(message, "Calendar days between %s and %s... ",
                 datestring1, datestring2);
         computed_days = courtday_difference(start_date, end_date);
         math_stats.ttl_tests++;
@@ -471,6 +482,61 @@ void testsuite_check_math(FILE *openedtestfile)
         display_results(message, TESTING);
     }
     display_stats(&math_stats);
+    display_results(NULL, END_FRAME);
+    return;
+}
+
+void testsuite_compute_caldays(FILE *openedtestfile)
+{
+    struct DateTime start_date;
+    struct DateTime computed_date;
+    struct DateTime expected_result;
+    int day_count = 0;
+    int count;
+    char line[100];
+    char datestring1[DATESTRINGLEN];
+    char datestring2[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
+    char message2[MAXMESSAGELEN];
+    struct teststats calmath_stats;
+
+    calmath_stats.ttl_tests = 0;
+    calmath_stats.successful_tests = 0;
+
+    display_results(NULL, EMPTY_ROW);
+    display_results("Date Offset Function", BUILD_FRAME);
+    
+    /* read and discard the headers */
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d,%d,%d,%d", &start_date.year,
+                      &start_date.month, &start_date.day, &expected_result.year,
+                      &expected_result.month, &expected_result.day,
+                      &day_count);
+        
+        date_to_string(datestring1, &start_date, MDY);
+        if (day_count > 0)
+            sprintf(message, "Adding %d calendar days to %s... ", day_count,
+                    datestring1);
+        else
+            sprintf(message, "Subtracting %d calendar days from %s... ", day_count,
+                    datestring1);
+        date_offset(&start_date, &computed_date, day_count);
+        date_to_string(datestring2, &computed_date, MDY);
+        calmath_stats.ttl_tests++;
+        sprintf(message2, "Result: %s.", datestring2);
+        strcat(message, message2); 
+        if (jdncnvrt(&computed_date) == jdncnvrt(&expected_result)) {
+            calmath_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        
+        display_results(message, TESTING);
+    }
+    display_stats(&calmath_stats);
     display_results(NULL, END_FRAME);
     return;
 }
@@ -526,6 +592,59 @@ void testsuite_compute_courtdays(FILE *openedtestfile)
         display_results(message, TESTING);
     }
     display_stats(&math_stats);
+    display_results(NULL, END_FRAME);
+    return;
+}
+
+void testsuite_check_leap(FILE *openedtestfile)
+{
+    struct DateTime testdate;
+    char line[100];
+    int count;
+    int truefalse = 0;
+    int expected_result_A = 0;
+    char datestring[DATESTRINGLEN];
+    char message[MAXMESSAGELEN];
+    struct teststats leap_stats;
+
+    leap_stats.ttl_tests = 0;
+    leap_stats.successful_tests = 0;
+
+    display_results(NULL, EMPTY_ROW);
+    display_results("Leap Year Function", BUILD_FRAME);
+    
+    /* read and discard the headers */
+    fgets(line, sizeof(line), openedtestfile);
+    
+    while (fgets(line, sizeof(line), openedtestfile) != NULL) {
+        count = sscanf(line, "%d,%d,%d,%d", &testdate.year,
+                      &testdate.month, &testdate.day,
+                      &expected_result_A);
+        
+        date_to_string(datestring, &testdate, MDY);
+        sprintf(message, "Testing %s ... ", datestring);
+        truefalse = isleapyear(&testdate);
+        leap_stats.ttl_tests++;
+        
+        if(truefalse)
+            strcat(message, "Result: Leap year.");
+        else
+            strcat(message, "Result: Not a leap year.");
+        if ((expected_result_A == 1) &&
+            (truefalse == expected_result_A)) {
+            leap_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else if ((expected_result_A == 0) &&
+                   (truefalse == expected_result_A)) {
+            leap_stats.successful_tests++;
+            message_right_justify(message, "PASS", SCREENWIDTH);
+        } else {
+            message_right_justify(message, "FAIL", SCREENWIDTH);
+        }
+        
+        display_results(message, TESTING);
+    }
+    display_stats(&leap_stats);
     display_results(NULL, END_FRAME);
     return;
 }
