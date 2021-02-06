@@ -5,9 +5,9 @@
  * Description:  Testsuite.c creates a number of functions for testing the
  * libdatetimetools library's functionality and quality.
  *
- * Version: 1.0.0.0
- * Created:  Mon Dec 21 21:17:02 2020
- * Last Modified: Fri Feb  5 17:33:59 2021
+ * Version: See VERSION 
+ * Created: Mon Dec 21 21:17:02 2020
+ * Last Modified: Fri Feb  5 18:08:40 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing

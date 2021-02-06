@@ -51,6 +51,9 @@
 		063C90E6259C447200BF1A98 /* test_datetimetools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = test_datetimetools.entitlements; sourceTree = "<group>"; };
 		06596A5225AD85310023CF82 /* errorhandler_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errorhandler_pvt.h; sourceTree = "<group>"; };
 		06596A5A25AD85310023CF82 /* errorhandler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = errorhandler.c; sourceTree = "<group>"; };
+		067EE39B25CE39A4009373B7 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
+		067EE39C25CE39A4009373B7 /* bumpversion.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bumpversion.sh; sourceTree = "<group>"; };
+		067EE39D25CE39A4009373B7 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		06CE056D25CB8B2C0053A0A2 /* derive_date_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = derive_date_test_CRLF.csv; sourceTree = "<group>"; };
 		06CE056E25CB8B2C0053A0A2 /* datecalc_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = datecalc_test_CRLF.csv; sourceTree = "<group>"; };
 		06CE056F25CB8B2C0053A0A2 /* leap_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = leap_test_CRLF.csv; sourceTree = "<group>"; };
@@ -109,6 +112,9 @@
 		0637E9D2259C05A300C0F87E = {
 			isa = PBXGroup;
 			children = (
+				067EE39C25CE39A4009373B7 /* bumpversion.sh */,
+				067EE39D25CE39A4009373B7 /* CHANGELOG.md */,
+				067EE39B25CE39A4009373B7 /* VERSION */,
 				06F471B6259C4DC7004D3DB9 /* README.md */,
 				063C90E6259C447200BF1A98 /* test_datetimetools.entitlements */,
 				0637EA01259C063A00C0F87E /* include */,

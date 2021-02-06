@@ -2,9 +2,9 @@
  * Filename: test_datetimetools.c
  * Library: libdatetimetools
  *
- * Version: 1.0.0.0
+ * Version: see VERSION
  * Created: Mon Dec 21 21:08:29 2020
- * Last Modified: Fri Feb  5 17:33:51 2021
+ * Last Modified: Fri Feb  5 18:08:13 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
