@@ -7,9 +7,9 @@
  * component of solutions to computing chain-based scheduling, as in litigation
  * and project management. 
  *
- * Version: See version.h
+ * Version: See VERSION
  * Created: 08/20/2011 10:33:55
- * Last Modified: Sun Dec 27 15:04:46 2020
+ * Last Modified: Fri Feb  5 18:07:38 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
