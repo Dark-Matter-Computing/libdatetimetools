@@ -80,7 +80,7 @@ else
     if [ "$RESPONSE" = "YES" ]; then RESPONSE="y"; fi
     if [ "$RESPONSE" = "y" ]; then
         echo "1.0.0" > VERSION
-        echo "## 0.1.0 ($NOW)" > CHANGELOG.md
+        echo "## 1.0.0 ($NOW)" > CHANGELOG.md
         git log --pretty=format:"  - %s" >> CHANGELOG.md
         echo "" >> CHANGELOG.md
         echo "" >> CHANGELOG.md
@@ -88,7 +88,7 @@ else
         read
         echo -e "$PUSHING_MSG"
         git add VERSION CHANGELOG.md
-        git commit -m "Add VERSION and CHANGELOG.md files, Bump version to v0.1.0."
+        git commit -m "Add VERSION and CHANGELOG.md files, Bump version to v1.0.0."
         git tag -a -m "Tag version 1.0.0." "v1.0.0"
         git push origin --tags
     fi
