@@ -9,7 +9,7 @@
  *
  * Version: See version.h
  * Created: 12/19/2020 12:43:04
- * Last Modified: Thu Dec 31 15:44:54 2020
+ * Last Modified: Wed Feb  3 07:28:03 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -77,11 +77,11 @@
 
 /*  Define field codes for the holiday CSV File */
 
-const char* HF_MONTH     = "Month";
-const char* HF_RTYPE     = "Rule Type";
-const char* HF_RULE      = "Rule";
-const char* HF_HOLIDAY   = "Holiday";
-const char* HF_AUTHORITY = "Authority";
+const char *HF_MONTH     = "Month";
+const char *HF_RTYPE     = "Rule Type";
+const char *HF_RULE      = "Rule";
+const char *HF_HOLIDAY   = "Holiday";
+const char *HF_AUTHORITY = "Authority";
 
 /*  Sizes and numbers of records and fields */
 
@@ -95,6 +95,7 @@ const char* HF_AUTHORITY = "Authority";
 #define FDELIMITER ',' /* Field delimiter used in the CSV files */
 #define TDELIMITER '\"' /* Text string delimiter used in the CSV files */
 #define NEWLINE '\n' /*  Newline */
+#define CARRIAGE_RTN '\r' /* carriage return */
 #define NULCHAR '\0' /* nul string */
 #define EMPTYFIELD '\0'
 

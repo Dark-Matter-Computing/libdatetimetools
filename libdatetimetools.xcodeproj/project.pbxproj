@@ -49,6 +49,19 @@
 		0637EA20259C07F400C0F87E /* testsuite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testsuite.c; sourceTree = "<group>"; };
 		0637EA21259C07F400C0F87E /* testsuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testsuite.h; sourceTree = "<group>"; };
 		063C90E6259C447200BF1A98 /* test_datetimetools.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = test_datetimetools.entitlements; sourceTree = "<group>"; };
+		06596A5225AD85310023CF82 /* errorhandler_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errorhandler_pvt.h; sourceTree = "<group>"; };
+		06596A5A25AD85310023CF82 /* errorhandler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = errorhandler.c; sourceTree = "<group>"; };
+		06CE056D25CB8B2C0053A0A2 /* derive_date_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = derive_date_test_CRLF.csv; sourceTree = "<group>"; };
+		06CE056E25CB8B2C0053A0A2 /* datecalc_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = datecalc_test_CRLF.csv; sourceTree = "<group>"; };
+		06CE056F25CB8B2C0053A0A2 /* leap_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = leap_test_CRLF.csv; sourceTree = "<group>"; };
+		06CE057025CB8B2C0053A0A2 /* math_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = math_test_CRLF.csv; sourceTree = "<group>"; };
+		06CE057125CB8B2C0053A0A2 /* check_rule_test_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = check_rule_test_CRLF.csv; sourceTree = "<group>"; };
+		06CE057225CB8B2C0053A0A2 /* math_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = math_test.csv; sourceTree = "<group>"; };
+		06CE057325CB8B3C0053A0A2 /* leap_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = leap_test.csv; sourceTree = "<group>"; };
+		06CE057425CB8B3C0053A0A2 /* check_rule_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = check_rule_test.csv; sourceTree = "<group>"; };
+		06CE057625CB8B550053A0A2 /* holidays_casuper_CRLF.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = holidays_casuper_CRLF.csv; sourceTree = "<group>"; };
+		06CE057725CB8B820053A0A2 /* interactivetest.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = interactivetest.sh; sourceTree = "<group>"; };
+		06CE057825CB8B820053A0A2 /* dostest.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dostest.sh; sourceTree = "<group>"; };
 		06F471B6259C4DC7004D3DB9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,6 +87,7 @@
 		060EBE90259C0F8000090FD3 /* testrules */ = {
 			isa = PBXGroup;
 			children = (
+				06CE057525CB8B550053A0A2 /* crlf_files */,
 				060EBE91259C0F8000090FD3 /* holidays_casuper.csv */,
 			);
 			path = testrules;
@@ -82,6 +96,10 @@
 		060EBE92259C0F8D00090FD3 /* testscripts */ = {
 			isa = PBXGroup;
 			children = (
+				06CE056C25CB8B2C0053A0A2 /* crlf_files */,
+				06CE057425CB8B3C0053A0A2 /* check_rule_test.csv */,
+				06CE057325CB8B3C0053A0A2 /* leap_test.csv */,
+				06CE057225CB8B2C0053A0A2 /* math_test.csv */,
 				060EBE93259C0F8D00090FD3 /* datecalc_test.csv */,
 				060EBE94259C0F8D00090FD3 /* derive_date_test.csv */,
 			);
@@ -113,9 +131,11 @@
 			isa = PBXGroup;
 			children = (
 				0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */,
-				0637E9E9259C05E800C0F87E /* timetools.c */,
-				0637E9EA259C05E800C0F87E /* version.h */,
+				06596A5225AD85310023CF82 /* errorhandler_pvt.h */,
 				0637E9EC259C05E800C0F87E /* datetools.c */,
+				0637E9E9259C05E800C0F87E /* timetools.c */,
+				06596A5A25AD85310023CF82 /* errorhandler.c */,
+				0637E9EA259C05E800C0F87E /* version.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -135,11 +155,33 @@
 				0637EA18259C077100C0F87E /* test_datetimetools.c */,
 				0637EA21259C07F400C0F87E /* testsuite.h */,
 				0637EA20259C07F400C0F87E /* testsuite.c */,
+				06CE057825CB8B820053A0A2 /* dostest.sh */,
+				06CE057725CB8B820053A0A2 /* interactivetest.sh */,
 				060EBE95259C0FC000090FD3 /* unittest.sh */,
 				060EBE92259C0F8D00090FD3 /* testscripts */,
 				060EBE90259C0F8000090FD3 /* testrules */,
 			);
 			path = testing;
+			sourceTree = "<group>";
+		};
+		06CE056C25CB8B2C0053A0A2 /* crlf_files */ = {
+			isa = PBXGroup;
+			children = (
+				06CE056D25CB8B2C0053A0A2 /* derive_date_test_CRLF.csv */,
+				06CE056E25CB8B2C0053A0A2 /* datecalc_test_CRLF.csv */,
+				06CE056F25CB8B2C0053A0A2 /* leap_test_CRLF.csv */,
+				06CE057025CB8B2C0053A0A2 /* math_test_CRLF.csv */,
+				06CE057125CB8B2C0053A0A2 /* check_rule_test_CRLF.csv */,
+			);
+			path = crlf_files;
+			sourceTree = "<group>";
+		};
+		06CE057525CB8B550053A0A2 /* crlf_files */ = {
+			isa = PBXGroup;
+			children = (
+				06CE057625CB8B550053A0A2 /* holidays_casuper_CRLF.csv */,
+			);
+			path = crlf_files;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

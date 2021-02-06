@@ -46,5 +46,9 @@ WATCHLISTS text eol=lf
 VERSION text eol=lf
 DIR_METADATA text eol=lf
 
+# Retain CRLF for specific files for testing
+**/testing/testscripts/crlf_files/*CRLF.csv text eol=crlf
+**/testing/testrules/crlf_files/*CRLF.csv text eol=crlf
+
 #Xcode and IDE Attributes
 *.pbxproj binary merge=union

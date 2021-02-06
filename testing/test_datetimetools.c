@@ -4,7 +4,7 @@
  *
  * Version: 1.0.0.0
  * Created: Mon Dec 21 21:08:29 2020
- * Last Modified: Mon Jan  4 18:43:40 2021
+ * Last Modified: Fri Feb  5 17:33:51 2021
  *
  * Author: Thomas H. Vidal (THV), thomashvidal@gmail.com
  * Organization: Dark Matter Computing
@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     char *datecalc_filename;
     char *leapcalc_filename;
     char *rulecheck_filename;
+    char *mathcalc_filename;
+    char *calmath_filename;
     int close_file_when_done = 1;
     
 
@@ -51,6 +53,8 @@ int main(int argc, char *argv[])
     datecalc_filename = NULL;
     leapcalc_filename = NULL;
     rulecheck_filename = NULL;
+    mathcalc_filename = NULL;
+    calmath_filename = NULL;
 
     /* Process the commandline arguments */
     if (argc == 1) {
@@ -81,6 +85,15 @@ int main(int argc, char *argv[])
                 leapcalc_filename = &argv[1][2];
                 testsuite_run_check(LEAPDATES, leapcalc_filename);
                 break;
+            case 'K': /* fall through */
+            case 'k':
+                calmath_filename = &argv[1][2];
+                testsuite_run_check(CALMATH, calmath_filename);
+                break;
+            case 'M': /* fall through */
+            case 'm':
+                mathcalc_filename = &argv[1][2];
+                testsuite_run_check(MATHCALC, mathcalc_filename);
             case 'R': /* fall through */
             case 'r':
                 rulecheck_filename = &argv[1][2];
