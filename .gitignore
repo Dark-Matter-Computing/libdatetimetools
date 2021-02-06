@@ -40,7 +40,11 @@ doc/**/specs
 **/make
 **/research
 **/resources
+**/testing/playground
 
+# Temporarily ignored documentation directories
+**/doc/analysis
+**/doc/api
 
 # Prerequisites
 *.d
