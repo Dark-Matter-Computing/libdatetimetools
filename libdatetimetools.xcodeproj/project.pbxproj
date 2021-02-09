@@ -12,7 +12,6 @@
 		060EBEA7259C179600090FD3 /* liblibdatetimetools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */; };
 		0637E9ED259C05E800C0F87E /* datetimetools_pvt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */; };
 		0637E9EE259C05E800C0F87E /* timetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637E9E9259C05E800C0F87E /* timetools.c */; };
-		0637E9EF259C05E800C0F87E /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637E9EA259C05E800C0F87E /* version.h */; };
 		0637E9F0259C05E800C0F87E /* datetools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0637E9EC259C05E800C0F87E /* datetools.c */; };
 		0637EA08259C063A00C0F87E /* datetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA02259C063A00C0F87E /* datetools.h */; };
 		0637EA09259C063A00C0F87E /* timetools.h in Headers */ = {isa = PBXBuildFile; fileRef = 0637EA03259C063A00C0F87E /* timetools.h */; };
@@ -40,7 +39,6 @@
 		0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibdatetimetools.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datetimetools_pvt.h; sourceTree = "<group>"; };
 		0637E9E9259C05E800C0F87E /* timetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timetools.c; sourceTree = "<group>"; };
-		0637E9EA259C05E800C0F87E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		0637E9EC259C05E800C0F87E /* datetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = datetools.c; sourceTree = "<group>"; };
 		0637EA02259C063A00C0F87E /* datetools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datetools.h; sourceTree = "<group>"; };
 		0637EA03259C063A00C0F87E /* timetools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timetools.h; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 				0637E9EC259C05E800C0F87E /* datetools.c */,
 				0637E9E9259C05E800C0F87E /* timetools.c */,
 				06596A5A25AD85310023CF82 /* errorhandler.c */,
-				0637E9EA259C05E800C0F87E /* version.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -209,7 +206,6 @@
 				0637E9ED259C05E800C0F87E /* datetimetools_pvt.h in Headers */,
 				0637EA09259C063A00C0F87E /* timetools.h in Headers */,
 				0637EA08259C063A00C0F87E /* datetools.h in Headers */,
-				0637E9EF259C05E800C0F87E /* version.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

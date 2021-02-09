@@ -13,14 +13,12 @@ project = libdatetimetools
 ## Source Tree
 SOURCEDIR = ./src
 OBJDIR = ./obj
-# OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 SOURCES = $(sort $(shell find . -name '*.c'))
 OBJECTS = $(sort $(notdir $(patsubst %.c,%.o,$(SOURCES))))
 LIBDIR = ./lib
 
-#Install Locations - Linux and macOS
-GLOBALLIBS = /usr/local/lib
-GLOBALINC = /usr/local/include
+#Install
+INSTALL_FILES = ./include/*tools.h
 
 ## Determine OS and Architecture
 
@@ -39,12 +37,18 @@ else
 		OSFLAG += -D LINUX
 		target = $(project)_linux
 		CC = gcc
+		#Install Locations
+		GLOBALLIBS = /usr/local/lib
+		GLOBALINC = /usr/local/include
 	endif
 	ifeq ($(UNAME_S),Darwin)
 		OSFLAG += -D macOS
 		target = $(project)
 		#cc = clang
 		cc = gcc
+		#Install Locations
+		GLOBALLIBS = /usr/local/lib
+		GLOBALINC = /usr/local/include
 	endif
 
 	UNAME_P := $(shell uname -p)
@@ -93,7 +97,10 @@ CPPFLAGS= -Weffc++
 
 # Primary Build Targets
 build: $(OBJECTS)
-	ar -rc $(LIBDIR)/$(target).a $(OBJDIR)/$<
+	@echo Building "$(target)"...
+	@echo Installing library in $(LIBDIR)...
+	@ar -rc $(LIBDIR)/$(target).a $(OBJDIR)/$<
+	@echo Library built...
 
 $(OBJECTS): $(SOURCES)
 	@$(COMPILE.c) -c -o $(OBJDIR)/$@ $<
@@ -110,18 +117,24 @@ $(OBJECTS): $(SOURCES)
 assembler_out: $(OBJDIR)/%.o 
 	$(CC) -o2 -S -c -o $(OBJDIR)/$@.s $(SOURCEDIR)/$<
 
-# Admin Targets
-rebuild: clean build
-
 clean:
 	rm -f $(OBJDIR)/*.o $(LIBDIR)/$(target).a 
 
-rebuild: clean build install
+rebuild: clean build 
+
 
 install: 
-	cp $(LIBDIR)/$(target).a $(GLOBALLIBS)/.
-	cp ./include/*tools.h $(GLOBALINC)/.
-	cp ./include/*tools.h ../DocketMaster/ext/.
+	@echo Installing library in $(GLOBALLIBS)...
+	@cp -f $(LIBDIR)/$(target).a $(GLOBALLIBS)/.
+	@echo Installing the headers in $(GLOBALINC)...
+	@for u in $(INSTALL_FILES); do \
+		cp -f $$u $(GLOBALINC); \
+	done
+	@echo Finished
+
+# Admin Targets
+rebuild: clean build
+release: build install
 
 variable_test:
 	@echo $(OSFLAG)
@@ -130,6 +143,7 @@ variable_test:
 	@echo "$(project).a"
 	@echo $(SOURCES)
 	@echo $(OBJECTS)
+	@echo $(INSTALL_FILES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
