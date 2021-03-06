@@ -272,7 +272,7 @@ void holiday_rules_parse_token(char *token, char *cur_field,
             /* if currentchar = '0' then the month is september or earlier */
             currentchar++; /* read next character */
 
-            /* TODO (Thomas#1#): Add error processing in case the month
+            /* TODO: Add error processing in case the month
             is not listed as a number betweeen 1 and 12. */
 
             newholiday->month = (ASCII2DECIMAL(*currentchar));
@@ -284,7 +284,7 @@ void holiday_rules_parse_token(char *token, char *cur_field,
 			 * between 0 and 9.
 			 * */
 
-            /* TODO (Thomas#1#): Add error processing in case the first
+            /* TODO: Add error processing in case the first 
             digit of the month month is != '1'. */
         }
     } else if (strcmp(cur_field, HF_RTYPE) == 0) {
@@ -297,7 +297,7 @@ void holiday_rules_parse_token(char *token, char *cur_field,
                  newholiday->wkday = ASCII2DECIMAL(*currentchar);
                  currentchar += 2; /* get rid of the dash */
                  newholiday->wknum = ASCII2DECIMAL(*currentchar);
-                 newholiday->day = 0; /* TODO use symbolic constant */
+                 newholiday->day = WKNDRULE_DAY;
                  break;
             case 'a':   /* Absolute Rules */
                         /* fall through */
@@ -323,7 +323,7 @@ void holiday_rules_parse_token(char *token, char *cur_field,
             case 'x':   /* rule has not been populated yet
                             error to be handled */
             default:
-                        /* TODO (Thomas#1#): Add error processing in case the
+                        /* TODO: Add error processing in case the
                             rule is not in the proper format. */
                         break;
                 }
@@ -402,7 +402,7 @@ void holiday_table_release(struct HolidayNode *holidayhashtable[])
 
 int holiday_rules_validatefile(FILE *candidaterulefile_h)
 {
-    /* TODO is fields used for anything? Should I create a global rulesset file
+    /* TODO: is fields used for anything? Should I create a global rulesset file
      * where these fields can be saved?
      */
     char tokenbuf[MAXRECORDLENGTH]; /* buffer to read the file tokenbuf */
@@ -414,7 +414,7 @@ int holiday_rules_validatefile(FILE *candidaterulefile_h)
     name = fgets(tokenbuf, sizeof(tokenbuf), candidaterulefile_h); 
 
     if (name == NULL) { /* file is empty */
-        return -1; /* TODO change this to return a meaningful errorcode */
+        return -1; /* TODO: change this to return a meaningful errorcode */
     } else {
         name = &tokenbuf[0];
         index = 1;
@@ -433,11 +433,11 @@ int holiday_rules_validatefile(FILE *candidaterulefile_h)
         }
         /* can't test these earlier b/c we first have to NUL term the strings */
         if(strcmp(name, "Court Holiday Rules File") != 0) 
-           return -1; /* TODO change this to return a meaningful errorcode
+           return -1; /* TODO: change this to return a meaningful errorcode
                        *  "ERROR: This is not a holiday rules file"
                        */
         if(strcmp(vers, "V1.0") != 0) 
-           return -1; /* TODO change this to return a meaningful errorcode
+           return -1; /* TODO: change this to return a meaningful errorcode
                        *  "ERROR: This is not the correct version
                        */
     }
@@ -623,7 +623,7 @@ int derive_weekday(const struct DateTime *dt)
     if ((dt->year > 9999) || (dt->year < 1752) || ((dt->year == 1752) &&
        (dt->month < 9)) || ((dt->year == 1752) && ((dt->month == 9) &&
         (dt->day < 14)))) {
-        /* TODO Move this into the error checking module */
+        /* TODO: Move this into the error checking module */
         /* printf("#################################################\n");
         printf("## Temporary warning in func derive_weekday    ##\n");
         printf("## Date out of range of forumla to derive      ##\n");
@@ -701,15 +701,11 @@ int isleapyear(struct DateTime *dt)
  *
  */
 
-        /* TODO (Thomas#1#): IMPORTANT - STREAMLINE THE AMOUNT OF FUNCTION
+        /* TODO: IMPORTANT - STREAMLINE THE AMOUNT OF FUNCTION
         CALLS TO JDNCNVRT.  PERHAPS INITIALIZE THIS WHEN A DATE IS CREATED TO
         SOME MAGIC NUMBER.  THAT WAY IF THE JDN HAS NOT BE CALCULATED THE
         FUNCTION WILL CALCULATE IT, OTHERWISE IT WILL **NOT** RE-CALCULATE IT.
         THIS SHOULD SAVE SOME CLOCK CYCLES!! */
-
-        /* TODO (Thomas#4#): instead of having jdncnvrt return an int, consider
-        having the function simply assign the JDN to the struct member data
-        object jdn. */
 
 int jdncnvrt(struct DateTime *dt)
 {
@@ -721,7 +717,7 @@ int jdncnvrt(struct DateTime *dt)
 
     if (dt->month >= 3)
         z = dt->year;
-        else z = dt->year; /* TODO looks like the if & else do same thing */
+        else z = dt->year; /* TODO: looks like the if & else do same thing */
     m = dt->month;
     if (m < 3){
         m += 12;

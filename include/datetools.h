@@ -46,6 +46,9 @@
 #define LEAP 1
 #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
                     to the last x-day of a certain month */
+#define WKNDRULE_DAY 0 /* This is the magic number for a holiday rule that
+                        * that defines a weekend rule.
+                        */
 #define DATESTRINGLEN 20 /* max length of a date string, enough for a long date */
 
 /* Days of the week */
@@ -99,8 +102,7 @@ enum DATEORDER{
  * that subscripts match the actual calendar months 1=january, etc.
  */
 
-    /* TODO Convert to unsigned char to minimize memory usage? */
-    /* TODO Consdider using an enum and dropping the extra 13th element. */
+    /* TODO: Convert to unsigned char to minimize memory usage? */
 
 static int montharray[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
@@ -108,7 +110,7 @@ static int montharray[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
  * match up with months.  This is a 2D array to account for leap years.
  */
 
-    /* TODO Convert to unsigned char to minimize memory usage? */
+    /* TODO: Convert to unsigned char to minimize memory usage? */
 
 static int daysinmonths[2][13] = {{0, 31, 28, 31, 30, 31,
                                       30, 31, 31, 30, 31, 30, 31},
@@ -117,7 +119,7 @@ static int daysinmonths[2][13] = {{0, 31, 28, 31, 30, 31,
 
 /* A struct to contain the date and time aspects of an event. */
 
-        /*  TODO It might be preferable to break this into a struct for date,
+        /*  TODO: It might be preferable to break this into a struct for date,
          *  a struct for time, and
          *  then combine them.
          */
