@@ -9,24 +9,22 @@ and project management.
 
 # Version info
 Version: 1.0
-Created: 12/19/2020 12:43:04
-Last Modified: Wed Dec 23 16:01:48 2020
+Created: 02/05/2021 12:43:04
+Last Modified: 02/05/2021 12:43:04
 
 
-# Usage:
+#Usage:
 Static library.
 
-# File Formats:
+#File Formats:
 
-Presently the library usese CSV files to import various rules
+Presently the library uses only CSV files to import various rules
 such as holidays.
 
 # Restrictions:
-Presently, the library handles Unix encoded ASCII files fine,
-but chokes on macOS and Windows files. Handling CR and CRLFs will be
-addressed in the future.
+N/a
 
-# Error Handling:
+#Error Handling:
 Under development
 
 # License & Disclaimer

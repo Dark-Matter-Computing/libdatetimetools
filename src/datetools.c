@@ -35,7 +35,7 @@ struct RuleSet activerules_h;
 int holiday_rules_open(const char *receivedrulefilename, int close_on_success) 
 {
     FILE *holidayrulefile;
-    int valid_file = 0;
+    int valid_file = 1; /* FIXME: create an enum for validity */
 
     holidayrulefile = fopen(receivedrulefilename, "r"); 
     if (holidayrulefile == NULL)
@@ -44,7 +44,7 @@ int holiday_rules_open(const char *receivedrulefilename, int close_on_success)
         exit(8);
     }
 
-    if ((valid_file = holiday_rules_validatefile(holidayrulefile))) {
+    if ((valid_file == holiday_rules_validatefile(holidayrulefile))) {
         holiday_rules_getfields(holidayrulefile, &activerules_h);
         holiday_tbl_build(holidayrulefile, holidayhashtable);
     }

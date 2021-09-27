@@ -27,6 +27,9 @@
  */
 
 
+/* TODO: To address modes, consider adding a preprocessor #ifndef to select a mode for the library to operate in, which primarily effects error handling -- but if I do it this way, the library will have to be re-compiled for each mode. Is there a way to do this w/o having to recompile the library */
+
+
 /*-----------------------------------------------------------------------------
  * Error Handling  
  *----------------------------------------------------------------------------*/
