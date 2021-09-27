@@ -1,0 +1,223 @@
+ALLDAYS          enumerator   63 include/datetools.h ALLDAYS = 8, 
+ALLMONTHS        enumerator   69 include/datetools.h ALLMONTHS = 0, /* This is the magic number for a holiday rule that applies
+APRIL            enumerator   77 include/datetools.h APRIL = 4,
+ASCII2DECIMAL    macro        66 src/datetimetools_pvt.h #define ASCII2DECIMAL(x) ((x)-48)
+AUGUST           enumerator   81 include/datetools.h AUGUST = 8,
+BADCOMMANDLINE   macro       112 src/datetimetools_pvt.h #define BADCOMMANDLINE 1
+BEGIN_FIELD      variable    104 src/datetimetools_pvt.h const unsigned char BEGIN_FIELD = (1<<0); /* Set when the first field delimiter is reached. */
+BEGIN_TSTRING    variable    105 src/datetimetools_pvt.h const unsigned char BEGIN_TSTRING = (1<<1); /* Set when the first text delimiter is reached. */
+BINDIR           macro        18 testing/Makefile BINDIR = ./bin
+BUILDDIR         macro        17 testing/Makefile BUILDDIR = ./build
+CALCS            enumerator   11 testing/testsuite.h CALCS,
+CALMATH          enumerator   14 testing/testsuite.h CALMATH,
+CARRIAGE_RTN     macro        98 src/datetimetools_pvt.h #define CARRIAGE_RTN '\r' /* carriage return */
+CC               macro        39 Makefile         CC = gcc
+CC               macro        41 testing/Makefile CC = gcc
+CFLAGS           macro        63 testing/Makefile CFLAGS= -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c89
+CFLAGS           macro        68 Makefile         CFLAGS=-g -Wall -Wextra -pedantic -D__USE_FIXED_PROTOTYPES__ -std=c99 \
+CFLAGS2          macro        65 testing/Makefile CFLAGS2= -W -Wundef -Wstrict-prototypes -Wmissing-prototypes \
+CLEAR_ALLFLAGS   macro        63 src/datetimetools_pvt.h #define CLEAR_ALLFLAGS(x) ((x) &= 0)
+CLEAR_FLAG       macro        52 src/datetimetools_pvt.h #define CLEAR_FLAG(x,y) ((x) &= ~(y))
+CLOSED           enumerator  126 src/datetimetools_pvt.h enum {CLOSED, OPEN} openstatus;
+CPPFLAGS         macro        72 Makefile         CPPFLAGS= -Weffc++
+DATEORDER        enum         90 include/datetools.h enum DATEORDER{
+DATESTRINGLEN    macro        49 include/datetools.h #define DATESTRINGLEN 20 /* max length of a date string, enough for a long date */
+DAYNOTSET        enumerator   65 include/datetools.h DAYNOTSET = 999
+DAYS             enum         52 include/datetools.h enum DAYS {
+DEBUGFLAG        macro        70 testing/Makefile DEBUGFLAG= -g
+DECEMBER         enumerator   85 include/datetools.h DECEMBER = 12,
+DERIVEDATES      enumerator   10 testing/testsuite.h DERIVEDATES,
+DateTime         struct      125 include/datetools.h struct DateTime
+DateTimeErrorCode enum         34 src/errorhandler_pvt.h enum DateTimeErrorCode {
+DateTimeWarningCode enum         43 src/errorhandler_pvt.h enum DateTimeWarningCode {
+EMPTYFIELD       macro       100 src/datetimetools_pvt.h #define EMPTYFIELD '\0'
+END_TSTRING      variable    106 src/datetimetools_pvt.h const unsigned char END_TSTRING = (1<<2); /* Set when the end text delimter is reached. */
+FDELIMITER       macro        95 src/datetimetools_pvt.h #define FDELIMITER ',' /* Field delimiter used in the CSV files */
+FEBRUARY         enumerator   75 include/datetools.h FEBRUARY = 2,
+FRAMESIDEWIDTH   variable     36 testing/testsuite.c const int FRAMESIDEWIDTH = 1;
+FRAME_SYMB       variable     37 testing/testsuite.c const char FRAME_SYMB = '*';
+FRIDAY           enumerator   58 include/datetools.h FRIDAY = 5,
+GLOBALINC        macro        42 Makefile         GLOBALINC = /usr/local/include
+GLOBALINC        macro        51 Makefile         GLOBALINC = /usr/local/include
+GLOBALLIBS       macro        41 Makefile         GLOBALLIBS = /usr/local/lib
+GLOBALLIBS       macro        50 Makefile         GLOBALLIBS = /usr/local/lib
+HF_AUTHORITY     variable     84 src/datetimetools_pvt.h const char *HF_AUTHORITY = "Authority";
+HF_HOLIDAY       variable     83 src/datetimetools_pvt.h const char *HF_HOLIDAY = "Holiday";
+HF_MONTH         variable     80 src/datetimetools_pvt.h const char *HF_MONTH = "Month";
+HF_RTYPE         variable     81 src/datetimetools_pvt.h const char *HF_RTYPE = "Rule Type";
+HF_RULE          variable     82 src/datetimetools_pvt.h const char *HF_RULE = "Rule";
+HOLIDAY_FILE     variable     32 testing/test_datetimetools.c FILE *HOLIDAY_FILE;
+HolidayNode      struct      157 src/datetimetools_pvt.h struct HolidayNode { /* structure for linked list to hold court holidays */
+HolidayRule      struct      138 src/datetimetools_pvt.h struct HolidayRule{
+INSTALL_FILES    macro        21 Makefile         INSTALL_FILES = ./include/*tools.h
+JANUARY          enumerator   74 include/datetools.h JANUARY = 1,
+JULY             enumerator   80 include/datetools.h JULY = 7,
+JUNE             enumerator   79 include/datetools.h JUNE = 6,
+LASTWEEK         macro        47 include/datetools.h #define LASTWEEK 9 /* This is the magic number for a holiday rule that applies
+LDFLAGS          macro        72 testing/Makefile LDFLAGS = -L$(LIBDIR)
+LDLIBS           macro        74 testing/Makefile LDLIBS = -ldatetimetools
+LEAP             macro        46 include/datetools.h #define LEAP 1
+LEAPDATES        enumerator   12 testing/testsuite.h LEAPDATES,
+LIBDIR           macro        18 Makefile         LIBDIR = ./lib
+LIBDIR           macro        19 testing/Makefile LIBDIR = /Volumes/development/products/libdatetimetools/lib
+LIBSRC           macro        16 testing/Makefile LIBSRC = ../src
+MARCH            enumerator   76 include/datetools.h MARCH = 3,
+MATHCALC         enumerator   13 testing/testsuite.h MATHCALC,
+MAXFIELDLEN      macro        91 src/datetimetools_pvt.h #define MAXFIELDLEN 25 /* Maximum length (in chars) of name of field */
+MAXNUMFIELDS     macro        90 src/datetimetools_pvt.h #define MAXNUMFIELDS 25 /* Maxinum number of fields in CSV File */
+MAXRECORDLENGTH  macro        88 src/datetimetools_pvt.h #define MAXRECORDLENGTH 500 /* Maximum Length (in characters of CSV File line,
+MAY              enumerator   78 include/datetools.h MAY = 5,
+MDY              enumerator   91 include/datetools.h MDY,
+MINNUMTTLWKS     macro        45 include/datetools.h #define MINNUMTTLWKS 4 /* All months have at least 4 weeks. */
+MONDAY           enumerator   54 include/datetools.h MONDAY = 1,
+MONTHS           enum         68 include/datetools.h enum MONTHS {
+NEWLINE          macro        97 src/datetimetools_pvt.h #define NEWLINE '\n' /* Newline */
+NODAY            enumerator   64 include/datetools.h NODAY = 9,
+NOERROR          macro       111 src/datetimetools_pvt.h #define NOERROR 0
+NOFDELIM         macro       114 src/datetimetools_pvt.h #define NOFDELIM 3
+NOTDELIM         macro       115 src/datetimetools_pvt.h #define NOTDELIM 4
+NOVEMBER         enumerator   84 include/datetools.h NOVEMBER = 11,
+NULCHAR          macro        99 src/datetimetools_pvt.h #define NULCHAR '\0' /* nul string */
+NULSTRING        macro       113 src/datetimetools_pvt.h #define NULSTRING 2
+OBJDIR           macro        15 Makefile         OBJDIR = ./obj
+OBJECTS          macro        17 Makefile         OBJECTS = $(sort $(notdir $(patsubst %.c,%.o,$(SOURCES))))
+OCTOBER          enumerator   83 include/datetools.h OCTOBER = 10,
+OPEN             enumerator  126 src/datetimetools_pvt.h enum {CLOSED, OPEN} openstatus;
+OSFLAG           macro        25 Makefile         OSFLAG :=
+OSFLAG           macro        27 testing/Makefile OSFLAG :=
+PROFFLAG         macro        68 testing/Makefile PROFFLAG= -pg
+RULECHECK        enumerator   15 testing/testsuite.h RULECHECK
+RuleSet          struct      122 src/datetimetools_pvt.h struct RuleSet {
+SATURDAY         enumerator   59 include/datetools.h SATURDAY = 6,
+SCREENWIDTH      variable     35 testing/testsuite.c const int SCREENWIDTH = 70;
+SEPTEMBER        enumerator   82 include/datetools.h SEPTEMBER = 9,
+SET_FLAG         macro        48 src/datetimetools_pvt.h #define SET_FLAG(x,y) ((x) |= (y))
+SOURCEDIR        macro        14 Makefile         SOURCEDIR = ./src
+SOURCEDIR        macro        15 testing/Makefile SOURCEDIR = .
+SOURCES          macro        16 Makefile         SOURCES = $(sort $(shell find . -name '*.c'))
+SUNDAY           enumerator   53 include/datetools.h SUNDAY = 0,
+TDELIMITER       macro        96 src/datetimetools_pvt.h #define TDELIMITER '\"' /* Text string delimiter used in the CSV files */
+TESTFILETYPES    enum          9 testing/testsuite.h enum TESTFILETYPES {
+TESTPRJ          macro        22 testing/Makefile TESTPRJ = $(BUILDDIR)/$(project).o
+TESTSUITE        macro        23 testing/Makefile TESTSUITE = $(BUILDDIR)/testsuite.o
+TEST_FLAG        macro        55 src/datetimetools_pvt.h #define TEST_FLAG(x,y) ((x) & (y))
+TEST_MULTIPLEFLAGS macro        59 src/datetimetools_pvt.h #define TEST_MULTIPLEFLAGS(x,y) ((x) & ~(y))
+THURSDAY         enumerator   57 include/datetools.h THURSDAY = 4,
+TOKEN_FOUND      variable    107 src/datetimetools_pvt.h const unsigned char TOKEN_FOUND = (1<<7); /* Set when the token was found */
+TTLMONTHS        enumerator   86 include/datetools.h TTLMONTHS = 13 /* Total months is defined as 13 to account for the code for
+TUESDAY          enumerator   55 include/datetools.h TUESDAY = 2,
+UNAME_P          macro        49 testing/Makefile UNAME_P := $(shell uname -p)
+UNAME_P          macro        54 Makefile         UNAME_P := $(shell uname -p)
+UNAME_S          macro        35 Makefile         UNAME_S := $(shell uname -s)
+UNAME_S          macro        37 testing/Makefile UNAME_S := $(shell uname -s)
+WEDNESDAY        enumerator   56 include/datetools.h WEDNESDAY = 3,
+WEEKDAYS         macro        44 include/datetools.h #define WEEKDAYS 7 
+YMD              enumerator   92 include/datetools.h YMD
+_DATETIMETOOLS_PVT_H_INCLUDED_ macro        35 src/datetimetools_pvt.h #define _DATETIMETOOLS_PVT_H_INCLUDED_
+_DATETOOLS_H_INCLUDED_ macro        34 include/datetools.h #define _DATETOOLS_H_INCLUDED_
+_TESTSUITE_H_INCLUDED_ macro         2 testing/testsuite.h #define _TESTSUITE_H_INCLUDED_
+activerules_h    variable     30 src/datetools.c  struct RuleSet activerules_h;
+authority        member      154 src/datetimetools_pvt.h char authority[100]; /* the statutory authority for the holiday */
+begin_date       variable    792 testing/testsuite.c struct DateTime begin_date; /* date to begin date calculations */
+cc               macro        46 testing/Makefile cc = gcc
+cc               macro        48 Makefile         cc = gcc
+courtday_difference function    918 src/datetools.c  int courtday_difference(struct DateTime date1, struct DateTime date2)
+courtday_offset  function    851 src/datetools.c  void courtday_offset(struct DateTime *orig_date, struct DateTime *calc_date,
+date_difference  function    819 src/datetools.c  int date_difference(struct DateTime date1, struct DateTime date2)
+date_offset      function    824 src/datetools.c  void date_offset(struct DateTime *orig_date, struct DateTime *calc_date,
+date_to_string   function   1349 src/datetools.c  void date_to_string(char *rtnstring, const struct DateTime *dt, int date_order)
+dateinput        variable    797 testing/testsuite.c char dateinput[11]; /*used to get data from the keyboard */
+day              member      129 include/datetools.h int day;
+day              member      152 src/datetimetools_pvt.h int day; /* the day of the holiday if the ruletype is 'a' */
+day_count        variable    796 testing/testsuite.c int day_count; /* number of days before or after a particular deadline */
+day_of_week      member      131 include/datetools.h enum DAYS day_of_week;
+daysinmonths     variable    113 include/datetools.h static int daysinmonths[2][13] = {{0, 31, 28, 31, 30, 31,
+dependency_1     macro        10 testing/Makefile dependency_1 = datetools
+dependency_2     macro        11 testing/Makefile dependency_2 = timetools
+dependency_3     macro        12 testing/Makefile dependency_3 = testsuite
+derive_weekday   function    612 src/datetools.c  int derive_weekday(const struct DateTime *dt)
+display_frame    function    703 testing/testsuite.c void display_frame(const char *section_name, int framepos)
+display_results  function    669 testing/testsuite.c void display_results(const char *message, int testphase) 
+display_stats    function    652 testing/testsuite.c void display_stats(struct teststats *printstats)
+end_date         variable    793 testing/testsuite.c struct DateTime end_date; /* date to use for end calculations */
+errorcode_to_string function     63 src/errorhandler.c const char *errorcode_to_string(int ErrCode)
+errorprocessor   function   1365 src/datetools.c  void errorprocessor(int error_code)
+headerfields     member      124 src/datetimetools_pvt.h char headerfields[MAXNUMFIELDS][MAXFIELDLEN];
+holiday_rules_closefile function    509 src/datetools.c  int holiday_rules_closefile(FILE *holidayrulefile)
+holiday_rules_get_tokens function     96 src/datetools.c  void holiday_rules_get_tokens(FILE *holidayrulefile,
+holiday_rules_getfields function    447 src/datetools.c  void holiday_rules_getfields(FILE *holidayrulefile, struct RuleSet *globalstate)
+holiday_rules_open function     35 src/datetools.c  int holiday_rules_open(const char *receivedrulefilename, int close_on_success) 
+holiday_rules_parse_token function    258 src/datetools.c  void holiday_rules_parse_token(char *token, char *cur_field,
+holiday_rules_resetfile function    501 src/datetools.c  void holiday_rules_resetfile(FILE *holidayrulefile)
+holiday_rules_tokenize function    147 src/datetools.c  char *holiday_rules_tokenize(char *string, int *lasttoken)
+holiday_rules_validatefile function    403 src/datetools.c  int holiday_rules_validatefile(FILE *candidaterulefile_h)
+holiday_table_addrule function    350 src/datetools.c  void holiday_table_addrule(struct HolidayNode **elementhandle,
+holiday_table_release function    377 src/datetools.c  void holiday_table_release(struct HolidayNode *holidayhashtable[])
+holiday_tbl_build function     63 src/datetools.c  void holiday_tbl_build(FILE *receivedrulefile,
+holiday_tbl_checkrule function    532 src/datetools.c  int holiday_tbl_checkrule(struct DateTime *dt, struct HolidayNode *rulenode)
+holiday_tbl_init function     71 src/datetools.c  void holiday_tbl_init(struct HolidayNode *holidayhashtable[])
+holidayhashtable variable     29 src/datetools.c  struct HolidayNode *holidayhashtable[13];
+holidayname      member      153 src/datetimetools_pvt.h char holidayname[40]; /* the title of the holiday */
+hr               variable     24 src/timetools.c  int hr, min, sec; /* hours, minutes, and seconds */
+isholiday        function   1077 src/datetools.c  int isholiday(struct DateTime *dt)
+islastweek       function   1034 src/datetools.c  int islastweek(struct DateTime *dt)
+islastxdom       function    980 src/datetools.c  int islastxdom(struct DateTime *dt)
+isleapyear       function    667 src/datetools.c  int isleapyear(struct DateTime *dt)
+isweekend        function    653 src/datetools.c  int isweekend(struct DateTime *dt)
+jdn              member      130 include/datetools.h int jdn; /* the Julian Day number for the relevant date */
+jdn2greg         function    776 src/datetools.c  void jdn2greg(int jdn, struct DateTime *calc_date)
+jdncnvrt         function    714 src/datetools.c  int jdncnvrt(struct DateTime *dt)
+line             variable     23 src/timetools.c  char line[100]; /* keyboard input buffer */
+line             variable    798 testing/testsuite.c char line[80]; /* keyboard buffer */
+main             function     36 testing/test_datetimetools.c int main(int argc, char *argv[])
+message_right_justify function    753 testing/testsuite.c void message_right_justify(char *text, const char *addedtext, int linewidth) 
+min              variable     24 src/timetools.c  int hr, min, sec; /* hours, minutes, and seconds */
+min2time         function     66 src/timetools.c  void min2time (int min, int *h, int *m, int *s)
+month            member      128 include/datetools.h int month;
+month            member      139 src/datetimetools_pvt.h int month;
+month_to_string  function   1302 src/datetools.c  const char *month_to_string(int month)
+montharray       variable    105 include/datetools.h static int montharray[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+nextrule         member      159 src/datetimetools_pvt.h struct HolidayNode *nextrule; 
+openstatus       member      126 src/datetimetools_pvt.h enum {CLOSED, OPEN} openstatus;
+parsetime        function     48 src/timetools.c  void parsetime (char input[], int *h, int *m, int *s)
+print_repeat_char function    743 testing/testsuite.c void print_repeat_char(int count, const char s)
+printholidayrules function   1113 src/datetools.c  void printholidayrules(void)
+project          macro         9 testing/Makefile project = test_datetimetools
+project          macro        11 Makefile         project = libdatetimetools
+result_date      variable    794 testing/testsuite.c struct DateTime result_date; /* used to hold new dates resulting from
+rule             member      158 src/datetimetools_pvt.h struct HolidayRule rule; 
+rulefile         member      123 src/datetimetools_pvt.h FILE *rulefile;
+ruletype         member      140 src/datetimetools_pvt.h char ruletype;
+sec              variable     24 src/timetools.c  int hr, min, sec; /* hours, minutes, and seconds */
+set_weekday      function    643 src/datetools.c  void set_weekday(struct DateTime *dt)
+successful_tests member       21 testing/testsuite.h int successful_tests;
+summin           function     61 src/timetools.c  int summin (int h, int m, int s)
+sys_errlist      variable     22 doc/analysis/sys_errlist.c const char *const sys_errlist[] __attribute__ ((weak, visibility ("default"))) = {
+sys_errlist      variable     59 doc/analysis/errlst.c const char *const sys_errlist[] = {
+sys_nerr         variable    157 doc/analysis/sys_errlist.c int sys_nerr __attribute__ ((weak, visibility ("default"))) = sizeof sys_errlist / sizeof *sys_errlist;
+sys_nerr         variable    191 doc/analysis/errlst.c const int sys_nerr = sizeof(sys_errlist) / sizeof(sys_errlist[0]);
+target           macro        38 Makefile         target = $(project)_linux
+target           macro        40 testing/Makefile target = $(project)_linux
+target           macro        45 testing/Makefile target = $(project)
+target           macro        46 Makefile         target = $(project)
+testfunc         function     29 src/timetools.c  int testfunc()
+teststats        struct       19 testing/testsuite.h struct teststats{
+testsuite        function    820 testing/testsuite.c void testsuite (void)
+testsuite_check_calcs function    158 testing/testsuite.c void testsuite_check_calcs(FILE *openedtestfile)
+testsuite_check_calmath function    387 testing/testsuite.c void testsuite_check_calmath(FILE *openedtestfile)
+testsuite_check_courtmath function    438 testing/testsuite.c void testsuite_check_courtmath(FILE *openedtestfile)
+testsuite_check_deriveday function    256 testing/testsuite.c void testsuite_check_deriveday(FILE *openedtestfile)
+testsuite_check_holidays function    314 testing/testsuite.c void testsuite_check_holidays(FILE *openedtestfile)
+testsuite_check_leap function    599 testing/testsuite.c void testsuite_check_leap(FILE *openedtestfile)
+testsuite_compute_caldays function    489 testing/testsuite.c void testsuite_compute_caldays(FILE *openedtestfile)
+testsuite_compute_courtdays function    544 testing/testsuite.c void testsuite_compute_courtdays(FILE *openedtestfile)
+testsuite_interactive function     58 testing/testsuite.c void testsuite_interactive(void)
+testsuite_run_check function     89 testing/testsuite.c void testsuite_run_check(enum TESTFILETYPES testtype, const char *testfile_name)
+totalnumfields   member      125 src/datetimetools_pvt.h int totalnumfields;
+ttl_tests        member       20 testing/testsuite.h int ttl_tests;
+ttlmin           variable     25 src/timetools.c  int ttlmin; /* total number of minutes */
+usage            function    128 testing/test_datetimetools.c void usage(char *program_name)
+wkday            member      144 src/datetimetools_pvt.h unsigned int wkday;
+wkday_to_string  function   1259 src/datetools.c  const char *wkday_to_string(int day)
+wknum            member      148 src/datetimetools_pvt.h int wknum;
+year             member      127 include/datetools.h int year;

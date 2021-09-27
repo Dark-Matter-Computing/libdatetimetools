@@ -36,6 +36,7 @@
 		060EBE93259C0F8D00090FD3 /* datecalc_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = datecalc_test.csv; sourceTree = "<group>"; };
 		060EBE94259C0F8D00090FD3 /* derive_date_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = derive_date_test.csv; sourceTree = "<group>"; };
 		060EBE95259C0FC000090FD3 /* unittest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unittest.sh; sourceTree = "<group>"; };
+		061983EA25F40838002F1349 /* caldays_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = caldays_test.csv; sourceTree = "<group>"; };
 		0637E9DB259C05A300C0F87E /* liblibdatetimetools.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibdatetimetools.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0637E9E7259C05E800C0F87E /* datetimetools_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datetimetools_pvt.h; sourceTree = "<group>"; };
 		0637E9E9259C05E800C0F87E /* timetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timetools.c; sourceTree = "<group>"; };
@@ -97,11 +98,12 @@
 			isa = PBXGroup;
 			children = (
 				06CE056C25CB8B2C0053A0A2 /* crlf_files */,
+				061983EA25F40838002F1349 /* caldays_test.csv */,
 				06CE057425CB8B3C0053A0A2 /* check_rule_test.csv */,
-				06CE057325CB8B3C0053A0A2 /* leap_test.csv */,
-				06CE057225CB8B2C0053A0A2 /* math_test.csv */,
 				060EBE93259C0F8D00090FD3 /* datecalc_test.csv */,
 				060EBE94259C0F8D00090FD3 /* derive_date_test.csv */,
+				06CE057325CB8B3C0053A0A2 /* leap_test.csv */,
+				06CE057225CB8B2C0053A0A2 /* math_test.csv */,
 			);
 			path = testscripts;
 			sourceTree = "<group>";
