@@ -1,0 +1,7 @@
+void date_to_string(char *rtnstring, const struct DateTime *dt, int date_order);    datetools.h    Output Functions
+        [ ] Description: Extracts a date from a DateTime struct. User can select the
+        [ ] the format that the string is output in using the DATEORDER enum.
+        [ ] Parameters: Takes a pointer to a DateTime struct.
+        [ ] Precondition: DateTime struct must have had a date set.
+        [ ] Return: A string corresponding to the date, or a NULL pointer.
+

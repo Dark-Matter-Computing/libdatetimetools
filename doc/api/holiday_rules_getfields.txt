@@ -1,0 +1,9 @@
+holiday_rules_getfields    datetimetools_pvt.h
+        [ ] Parameters
+            [ ] FILE *holidayrulefile
+            [ ] struct RuleSet *globalstate
+        [ ] Returns
+            [ ] void
+        [ ] Pre-conditions
+        [ ] Post-conditions
+

@@ -1,0 +1,5 @@
+void set_weekday(struct DateTime *dt);    datetools.h    Date Computations
+        [ ] /* Same as derive_weekday, but this one sets the day_of_week member of the
+        [ ] DateTime struct to the day of the week.
+        [ ] /
+

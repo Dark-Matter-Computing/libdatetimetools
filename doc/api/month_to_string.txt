@@ -1,0 +1,5 @@
+const char *month_to_string(int month);    datetools.h    Output Functions
+        [ ] Description: Gets the month corresponding to a month of the enum MONTHS.
+        [ ] Parameters: Takes an integer corresponding to a MONTH of the year.
+        [ ] Return: A string corresponding to the month of the year, or a NULL pointer.
+

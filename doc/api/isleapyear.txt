@@ -1,0 +1,5 @@
+int isleapyear(struct DateTime *dt);    datetools.h    Date Computations
+        [ ] Parameters: Takes a pointer to a DateTime structure.
+        [ ]
+        [ ] Return: Returns an integer equal to zero if the year is NOT a leap year,
+        [ ] or a 1 if the year IS a leap year.

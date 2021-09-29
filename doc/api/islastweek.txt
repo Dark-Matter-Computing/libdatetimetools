@@ -1,0 +1,6 @@
+int islastweek(struct DateTime *dt);    datetools.h    Date Computations
+        [ ] Description: calculates whether a particular date is in the last week
+        [ ] of the month.
+        [ ] Parameters: Takes a DateTime struct.
+        [ ] Returns: An integer 0 = not in last week; 1 = is in last week
+

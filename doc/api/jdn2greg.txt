@@ -1,0 +1,9 @@
+void jdn2greg(int jdn, struct DateTime *calc_date);    datetools.h    Date Computations
+        [ ] Name: jdn2greg
+        [ ] Description: Converts a Julian Day Number to the Gregorian calendar date.
+        [ ] The purpose of using the JDN is to create a unique number for a day
+        [ ] that we can use to make date calculations, such as the number of days
+        [ ] between two dates or the number of days before or after a specified
+        [ ] date. This function does the opposite of the jdncvrt function.
+        [ ] Parameters:  Takes an integer representing a JDN and a pointer to a
+        [ ] DateTime structure.

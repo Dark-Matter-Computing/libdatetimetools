@@ -44,7 +44,6 @@ doc/**/specs
 
 # Temporarily ignored documentation directories
 **/doc/analysis
-**/doc/api
 
 # Prerequisites
 *.d

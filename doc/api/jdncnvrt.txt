@@ -1,0 +1,15 @@
+int jdncnvrt(struct DateTime *dt);    datetools.h    Date Computations
+        [ ] Name: jdncvrt
+        [ ] Description: converts a Gregorian calendar date to a Julian Day Number
+        [ ] (JDN).  The purpose of using the JDN is to create a unique number for
+        [ ] a day that we can use to make date calculations, such as the number of
+        [ ] days between two dates or the number of days before or after a
+        [ ] specified date. This function does the opposite of the jdn2greg
+        [ ] function.
+        [ ]
+        [ ] Parameters: Takes a pointer to a DateTime structure.
+        [ ]
+        [ ] Return: Returns an integer with the Julian Date.  Usually this number is
+        [ ] not stored for "permanent use" but is used as an argument for
+        [ ] another function, such as the date_offset function.
+

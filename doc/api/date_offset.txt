@@ -1,0 +1,10 @@
+void date_offset(struct DateTime *orig_date, struct DateTime *calc_date, int numdays);    datetools.h    Date Computations
+        [ ] Description: calculates the date after adding or subtracting a specified
+        [ ] number days.
+        [ ] Usage: The algorithm EXCLUDES the first date, but counts the end date.
+        [ ] Parameters: The starting date, the number of calender days to count, and a
+        [ ] pointer to another DateTime struct to store the result.
+        [ ] Return: No return, but the function changes the value of the variable
+        [ ] calc_date (the resulting date) through use of the pointer. The return
+        [ ] value is positive if date1 is before date 2, and negative otherwise.
+

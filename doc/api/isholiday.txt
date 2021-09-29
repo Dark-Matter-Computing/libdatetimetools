@@ -1,0 +1,2 @@
+int isholiday(struct DateTime *dt) ;/* search holiday rules function */    datetools.h    Date Computations
+

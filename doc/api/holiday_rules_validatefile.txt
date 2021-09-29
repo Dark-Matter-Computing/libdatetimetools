@@ -1,0 +1,15 @@
+holiday_rules_validatefile    datetimetools_pvt.h
+        [ ] Parameters
+            [ ] FILE *candidaterulefile_h
+        [ ] Returns
+            [ ] int
+        [ ] Return Values
+            [ ] 0 =
+            [ ] [x] = Not a Court Holiday Rule File
+            [ ] [x] = Deprecated version of the Holiday Rules File
+                Perhaps create a function that will update an old rules file
+            [ ] [x] = fields wrong
+            [ ] [x] = data formatted incorrectly. [brainstorm ways so that I might be able to provide more diagnostic information]
+                This might need to be moved elsewhere. Presently this validation function only checks that there is a row of fields and a version number.
+        [ ] Pre-conditions
+        [ ] Post-conditions

@@ -1,0 +1,7 @@
+int isweekend(struct DateTime *dt);    datetools.h    Date Computations
+        [ ] Because most courts treat weekends as holidays, this function is not
+        [ ] currently needed.  The weeked rules are simply part of the Holiday rules
+        [ ] processing tools
+        [ ]
+        [ ] Return: Returns an integer equal to zero if the date is NOT a weekend, or
+        [ ] a 1 if the date IS a weekend.

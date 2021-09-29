@@ -1,0 +1,6 @@
+const char *wkday_to_string(int day);    datetools.h    Output Functions
+        [ ] void printholidayrules(void);
+        [ ] Description: Gets the weekday corresponding to a day of the enum DAYS.
+        [ ] Parameters: Takes an integer corresponding to a day of the week.
+        [ ] Return: A string corresponding to the day of the week, or NULL.
+

@@ -1,0 +1,30 @@
+Feature: Calculate the day of the week.
+
+Scenario:   I need to know the day of the week that a particular date falls
+Given:      I have a complete date with year, month, and day.
+When:       The date is between September 14, 1752 and December 31, 9999
+Then:       This function calculates the day of the week, using Sakamoto's formula
+
+Parameters: const struct DateTime *dt
+            
+Returns: int representing the day of the week.
+
+Preconditions:  The pointer to the DateTime struct is not null, the fields in the DateTime struct
+                have a non-null day, month, and year; the day month and year are between September 14, 1752
+                and December 31, 9999.
+
+Postconditions: function returns an integer that corresponds to one of the days in enum DAYS
+
+Potential errors:   dt is null
+                    *dt->year > 9999
+                    *dt->year < 1752
+                    *dt->year == 1752 && *dt->month < September
+                    *dt->year == 1752 && *dt->month == September && *dt->day < 14
+                    *dt->year == [not set]
+                    *dt->month == [not set]
+                    *dt->day == [not set]
+                    
+
+Prototype:  int derive_weekday(const struct DateTime *dt)
+Module:     datetools.h
+Category:   Date Computations

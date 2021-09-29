@@ -1,0 +1,33 @@
+Feature: Open a calendaring rules document, so that I can process rules.
+
+Scenario:
+Given
+When
+Then
+
+Parameters: const char *receivedrulefilename
+            int close_on_success
+
+Returns: int
+
+Preconditions: The *receivedrulefilename is not null and points to a valid file name string.
+
+Postconditions: A valid holiday rule file is opened; or
+                An error is generated because the file cannot be opened.
+
+Potential errors:
+                    Normal file errors: file does not exist; file cannot be opened; etc.
+                    
+                    rule file opens fine, but is not valid. —>
+                    holiday_rules_validate_file does not process errors, but
+                    will return an (unhandled) error. So, this function
+                    kick-offs the error handling for each area where errors
+                    can occur Presently, if the file name is null, it just
+                    exits. In non-interactive mode, that should still be
+                    fine. In interactive and gui modes, it should re-request
+                    a file name. This means I have to add a “mode” setting
+                    and the library must be made aware of it.
+
+Prototype: int holiday_rules_open(const char *receivedrulefilename, int close_on_success)
+Module: datetools.h
+Category: Activate Rule Handler

@@ -1,0 +1,9 @@
+holiday_tbl_checkrule    datetimetools_pvt.h
+        [ ] Parameters
+            [ ] struct DateTime *dt
+            [ ] struct HolidayNode *rulenode
+        [ ] Returns
+            [ ] int
+        [ ] Pre-conditions
+        [ ] Post-conditions
+

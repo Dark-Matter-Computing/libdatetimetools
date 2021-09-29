@@ -1,0 +1,5 @@
+int courtday_difference(struct DateTime *date1, struct DateTime *date2);    datetools.h    Date Computations
+
+Description: Counts court days between two dates.
+Parameters: The starting date and ending date, both in the form of pointers to a DateTime struct.
+Return: Returns an integer which is the result of calculating the number of court days between the two dates. Recall court days exclude weekends and holidays. The return value is positive if date1 is before date 2, and negative otherwise.

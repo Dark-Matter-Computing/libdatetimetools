@@ -1,0 +1,9 @@
+holiday_table_addrule    datetimetools_pvt.h
+        [ ] Parameters
+            [ ] struct HolidayNode **elementhandle
+            [ ] struct HolidayRule *newrule
+        [ ] Returns
+            [ ] void
+        [ ] Pre-conditions
+        [ ] Post-conditions
+

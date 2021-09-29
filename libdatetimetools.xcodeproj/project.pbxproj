@@ -47,6 +47,7 @@
 		0637EA18259C077100C0F87E /* test_datetimetools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_datetimetools.c; sourceTree = "<group>"; };
 		0637EA20259C07F400C0F87E /* testsuite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testsuite.c; sourceTree = "<group>"; };
 		0637EA21259C07F400C0F87E /* testsuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testsuite.h; sourceTree = "<group>"; };
+		063DABBB27038BBE005ED2DE /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		06596A5225AD85310023CF82 /* errorhandler_pvt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errorhandler_pvt.h; sourceTree = "<group>"; };
 		06596A5A25AD85310023CF82 /* errorhandler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = errorhandler.c; sourceTree = "<group>"; };
 		067EE39B25CE39A4009373B7 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
@@ -111,6 +112,7 @@
 		0637E9D2259C05A300C0F87E = {
 			isa = PBXGroup;
 			children = (
+				063DABBB27038BBE005ED2DE /* doc */,
 				067EE39C25CE39A4009373B7 /* bumpversion.sh */,
 				067EE39D25CE39A4009373B7 /* CHANGELOG.md */,
 				067EE39B25CE39A4009373B7 /* VERSION */,

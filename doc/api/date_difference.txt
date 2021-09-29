@@ -1,0 +1,8 @@
+int date_difference(struct DateTime *date1, struct DateTime *date2);    datetools.h    Date Computations
+        [ ] Name: date_difference
+        [ ] Description: calculates the number of calendar days between two dates.
+        [ ] Parameters: The starting date and ending date, both in the form of
+        [ ] pointers to a DateTime struct.
+        [ ] Return: Returns an integer which is the result of calculating the number
+        [ ] of calendar days between the two dates.
+
