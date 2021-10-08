@@ -1,10 +1,30 @@
-holiday_rules_get_tokens    datetimetools_pvt.h
-        [ ] Parameters
-            [ ] FILE *holidayrulefile
-            [ ] struct HolidayNode *holidayhashtable[]
-            [ ] struct RuleSet *globalstate
-        [ ] Returns
-            [ ] void
-        [ ] Pre-conditions
-        [ ] Post-conditions
+Feature (internal function): Build my rules table so I can process calendar rules.
 
+Scenario: I want to process one or more events according to a set of calendaring rules
+Given: A rules set (e.g., a court’s calendaring rules)
+When: The file containing the rules set has been opened
+When: The file containing the rules set is valid and properly formatted
+When: The rules hash table has previously been initialized
+Then: The function can read through the rules file and parse out the rules.
+
+Parameters:    FILE *holidayrulefile,
+               struct HolidayNode *holidayhashtable[],
+               struct RuleSet *globalstate
+      
+Returns:       void
+
+Preconditions:  A valid rules file has been opened; a new hash table in which the rules file will be
+de-serialized has been initialized
+
+Postconditions: The tokens are read and the hash table is populated with the rules.
+
+Potential errors: A rules file is not open; the rules file is invalid; the hash table was not initialized; [problems with tokenizing the rules — bad delimiters, mis-matched delimiters, etc.]
+
+Prototype: void holiday_rules_get_tokens(FILE *holidayrulefile,
+                              struct HolidayNode *holidayhashtable[],
+                              struct RuleSet *globalstate);
+Header: datetools_pvt.h
+Module: Rule Handler
+
+
+    holiday_tbl_init(holidayhashtable);

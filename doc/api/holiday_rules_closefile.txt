@@ -1,8 +1,21 @@
-holiday_rules_closefile    datetimetools_pvt.h
-        [ ] Parameters
-            [ ] FILE *holidayrulefile
-        [ ] Returns
-            [ ] int
-        [ ] Pre-conditions
-        [ ] Post-conditions
+Feature: Close a calendaring rules document when I am done processing it.
 
+Scenario: I done using a calendaring rules file.
+Given: I already have the calendaring rules file open
+When: I have processed all the data in the file and no longer need to reference the file.
+Then: this function will close the file
+
+Parameters: FILE *holidayrulefile
+      
+Returns: int
+
+Preconditions: A file was already open.
+
+Postconditions: The holiday rule file is closed; or
+                An error is generated because the file cannot be closed.
+
+Potential errors: *holidayrulefile is NULL; an incorrect pointer is passed in; there is a file i/o error related to the actual performance of the file closing operation.
+
+Prototype: int holiday_rules_closefile(FILE *holidayrulefile)
+Header: datetools_pvt.h
+Module: Rule Handler

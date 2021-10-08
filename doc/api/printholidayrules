@@ -1,0 +1,20 @@
+Feature: Print a formatted list of all the holidays rules that are currently active.
+
+Scenario: I want to output a complete list of all the holiday rules that have been created.
+Given: A valid holiday rules file has been open
+Given: the holiday rules file has been de-serialized into a holiday hashtable
+Then: This function create a string corresponding to the name of the weekday represented by enum DAYS.
+
+Parameters: none
+      
+Returns: nothing
+
+Preconditions: We have a holiday hashtable that has been populated with a valid holiday-rule set.
+
+Postconditions: None.
+
+Potential errors: [catalog]
+
+Prototype: void printholidayrules(void)
+Header: datetools.h
+Module: Output Functions
